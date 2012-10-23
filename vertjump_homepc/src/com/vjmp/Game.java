@@ -4,17 +4,21 @@ import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
+import com.vjmp.chapter.Chapter;
+import com.vjmp.editor.Editor;
 import com.vjmp.gfx.Camera;
-import com.vjmp.gfx.Sprite;
-import com.vjmp.gfx.SpriteManager;
+import com.vjmp.managers.EntityManager;
 
 public class Game extends Canvas implements Runnable {
 	
@@ -23,17 +27,12 @@ public class Game extends Canvas implements Runnable {
 	public static final int WIDTH = 180;
 	public static final int HEIGHT = (WIDTH)*4/3;
 	public static final int SCALE = 3;
-	public static final String NAME = "VertiJump";
+	public static final String NAME = "VertiJump - The Game";
 	public static 		boolean running = true;
 	
-	private static BufferedImage bg;
-	
-	private static InputHandler	inputHandler;
-	private static Player		player;		
-	private static Camera		camera;
-	private static Map			map;
-	
-	private static SpriteManager spriteManager;
+    private static Chapter chapter = null;
+	private static InputHandler inputHandler = null;
+	private static EntityManager spriteManager;
 	
 	
 	
@@ -54,6 +53,13 @@ public class Game extends Canvas implements Runnable {
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
+		
+		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+		
+		int x = (dim.width - WIDTH*2*SCALE)/2 - 50;
+		int y = (dim.height - HEIGHT*SCALE)/2;
+		frame.setLocation(x, y);
+
 	}
 	
 	public synchronized void start() {
@@ -64,33 +70,21 @@ public class Game extends Canvas implements Runnable {
 	
 	public void init() {
 		
-		spriteManager = new SpriteManager();
-		inputHandler  = new InputHandler(this);
-		player		  = new Player(inputHandler);
-		camera		  = new Camera(WIDTH * SCALE,HEIGHT * SCALE);
-		map			  = new Map(WIDTH * SCALE,HEIGHT * SCALE);
-		load_resource();
-	}
-	public void load_resource() {
-		bg = null;
-		try {
-			bg = ImageIO.read(new File("./res/background.png"));
-		} catch (IOException e) {
-			System.out.println("No image for you!");
-		}
-	
+		spriteManager = new EntityManager();
+		inputHandler = new InputHandler(this);
+		chapter = new Chapter(inputHandler,WIDTH * SCALE,HEIGHT * SCALE,"./res/map.txt");
 	}
 	
 	public void tick() {
-		placeHolderLogick();
-		player.update(map);
-		camera.update(player.GetPosX(), player.GetPosY());
-		map.update(camera.pos_y);
+	//	placeHolderLogick();
+		chapter.update();
+		placeHolderLogic();
+		
 	}
 	
 	
 	
-	private void placeHolderLogick() {
+	private void placeHolderLogic() {
 		if(inputHandler.W.isPressed()) {
 			//player.move(0, -10);
 		
@@ -107,9 +101,15 @@ public class Game extends Canvas implements Runnable {
 			//player.move(10, 0);
 			
 		}
+		if(inputHandler.ESC.isPressed()) {
+			running = false;
+		}
+		if(inputHandler.P.isPressed()) {
+			
+		}
 		
 	}
-
+	
 	public void render() {
 		BufferStrategy strat = this.getBufferStrategy();
 		if(strat == null) {
@@ -118,28 +118,15 @@ public class Game extends Canvas implements Runnable {
 		}
 		Graphics g = strat.getDrawGraphics();
 		
-		g.fillRect(0, 0, getWidth(), getHeight());
-		DrawBackGround(g);
-		g.translate(camera.pos_x,camera.pos_y);
-		//g.translate(0,0);
-
-		spriteManager.DrawSprites(g);
-		map.draw(g);
-		player.draw(g);
+		chapter.draw(g);
+		//spriteManager.DrawSprites(g);
+		
 		g.dispose();
 		
 		strat.show();
 	}
 	
-	private void DrawBackGround(Graphics g) {
-		double width_draw_count = (double)getWidth() / (double)bg.getWidth();
-		double height_draw_count = (double)getHeight() / (double)bg.getHeight();
-		for(int i=0;i<width_draw_count+1;i++) 
-			for(int j=0;j<height_draw_count+1;j++) {
-				g.drawImage(bg, i*bg.getWidth(), j*bg.getHeight(),null);
-			}
-		
-	}
+	
 	
 	
 	
@@ -175,13 +162,11 @@ public class Game extends Canvas implements Runnable {
 				System.out.println(frames + " " + ticks);
 				frames = 0;
 				ticks = 0;
-			}*/
-			
+			}
+			*/
 		}
 		
 	}
 	
-	public static void main(String[] args) {
-		new Game().start();
-	}
+	
 }

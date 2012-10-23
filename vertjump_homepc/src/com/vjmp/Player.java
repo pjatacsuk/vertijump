@@ -1,57 +1,85 @@
 package com.vjmp;
 
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 
+import com.vjmp.entities.Entity.EntityType;
+import com.vjmp.entities.drawable.DrawableEntity;
 import com.vjmp.gfx.Sprite;
 
 public class Player {
+	enum STICK_DIR {LEFT,RIGHT,NONE};
+	
 	private Sprite sprite;
 	private InputHandler inputHandler;
 	
 	private static final int max_velocity_x_default = 15;
 	private static final int max_velocity_y_default = 20;
+	private static final int max_speed_x_default = 20;
+	private static final int max_speed_y_default = 5;
 	private double velocity_x = 0;
 	private double velocity_y = 0;
 	private double velocity_gravity = 2;
 	private double max_velocity_x = 15;
-	private double max_velocity_y = 40;
+	private double max_velocity_y = 30;
 	private double max_speed_x = 20;
-	private double max_speed_y = 40;
+	private double max_speed_y = 5;
 	
 	private double velocity_change =5 ;
-	private double speed_x = 5;
-	private double speed_y = 5;
+	private double speed_x = 0;
+	private double speed_y = 0;
 	private double speed_x_change = 0;
 	private double speed_y_change = 0;
 
 	private double jump_speed = 15;
 	private boolean jumping = false;
 	private boolean ignore_W = false;
-
+	private boolean ignore_SHIFT = false;
+	private boolean sticky = false;
+	private STICK_DIR stick_dir = STICK_DIR.NONE;
 	
+	private boolean isFinishedLevel = false;
 	
 	public Player(InputHandler iHandler) {
 		sprite = new Sprite("./res/spooky.png");
 		inputHandler = iHandler;
-		sprite.move(100, 500);
+		sprite.move(130, 500);
 	}
 	
 	public void update(Map map) {
 		HandleInput();
 		UpdateVelocity();
+	
 		MovePlayer();
+	
 		CheckCollosion(map);
-		if(velocity_x != 0 || velocity_y != 0)
-		System.out.println(velocity_x + " " + velocity_y);
+		StickyUpdate();
+		//debug
+	//	if(velocity_x != 0 || velocity_y != 0)	System.out.println(velocity_x + " " + velocity_y);
 	}
+	private void StickyUpdate() {
+	//	if(sticky) {
+			if(Math.abs(speed_x) > 0.01) {
+				sticky = false;
+				stick_dir = STICK_DIR.NONE;
+			}
+			//if(speed_x != 0) sticky = false;
+	//	}
+	}
+
 	private void CheckCollosion(Map map) {
-		for(Sprite s : map) {
-			if(s.isVisible()) {
-				if(sprite.getRect().intersects(s.getRect())) {
-					Collosion(s.getRect());
+		for(DrawableEntity s : map) {
+			
+			if(sprite.getRect().intersects(s.getRect())) {
+				if(s.getType() == EntityType.FINISH_LINE) {
+					System.out.println("Finish!!!");
+				}
+				if(s.isVisible()) {
+				Collosion(s.getRect());
 				}
 			}
+			
 		}
 		
 	}
@@ -78,12 +106,22 @@ public class Player {
 				
 			
 		} else {
+			
 		   if(speed_x > 0) {
+			   
+			   
+				sticky = true;
+				stick_dir = STICK_DIR.LEFT;   
+			  
 			    sprite.move(-intersection.width,0);
 		   		velocity_x = 0;
 		   		speed_x = 0;
 		   }
-		   else {
+		   else  if(speed_x < 0){
+			  
+				sticky = true;
+				stick_dir = STICK_DIR.RIGHT;
+			  
 			    sprite.move(intersection.width, 0);
 		   		velocity_x = 0;
 		   		speed_x = 0;
@@ -118,18 +156,28 @@ public class Player {
 		
 		
 		if(jumping) {
+			
 			velocity_y +=  -jump_speed;
-		} else {
-			velocity_y += velocity_gravity;
+			if(Math.abs(velocity_y) > max_velocity_y ) {
+				velocity_y = max_velocity_y * ((velocity_y) / Math.abs(velocity_y));
+			}
 		}
-		if(Math.abs(velocity_y) >= max_velocity_y) {
-			velocity_y = max_velocity_y * ((velocity_y) / Math.abs(velocity_y));
+		
+			velocity_y += velocity_gravity;
+		
+		if(speed_y < -max_speed_y) {
+			speed_y = max_speed_y * ((speed_y) / Math.abs(speed_y));
 			ignore_W = true;
+			jumping = false;
 		}
 		if(Math.abs(velocity_x) >= max_velocity_x) {
 			velocity_x = max_velocity_x * ((velocity_x) / Math.abs(velocity_x));
 		} 
-		
+		if(sticky) {
+			velocity_y = 1;
+			speed_y = 1;
+			ignore_W=false;
+		}
 	}
 	
 	private void ChangePlayerSpeed() {
@@ -157,12 +205,15 @@ public class Player {
 			}
 		}
 		if(velocity_y != 0) {
-			if(speed_y <= max_speed_y) {
-			speed_y += velocity_y * (1.0/60.0);
+			if(Math.abs(speed_y) <= max_speed_y) {
+			speed_y += velocity_y * (1.0/30.0);
 			}
 		}
 	}
-
+	
+	public void setLocation(Point p) {
+		sprite.setLocation(p.x,p.y);
+	}
 	private void MovePlayer() {
 		
 		
@@ -189,36 +240,59 @@ public class Player {
 			jumping = true;
 		//	velocity_y = 0;
 		//	System.out.println("jumping");
+		
+			sticky = false;
 			
 		
-		} else {
+		} else if(!inputHandler.W.isPressed()) {
+			//ignore_W = true;
 			jumping = false;
 		//	System.out.println("not jumping");
 		}
 		if(inputHandler.A.isPressed()) {
-			velocity_x += -velocity_change; 
-			if(speed_x > 3) speed_x = 3;
-			speed_x_change = 0;
+			
+			
+			//bug_fix, ha nem csinalnank,vegig lehetne csuzni a falon felfele collosion miatt
+			if(stick_dir != STICK_DIR.RIGHT) {
+				velocity_x += -velocity_change; 
+				if(speed_x > 3) speed_x = 3;
+				speed_x_change = 0;
+			}
+			
+			
+			//if(sticky)	sticky = false;
 		}
 		if(inputHandler.S.isPressed()) {
-			velocity_y += velocity_change;
+		//	velocity_y += velocity_change;
 			
 		}
 		if(inputHandler.D.isPressed()) {
-			velocity_x += velocity_change;
-			if(speed_x < -3)	speed_x = -3;
-			speed_x_change = 0;
+		
+			//bug_fix, ha nem csinalnank,vegig lehetne csuzni a falon felfele collosion miatt
+			if(stick_dir != STICK_DIR.LEFT) {
+				velocity_x += velocity_change;
+				if(speed_x < -3)	speed_x = -3;
+				speed_x_change = 0;
+			}
+			
+	//		if(sticky) sticky = false;
 			
 		}
-	/*	if(inputHandler.SHIFT.isPressed()) {
+		if(inputHandler.SHIFT.isPressed() && !ignore_SHIFT) {
 			max_velocity_x  = max_velocity_x * 1.5;
 			max_velocity_y  = max_velocity_y * 1.5;
-		} else {
+			max_speed_x		= max_speed_x * 1.5;
+			max_speed_y 	= max_speed_y * 1.5;
+			ignore_SHIFT = true;
+		} else if(!inputHandler.SHIFT.isPressed()) {
+			max_speed_x		= max_speed_x_default;
+			max_speed_y		= max_speed_y_default;
+			ignore_SHIFT = false;
 			max_velocity_x  = max_velocity_x_default;
-			max_velocity_y  = max_velocity_x_default;
+			max_velocity_y  = max_velocity_y_default;
 		}
 		
-	*/
+	
 	}
 	
 	public void draw(Graphics g) {
