@@ -18,7 +18,7 @@ public class DrawableEntity extends Entity implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Sprite sprite;
+	protected Sprite sprite;
 	
 	
 	public DrawableEntity(String string, int x, int y, boolean b) {
@@ -34,12 +34,14 @@ public class DrawableEntity extends Entity implements Serializable {
 	public void draw(Graphics g) {
 		sprite.draw(g);
 	}
+	/*a
 	public EntityType getType() {
 		return super.getType();
-	}
+	}*/
 	
 	 private void writeObject(ObjectOutputStream stream)
 		        throws IOException {
+		
 		 		stream.writeObject(entityType);
 		 		stream.writeObject(sprite);
 		 		

@@ -8,9 +8,13 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Iterator;
 
+import com.vjmp.entities.Entity.EntityType;
 import com.vjmp.entities.drawable.DrawableEntity;
+import com.vjmp.entities.drawable.TriggerEntity;
 import com.vjmp.gfx.Camera;
 import com.vjmp.managers.DrawableEntityManager;
+import com.vjmp.managers.GameDrawableEntityManager;
+import com.vjmp.managers.TriggerEntityManager;
 
 public class Map implements Iterable<DrawableEntity>,Serializable {
 	/**
@@ -19,11 +23,13 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 	private static final long serialVersionUID = 1L;
 	private	int	WIDTH;
 	private int HEIGHT;
-	private DrawableEntityManager entityManager;
+	private DrawableEntityManager entityManager = null;
+	private TriggerEntityManager triggerEntityManager = null;
 	private boolean isEditor = false;
 	
 	public Map(int width,int height) {
 		entityManager = new DrawableEntityManager();
+		triggerEntityManager = new TriggerEntityManager(false);
 		WIDTH = width;
 		HEIGHT= height;
 	//	GenerateMap(100);
@@ -31,23 +37,30 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 		entityManager.add(new DrawableEntity("./res/debug_platform.png",0,HEIGHT-25,true));
 	}
 	public Map(int width,int height,boolean iseditor) {
-		entityManager = new DrawableEntityManager();
+		
 		WIDTH = width;
 		HEIGHT= height;
 		isEditor = iseditor;
 	//	GenerateMap(100);
 	//	GenerateTest2(120);
+		entityManager = new DrawableEntityManager();
+		triggerEntityManager = new TriggerEntityManager(iseditor);
+		
 		entityManager.add(new DrawableEntity("./res/debug_platform.png",0,HEIGHT-25,true));
 	}
 	
 	public Map(Map map,boolean isEditor) {
-		entityManager = new DrawableEntityManager(map.entityManager);
+		
 		WIDTH = map.WIDTH;
 		HEIGHT = map.HEIGHT;
 		this.isEditor = isEditor;
-	}
+		entityManager = new DrawableEntityManager(map.entityManager);
+		triggerEntityManager = new TriggerEntityManager(map.triggerEntityManager,false);
+		
+}
 	public void draw(Graphics g) {
 		entityManager.DrawSprites(g);
+		triggerEntityManager.DrawSprites(g);
 	}
 
 	public void GenerateMap(int n) {
@@ -133,7 +146,9 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 		}	else {
 			UpdateEditorSprites(camera.pos_y);
 		}
-	}
+		triggerEntityManager.update(camera);
+		
+}
 	
 
 
@@ -156,9 +171,16 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 			}
 		}
 	}
+	public TriggerEntityManager getTriggerEntityManager() {
+		return triggerEntityManager;
+	}
 	
 	public void add(DrawableEntity sprite) {
-		entityManager.add(sprite);
+		if(sprite.getType() == EntityType.TRIGGER) {
+		triggerEntityManager.add((TriggerEntity)sprite);
+		} else {
+			entityManager.add(sprite);
+		}
 	}
 	
 	 private void writeObject(ObjectOutputStream stream)
@@ -167,7 +189,7 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 		stream.writeInt(HEIGHT);
 		stream.writeBoolean(isEditor);
 		 stream.writeObject(entityManager);
-		 
+		 stream.writeObject(triggerEntityManager);
 		 
 	 }
 	 private void readObject(ObjectInputStream in)
@@ -177,8 +199,9 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 		 WIDTH = in.readInt();
 		 HEIGHT = in.readInt();
 		 isEditor = in.readBoolean();
-		 entityManager = (DrawableEntityManager)in.readObject();  
-		 
+		 entityManager = (DrawableEntityManager)in.readObject();
+		 triggerEntityManager = (TriggerEntityManager)in.readObject();
+		 System.out.println("COmpltete");
 	 }
 	public void remove(Rectangle rect) {
 		entityManager.remove(rect);

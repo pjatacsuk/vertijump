@@ -18,23 +18,29 @@ import com.vjmp.InputHandler.Buttons;
 import com.vjmp.Map;
 import com.vjmp.entities.drawable.DrawableEntity;
 import com.vjmp.entities.drawable.FinishLine;
+import com.vjmp.entities.drawable.TriggerEntity;
 import com.vjmp.gfx.Camera;
-import com.vjmp.gfx.Sprite;
 public class Editor implements Serializable,ActionListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Map map= null;
+	private static final int  BLOCK_SIZE = 15;
 	private static int sprite_index = 0;
 	private static DrawableEntity player = null;
+	private static InputHandler.Buttons mouse_button = Buttons.NONE;
+	
+	private Map map= null;
 	private TextureList textureList = null;
+	private boolean polling_for_mouse_release = true;
+	
+	
+	
 	transient private InputHandler inputHandler=null;
-	private static final int  BLOCK_SIZE = 15;
 	transient private Point old_mouse_coord = null;
 	
-	private boolean polling_for_mouse_release = true;
-	private static InputHandler.Buttons mouse_button = Buttons.NONE;
+	
+	
 	
 	
 	public Editor(InputHandler inputHandler,int WIDTH,int HEIGHT) {
@@ -58,7 +64,7 @@ public class Editor implements Serializable,ActionListener {
 	    	}
 	    }
 	    else if(textureList.GetPath(sprite_index).equals("./res/block_brown.png")) {
-	    	map.add(new FinishLine(textureList.GetPath(sprite_index),rect,false));
+	    	map.add(new FinishLine(textureList.GetPath(sprite_index),rect,true));
 	    	
 	    }  else {
 		map.add(new DrawableEntity(textureList.GetPath(sprite_index),rect,true));

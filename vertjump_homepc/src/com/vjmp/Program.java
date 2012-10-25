@@ -20,7 +20,7 @@ public class Program {
 					line = "game";
 				} else {
 					line = null;
-				}
+				} 
 			
 			}
 	}

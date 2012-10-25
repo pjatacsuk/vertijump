@@ -6,6 +6,8 @@ import java.awt.Rectangle;
 
 import com.vjmp.entities.Entity.EntityType;
 import com.vjmp.entities.drawable.DrawableEntity;
+import com.vjmp.entities.drawable.TriggerEntity;
+import com.vjmp.entities.drawable.TriggerEntity.TriggerType;
 import com.vjmp.gfx.Sprite;
 
 public class Player {
@@ -72,16 +74,32 @@ public class Player {
 		for(DrawableEntity s : map) {
 			
 			if(sprite.getRect().intersects(s.getRect())) {
-				if(s.getType() == EntityType.FINISH_LINE) {
-					System.out.println("Finish!!!");
-				}
-				if(s.isVisible()) {
+				if(s.getType() == EntityType.TRIGGER) {
+					HandleTriggerPlaceHolder(s);
+				} else if(s.isVisible()) {
 				Collosion(s.getRect());
 				}
 			}
 			
 		}
+		for(TriggerEntity t : map.getTriggerEntityManager() ) {
+			if(sprite.getRect().intersects(t.getRect())) {
+				t.activateTrigger();
+			} else {
+				t.disactivateTrigger();
+			}
+		}
 		
+	}
+	
+	
+//TODO TRIGGERHANDLER
+	
+	private void HandleTriggerPlaceHolder(DrawableEntity s) {
+		TriggerEntity tmp =(TriggerEntity)s;
+		if(tmp.getTriggerType() == TriggerType.FINISH_LINE) {
+			System.out.println("Finish!!!");
+		}
 	}
 
 	private void Collosion(Rectangle rect) {

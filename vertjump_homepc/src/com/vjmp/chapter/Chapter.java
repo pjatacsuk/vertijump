@@ -28,7 +28,7 @@ public class Chapter {
 	public Chapter(InputHandler inputHandler,int WIDTH,int HEIGHT,String map_path) {
 			player = new Player(inputHandler);
 			camera = new Camera(WIDTH,HEIGHT);
-			map = new Map(WIDTH,HEIGHT);
+			map = new Map(WIDTH,HEIGHT,true);
 			
 			this.WIDTH = WIDTH;
 			this.HEIGHT = HEIGHT;
@@ -60,6 +60,7 @@ public class Chapter {
 			 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
 			 Editor editor = (Editor)ois.readObject();
 			 map = new Map(editor.getMap(),false);
+			 
 			 player.setLocation(editor.GetPlayerLocation());
 			 camera.pos_y =0;
 			 ois.close();

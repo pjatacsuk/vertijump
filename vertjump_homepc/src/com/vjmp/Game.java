@@ -105,7 +105,7 @@ public class Game extends Canvas implements Runnable {
 			running = false;
 		}
 		if(inputHandler.P.isPressed()) {
-			
+			chapter = new Chapter(inputHandler,WIDTH*SCALE,HEIGHT*SCALE,"./res/map.txt");
 		}
 		
 	}
@@ -117,7 +117,6 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 		Graphics g = strat.getDrawGraphics();
-		
 		chapter.draw(g);
 		//spriteManager.DrawSprites(g);
 		

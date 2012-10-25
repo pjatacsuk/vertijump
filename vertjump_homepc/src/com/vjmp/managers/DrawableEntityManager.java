@@ -23,6 +23,7 @@ public class DrawableEntityManager extends EntityManager<DrawableEntity> {
 
 	public void DrawSprites(Graphics g) {
 		for(DrawableEntity drawable : this.list) {
+			
 			drawable.draw(g);
 		}
 		

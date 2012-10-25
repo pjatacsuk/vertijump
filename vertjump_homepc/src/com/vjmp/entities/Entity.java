@@ -2,10 +2,10 @@ package com.vjmp.entities;
 
 
 public class Entity {
-	public enum EntityType{BLOCK,FINISH_LINE,SPAWN_POINT};
+	public enum EntityType{BLOCK,FINISH_LINE,TRIGGER};
 	protected EntityType entityType;
 	
-	protected EntityType getType() {
+	public EntityType getType() {
 		return entityType;
 	}
 }
