@@ -10,13 +10,13 @@ import java.io.ObjectInputStream;
 
 import javax.imageio.ImageIO;
 
-import com.vjmp.HighScore;
 import com.vjmp.InputHandler;
 import com.vjmp.Map;
 import com.vjmp.Player;
 import com.vjmp.editor.Editor;
 import com.vjmp.gfx.Camera;
 import com.vjmp.managers.ChapterHighScoreManager;
+import com.vjmp.utilities.HighScore;
 
 public class Chapter {
 	public enum ChapterState{FINISHED,DIED,RUNNING,STALLING};

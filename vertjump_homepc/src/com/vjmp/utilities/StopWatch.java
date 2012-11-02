@@ -1,4 +1,4 @@
-package com.vjmp;
+package com.vjmp.utilities;
 
 public class StopWatch {
 	private long timeSpent = 0;

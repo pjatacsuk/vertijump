@@ -1,4 +1,4 @@
-package com.vjmp;
+package com.vjmp.utilities;
 
 public class Timer {
 	private long startTime = 0;

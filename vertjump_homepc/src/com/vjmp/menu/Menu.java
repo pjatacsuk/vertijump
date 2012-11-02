@@ -218,7 +218,7 @@ public abstract class Menu extends GameMenuItem{
 	}
 	protected void switchToNextScreen() {
 		if(camera.pos_x > (-1 * nextMenu.distanceFromRoot*game.getWidth())) {
-				camera.pos_x -= 10;
+				camera.pos_x -= 15;
 		} else {
 			isMenuActive = false;
 			switchScreenState = SwitchScreenState.NONE;
@@ -230,7 +230,7 @@ public abstract class Menu extends GameMenuItem{
 	
 	protected void switchToPrevScreen() {
 		if(camera.pos_x < (-1 * prevMenu.distanceFromRoot*game.getWidth())) {
-				camera.pos_x += 10;
+				camera.pos_x += 15;
 		} else {
 			isMenuActive = false;
 			switchScreenState = SwitchScreenState.NONE;

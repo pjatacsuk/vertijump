@@ -1,4 +1,4 @@
-package com.vjmp;
+package com.vjmp.utilities;
 
 import java.awt.Font;
 import java.awt.Graphics;
