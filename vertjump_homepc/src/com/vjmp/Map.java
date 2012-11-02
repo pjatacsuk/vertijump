@@ -205,6 +205,7 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 	 }
 	public void remove(Rectangle rect) {
 		entityManager.remove(rect);
+		triggerEntityManager.remove(rect);
 	}
 	 
 }

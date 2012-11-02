@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import com.vjmp.entities.Entity;
 import com.vjmp.gfx.Sprite;
+import com.vjmp.gfx.Sprite.Dir;
 
 
 public class DrawableEntity extends Entity implements Serializable {
@@ -29,6 +30,12 @@ public class DrawableEntity extends Entity implements Serializable {
 	public DrawableEntity(String path, Rectangle rect, boolean b) {
 		entityType = entityType.BLOCK;
 		sprite = new Sprite(path,rect,b);
+	}
+
+	public DrawableEntity(String path, Rectangle rect, boolean b,
+			boolean[] walls) {
+		entityType = entityType.BLOCK;
+		sprite = new Sprite(path,rect,b,walls);
 	}
 
 	public void draw(Graphics g) {
@@ -75,14 +82,21 @@ public class DrawableEntity extends Entity implements Serializable {
 	}
 
 	public int GetHeight() {
-		return sprite.GetHeight();
+		return sprite.getRectHeight();
 	}
 
 	public Rectangle getRect() {
 		return sprite.getRect();
 	}
+	public boolean intersects(Rectangle rect){
+		return sprite.getRect().intersects(rect);
+	}
 
 	public boolean isVisible() {
 		return sprite.isVisible();
+	}
+
+	public boolean getWall(Dir dir) {
+		return	sprite.GetWall(dir);
 	}
 }

@@ -2,25 +2,22 @@ package com.vjmp;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
-import com.vjmp.chapter.Chapter;
-import com.vjmp.editor.Editor;
 import com.vjmp.gfx.Camera;
+import com.vjmp.managers.ChapterManager;
 import com.vjmp.managers.EntityManager;
+import com.vjmp.menu.MainMenu;
 
 public class Game extends Canvas implements Runnable {
+	public enum GameState{MENU,NEWGAME,RESUMEGAME,RUNGAME};
+	
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -30,15 +27,19 @@ public class Game extends Canvas implements Runnable {
 	public static final String NAME = "VertiJump - The Game";
 	public static 		boolean running = true;
 	
-    private static Chapter chapter = null;
+    private static boolean gameStarted = false;
+	private static ChapterManager chapterManager = null;
 	private static InputHandler inputHandler = null;
 	private static EntityManager spriteManager;
-	
+	private static String frame_tick = null;
+	private static MainMenu menu = null;
+	private static GameState gameState = GameState.MENU;
 	
 	
 	private JFrame frame;
 	
 	public Game() {
+		
 		setMinimumSize(new Dimension(WIDTH * SCALE,HEIGHT*SCALE));
 		setMaximumSize(new Dimension(WIDTH * SCALE,HEIGHT*SCALE));
 		setPreferredSize(new Dimension(WIDTH * SCALE,HEIGHT*SCALE));
@@ -59,12 +60,15 @@ public class Game extends Canvas implements Runnable {
 		int x = (dim.width - WIDTH*2*SCALE)/2 - 50;
 		int y = (dim.height - HEIGHT*SCALE)/2;
 		frame.setLocation(x, y);
+		
+		
 
 	}
 	
 	public synchronized void start() {
 		running = true;
 		init();
+		
 		new Thread(this).start();
 	}
 	
@@ -72,40 +76,60 @@ public class Game extends Canvas implements Runnable {
 		
 		spriteManager = new EntityManager();
 		inputHandler = new InputHandler(this);
-		chapter = new Chapter(inputHandler,WIDTH * SCALE,HEIGHT * SCALE,"./res/map.txt");
+		chapterManager = new ChapterManager("./res/map_list.txt",inputHandler,WIDTH * SCALE,HEIGHT * SCALE);
+		menu = new MainMenu(this, null, new Camera(getWidth(),getHeight()));
 	}
 	
 	public void tick() {
-	//	placeHolderLogick();
-		chapter.update();
+		
+		
+		switch(gameState) {
+		case MENU:
+			menu.update();
+			break;
+		case RESUMEGAME:
+		case NEWGAME:			
+			break;
+		case RUNGAME:
+			chapterManager.update();
+			break;
+			
+		}
+		updateGameState();
 		placeHolderLogic();
 		
 	}
 	
 	
-	
-	private void placeHolderLogic() {
-		if(inputHandler.W.isPressed()) {
-			//player.move(0, -10);
+	private void updateGameState() {
+		switch(gameState){
+		case NEWGAME:
+			chapterManager.resetChapterManager();
+			gameState = GameState.RUNGAME;
+			gameStarted = true;
+			break;
+		case RESUMEGAME:
+			chapterManager.resetChapter();
+			gameState = GameState.RUNGAME;
+			break;
+		case RUNGAME:
+			//running
+			break;
+		}
 		
-		}
-		if(inputHandler.A.isPressed()) {
-			//player.move(-10,0);
+	}
+
+	public InputHandler getInputHandler() {
+		return inputHandler;
+	}
+	private void placeHolderLogic() {
 	
-		}
-		if(inputHandler.S.isPressed()) {
-			//player.move(0, 10);
-			
-		}
-		if(inputHandler.D.isPressed()) {
-			//player.move(10, 0);
-			
-		}
 		if(inputHandler.ESC.isPressed()) {
-			running = false;
+			gameState = GameState.MENU;
+			
 		}
 		if(inputHandler.P.isPressed()) {
-			chapter = new Chapter(inputHandler,WIDTH*SCALE,HEIGHT*SCALE,"./res/map.txt");
+			chapterManager.resetChapter();
 		}
 		
 	}
@@ -117,8 +141,21 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 		Graphics g = strat.getDrawGraphics();
-		chapter.draw(g);
-		//spriteManager.DrawSprites(g);
+	
+		switch(gameState) {
+		case MENU:
+	//		g.setColor(new Color(17,23,26));
+	//		g.fillRect(0, 0, getWidth(),getHeight());
+			menu.draw(g);
+		break;
+		case NEWGAME:	
+		case RESUMEGAME:
+			break;
+		case RUNGAME:
+			chapterManager.draw(g);
+			break;
+		}
+		
 		
 		g.dispose();
 		
@@ -155,17 +192,33 @@ public class Game extends Canvas implements Runnable {
 				frames++;
 				render();
 			}
-			/*
+			
 			if(System.currentTimeMillis() - lastTimer >= 1000) {
 				lastTimer += 1000;
 				System.out.println(frames + " " + ticks);
 				frames = 0;
 				ticks = 0;
 			}
-			*/
+			
 		}
 		
 	}
+
+	public void setState(GameState gameState) {
+		this.gameState = gameState;
+	}
+
+	public static boolean isGameStarted() {
+		return gameStarted;
+	}
+
+	public static void setGameStarted(boolean gameStarted) {
+		Game.gameStarted = gameStarted;
+	}
+
 	
+	public ChapterManager getChapterManager() {
+		return chapterManager;
+	}
 	
 }

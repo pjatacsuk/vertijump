@@ -19,14 +19,17 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 	public class Key {
 		private boolean pressed = false;
 		private boolean pressed_and_released = false;
+		private boolean previous_state;
 		
 		Key() {
 			
 		}
 		
 		public void setPressed(boolean press) {
-			pressed = press ;
+			previous_state = pressed;
+			pressed = press;
 			if(pressed) pressed_and_released = true;
+	
 			
 		}
 		public boolean isPressed() {
@@ -42,6 +45,14 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 				else {
 					return false;
 				}
+			} else {
+				return false;
+			}
+		}
+		public boolean isPressedOnce() {
+			if(pressed == true && previous_state == false){
+				pressed = false;
+				return true;
 			} else {
 				return false;
 			}
@@ -123,8 +134,10 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 	public Key P = new Key();
 	public Key SHIFT = new Key();
 	public Key ESC = new Key();
+	public Key ENTER = new Key();
 	
 	public Mouse MOUSE = new Mouse();
+	
 	
 	public InputHandler(Game game) {
 		game.addKeyListener(this);
@@ -177,6 +190,9 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 		}
 		if(keyCode == KeyEvent.VK_ESCAPE) {
 			ESC.setPressed(isPressed);
+		}
+		if(keyCode == KeyEvent.VK_ENTER){
+			ENTER.setPressed(isPressed);
 		}
 	}
 	@Override

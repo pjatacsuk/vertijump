@@ -1,6 +1,6 @@
 package com.vjmp.editor;
 
-import java.awt.Dimension;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -12,14 +12,21 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JTextField;
 
 import com.vjmp.InputHandler;
 import com.vjmp.InputHandler.Buttons;
 import com.vjmp.Map;
+import com.vjmp.entities.Entity.EntityType;
 import com.vjmp.entities.drawable.DrawableEntity;
 import com.vjmp.entities.drawable.FinishLine;
+import com.vjmp.entities.drawable.MessageBox;
+import com.vjmp.entities.drawable.SpikeTrigger;
 import com.vjmp.entities.drawable.TriggerEntity;
+import com.vjmp.entities.drawable.TriggerEntity.TriggerType;
 import com.vjmp.gfx.Camera;
+import com.vjmp.managers.GuiManager;
 public class Editor implements Serializable,ActionListener {
 	/**
 	 * 
@@ -27,17 +34,22 @@ public class Editor implements Serializable,ActionListener {
 	private static final long serialVersionUID = 1L;
 	private static final int  BLOCK_SIZE = 15;
 	private static int sprite_index = 0;
+	private static EntityType entityType = EntityType.BLOCK;
 	private static DrawableEntity player = null;
 	private static InputHandler.Buttons mouse_button = Buttons.NONE;
 	
-	private Map map= null;
+	private Map map = null;
 	private TextureList textureList = null;
 	private boolean polling_for_mouse_release = true;
+	private static String MessageString = null;
+	private static TriggerType triggerType;
 	
+	private GuiManager guiManager = null;
 	
 	
 	transient private InputHandler inputHandler=null;
 	transient private Point old_mouse_coord = null;
+	
 	
 	
 	
@@ -52,10 +64,11 @@ public class Editor implements Serializable,ActionListener {
 	public void setInputHandler(InputHandler inputHandler) {
 		this.inputHandler = inputHandler;
 	}
-	
+	public void setComponentManager(GuiManager componentManager){
+		this.guiManager = componentManager;
+	}
 	public void addSprite(Rectangle rect) {
-	
-		
+			
 	    if(textureList.GetPath(sprite_index).equals("./res/spooky.png")){
 	    	if(player == null) {
 	    		player = new DrawableEntity("./res/spooky.png",rect.x,rect.y,true);
@@ -63,17 +76,52 @@ public class Editor implements Serializable,ActionListener {
 	    		player.setLocation(rect.x,rect.y);
 	    	}
 	    }
-	    else if(textureList.GetPath(sprite_index).equals("./res/block_brown.png")) {
-	    	map.add(new FinishLine(textureList.GetPath(sprite_index),rect,true));
-	    	
-	    }  else {
-		map.add(new DrawableEntity(textureList.GetPath(sprite_index),rect,true));
+	    else {
+	    	DrawableEntity drawableEntity = GetDrawableEnityTypeFromSpriteIndex(rect);
+	    	if(drawableEntity != null) {
+	    	map.add(drawableEntity);
+	    	} else {
+	    		System.out.println("HIBA!");
+	    	}
 	    }
+	}
+	private DrawableEntity GetDrawableEnityTypeFromSpriteIndex(Rectangle rect) {
+		
+		DrawableEntity ret = null;
+		switch(entityType) {
+		case BLOCK:
+			ret = new DrawableEntity(textureList.GetPath(sprite_index),rect,true,guiManager.getWalls());
+			break;
+		case TRIGGER:
+			ret = GetTriggerEntityFromType(rect);
+			break;
+		}
+		
+		return ret;
+	
+	}
+	private DrawableEntity GetTriggerEntityFromType(Rectangle rect) {
+		TriggerEntity ret = null;
+		switch(triggerType) {
+		case SPIKE:
+			ret = new SpikeTrigger(textureList.GetPath(sprite_index),rect,true,guiManager.getWalls());
+			break;
+		case FINISH_LINE:
+			ret = new FinishLine(textureList.GetPath(sprite_index),rect,true);
+			break;
+		case MESSAGE_BOX:
+			ret = new MessageBox(MessageString,textureList.GetPath(sprite_index),rect,true,guiManager.getWalls());
+		
+			break;
+		}
+		return ret;
 	}
 	public void update(Camera camera) {
 		map.update(camera);
 		BlockLogic(camera);
-	
+		if(guiManager != null) {
+		guiManager.update();
+		}
 	}
 	
 	private void BlockLogic(Camera camera) {
@@ -103,6 +151,7 @@ public class Editor implements Serializable,ActionListener {
 	
 	private void removeSprite(Rectangle rect) {
 		map.remove(rect);
+		
 		
 	}
 	public Rectangle GenerateRectangleFromMouse(Camera camera) {
@@ -157,18 +206,10 @@ public class Editor implements Serializable,ActionListener {
 		 textureList = new TextureList();
 	 }
 	 public JComboBox GenerateTextureListComponent() {
-		    String textures_temp = "";
-		    for(int i=0;i<textureList.size();i++) {
-		    	textures_temp = textures_temp + i + " ";
-		    }
-		    String[] textures = textures_temp.split(" ");
-		    
-			JComboBox list = new JComboBox(textures);
-			ComboBoxRenderer renderer = new ComboBoxRenderer();
-			list.setRenderer(renderer);
-			list.setPreferredSize(new Dimension(100,100));
-			list.addActionListener(this);
-			return list;
+		 return guiManager.GenerateTextureListComponent(textureList.size(), this);
+	 } 
+	 public JComboBox GenerateEntityTypeComponent() {
+		  return guiManager.GenerateEntityTypeComponent(this);
 	 }
 	public Map getMap() {
 		return map;
@@ -176,18 +217,40 @@ public class Editor implements Serializable,ActionListener {
 	public Point GetPlayerLocation() {
 		return player.GetLocation();
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if(arg0.getActionCommand().equals("comboBoxChanged")) {
-			JComboBox c = (JComboBox)arg0.getSource();
-			sprite_index = c.getSelectedIndex();
-		 
-			
-		}
 		
+		if(arg0.getActionCommand().equals("comboBoxChanged")) {
+			guiManager.updateGuiState(arg0);
+			JComboBox c = (JComboBox)arg0.getSource();
+			if(c.getName().equals("Textures")) {
+				sprite_index = c.getSelectedIndex();
+			} else if(c.getName().equals("EntityType")) {
+				String type = (String) c.getSelectedItem();
+				if(type.equals("BLOCK")) {
+					entityType = EntityType.BLOCK;
+				} else if(type.equals("TRIGGER")) {
+					entityType = EntityType.TRIGGER;
+					JComboBox cb = (JComboBox) guiManager.getTriggerTypeBox();	
+					triggerType = guiManager.getTriggerType(cb);
+				}
+			} else if(c.getName().equals("TriggerType")) {
+				triggerType = guiManager.getTriggerType(c);
+			}
+			
+		} else  {
+			JComponent c = (JComponent)arg0.getSource();
+			if(c.getName().equals("MessageBoxField")) {
+				JTextField t = (JTextField)c;
+				MessageString = new String(t.getText());
+				
+			}
+		}
 	}
-	
-	
+	public Component GenerateTriggerListComponent() {
+		return guiManager.GenerateTriggerListComponent(this);
+	}
 	 
 
 

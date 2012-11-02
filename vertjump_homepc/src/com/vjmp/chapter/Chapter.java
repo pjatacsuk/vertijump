@@ -10,13 +10,18 @@ import java.io.ObjectInputStream;
 
 import javax.imageio.ImageIO;
 
+import com.vjmp.HighScore;
 import com.vjmp.InputHandler;
 import com.vjmp.Map;
 import com.vjmp.Player;
 import com.vjmp.editor.Editor;
 import com.vjmp.gfx.Camera;
+import com.vjmp.managers.ChapterHighScoreManager;
 
 public class Chapter {
+	public enum ChapterState{FINISHED,DIED,RUNNING,STALLING};
+	
+	
 	private Map map = null;
 	private Camera camera = null;
 	private Player player = null;
@@ -24,16 +29,30 @@ public class Chapter {
 	private static BufferedImage bg;
 	private int WIDTH = 0;
 	private int HEIGHT = 0;
+	private String path = null;
+	private HighScore highScore = null;
+	private ChapterHighScoreManager chapterHighScoreManager = null;
+	private String chapterName;
+
 	
-	public Chapter(InputHandler inputHandler,int WIDTH,int HEIGHT,String map_path) {
+	private ChapterState chapterState = ChapterState.STALLING;
+	
+	private TriggerHandler triggerHandler = null;
+	public boolean isReadyToUpdate = true;
+	
+	public Chapter(String name,InputHandler inputHandler,int WIDTH,int HEIGHT,String map_path) {
 			player = new Player(inputHandler);
 			camera = new Camera(WIDTH,HEIGHT);
 			map = new Map(WIDTH,HEIGHT,true);
-			
+			path = map_path;
+			chapterName = name;
 			this.WIDTH = WIDTH;
 			this.HEIGHT = HEIGHT;
 			this.inputHandler = inputHandler;
 			load_resource();
+			highScore = new HighScore(chapterName);
+			chapterHighScoreManager = new ChapterHighScoreManager(chapterName);
+		
 			try {
 				load(map_path);
 			} catch (FileNotFoundException e) {
@@ -46,6 +65,7 @@ public class Chapter {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 		}
+			
 	}
 	public void load_resource() {
 		bg = null;
@@ -57,19 +77,60 @@ public class Chapter {
 	
 	}
 	private void load(String path) throws FileNotFoundException, IOException, ClassNotFoundException {
+			 this.path = path;
 			 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
 			 Editor editor = (Editor)ois.readObject();
 			 map = new Map(editor.getMap(),false);
-			 
+			 triggerHandler = new TriggerHandler(this,map.getTriggerEntityManager());
+			 player = new Player(inputHandler);
 			 player.setLocation(editor.GetPlayerLocation());
 			 camera.pos_y =0;
 			 ois.close();
+			 start();
 	 }
-	 
+	 public void start() {
+		 chapterState = ChapterState.RUNNING;
+		 if(highScore == null) {
+		 	highScore = new HighScore(chapterName);
+		 }
+		 highScore.start();
+	 }
+	 public void stop() {
+		 highScore.stop();
+		 chapterHighScoreManager.add(new HighScore(chapterName,highScore.toString()));
+		 chapterHighScoreManager.saveToFile();
+	 }
+	 public void resetMap() {
+		  try {
+		
+			load(path);
+			start();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	 }
 	 public void update() {
+		 	triggerHandler.update();
 		 	player.update(map);
 			camera.update(player.GetPosX(), player.GetPosY());
 			map.update(camera);
+			highScore.update(camera);
+			updatePlayerFallDeath();
+	 }
+	 private void updatePlayerFallDeath() {
+		if(camera.pos_y + player.GetPosY() > HEIGHT + 10) {
+			resetMap();
+		}
+	}
+	public ChapterState getChapterState() { 
+		 return chapterState;
 	 }
 	 private void placeHolderLogic() {
 			if(inputHandler.W.isPressed()) {
@@ -124,7 +185,15 @@ public class Chapter {
 			//g.translate(0,0);
 			map.draw(g);
 			player.draw(g);
+			highScore.draw(g);
 			g.dispose();
 	 }
+	public void setChapterState(ChapterState state) {
+		chapterState = state;
+		
+	}
+	public String getName() {
+		return chapterName;
+	}
 	
 }

@@ -21,15 +21,19 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
+import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JTextField;
 
 import com.vjmp.InputHandler;
 import com.vjmp.gfx.Camera;
-import com.vjmp.managers.EntityManager;
+import com.vjmp.managers.GuiManager;
 
-public class MapEditor extends Canvas implements Runnable{
+public class MapEditor extends Canvas implements Runnable,ActionListener{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -45,7 +49,7 @@ public class MapEditor extends Canvas implements Runnable{
 	
 	private static Camera		camera;
 	private static Editor		editor;
-	
+	private File activeFile = null;
 	
 	
 	
@@ -70,11 +74,11 @@ public class MapEditor extends Canvas implements Runnable{
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weighty = 1.0;
-		c.gridheight = 2;
+		c.gridheight = 8;
 		c.weightx = 0.0;
 		c.fill = GridBagConstraints.VERTICAL;
 		frame.add(this,c);
-		
+	
 		c.gridx=1;
 		c.gridy=0;
 		c.gridheight = 1;
@@ -82,16 +86,70 @@ public class MapEditor extends Canvas implements Runnable{
 		
 		frame.getContentPane().add(editor.GenerateTextureListComponent(),c);
 		
-		
 		c.gridx=1;
 		c.gridy=1;
+		c.gridheight = 1;
+		c.weighty = 0.0;
+		
+		
+		frame.add(editor.GenerateEntityTypeComponent(),c);
+		
+		
+		
+		c.gridy = 2;
+		frame.getContentPane().add(editor.GenerateTriggerListComponent(),c);
+		
+		c.gridx=1;
+		c.gridy=3;
 		c.gridheight=1;
 		c.weighty = 0.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		
-		JButton b = new JButton("hello");
-		frame.getContentPane().add(b,c);
-		b.addActionListener(editor);
+		
+		JTextField t = new JTextField(10);
+		t.setName("MessageBoxField");
+		t.addActionListener(editor);
+		
+		frame.getContentPane().add(t,c);
+		
+		
+		JCheckBox c1 = new JCheckBox("North");
+		c1.setName("North");
+		JCheckBox c2 = new JCheckBox("West");
+		c2.setName("West");
+		JCheckBox c3 = new JCheckBox("South");
+		c3.setName("South");
+		JCheckBox c4 = new JCheckBox("East");
+		c4.setName("East");
+		frame.getContentPane().add(c1,c);
+		c.gridy=4;
+		frame.getContentPane().add(c2,c);
+		c.gridy=5;
+		frame.getContentPane().add(c3,c);
+		c.gridy=6;
+		frame.getContentPane().add(c4,c);
+		
+		
+		editor.setComponentManager(new GuiManager(frame));
+		
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("File"); 
+		menuBar.add(menu);
+		
+		JMenuItem open = new JMenuItem("Open");
+		open.setName("Open");
+		open.addActionListener(this);
+		menu.add(open);
+		
+		
+		JMenuItem save = new JMenuItem("Save");
+		save.setName("Save"); 
+		save.addActionListener(this);
+		menu.add(save); 
+		
+		
+		
+		frame.setJMenuBar(menuBar);
 		frame.pack();
 		
 		frame.setResizable(false);
@@ -103,6 +161,8 @@ public class MapEditor extends Canvas implements Runnable{
 		int x = dim.width - frame.getWidth() - 70;
 		int y = (dim.height - HEIGHT*SCALE)/2;
 		frame.setLocation(x, y);
+		
+	
 	}
 	
 	public synchronized void start() {
@@ -118,7 +178,19 @@ public class MapEditor extends Canvas implements Runnable{
 		inputHandler  = new InputHandler(this);
 	
 		camera		  = new Camera(WIDTH * SCALE,HEIGHT * SCALE);
-		editor		  = new Editor(inputHandler,WIDTH * SCALE,HEIGHT * SCALE);
+		try {
+			activeFile = new File("./res/map.txt");
+			load(activeFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		load_resource();
 		
 	
@@ -144,9 +216,10 @@ public class MapEditor extends Canvas implements Runnable{
 	private void handleOwnInput() {
 		try {
 			if(inputHandler.O.isPressedAndReleased()) {
-				save("./res/map.txt");
+				save(activeFile);
 			} else if(inputHandler.P.isPressedAndReleased()) {
-				load("./res/map.txt");
+				load(activeFile);
+				
 			}
 			if(inputHandler.ESC.isPressed()) {
 				running = false;
@@ -169,11 +242,25 @@ public class MapEditor extends Canvas implements Runnable{
 		 oos.writeObject(editor);
 		 oos.close();
 	 }
+	void save(File file) throws FileNotFoundException, IOException {
+		 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
+		 oos.writeObject(editor);
+		 oos.close();
+	 }
 	 void load(String path) throws FileNotFoundException, IOException, ClassNotFoundException {
 		 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
 		 editor = (Editor)ois.readObject();
 		 ois.close();
 		 editor.setInputHandler(inputHandler);
+		 editor.setComponentManager(new GuiManager(frame));
+		
+	 }
+	 void load(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
+		 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+		 editor = (Editor)ois.readObject();
+		 ois.close();
+		 editor.setInputHandler(inputHandler);
+		 editor.setComponentManager(new GuiManager(frame));
 		
 	 }
 	
@@ -248,6 +335,43 @@ public class MapEditor extends Canvas implements Runnable{
 				ticks = 0;
 			}*/
 			
+		}
+		
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		JMenuItem menuItem = (JMenuItem)arg0.getSource();
+		if(menuItem.getName().equals("Open")) {
+			JFileChooser fc = new JFileChooser("./");
+			int returnVal = fc.showOpenDialog(fc);
+			activeFile = fc.getSelectedFile();
+			try {
+				load(activeFile);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		} else if(menuItem.getName().equals("Save")) {
+			try {
+				JFileChooser fc = new JFileChooser("./");
+				int returnVal = fc.showOpenDialog(fc);
+				activeFile = fc.getSelectedFile();
+				save(activeFile);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 	}

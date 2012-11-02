@@ -18,11 +18,14 @@ public class Sprite implements Serializable {
 	/**
 	 * 
 	 */
+	public enum Dir{NORTH,WEST,EAST,SOUTH};
+	
 	private static final long serialVersionUID = 1L;
 	private int pos_x = 0;
 	private int pos_y = 0;
 	
 	private BufferedImage img = null;
+	private boolean[]	  wall = null;
 	private boolean       isVisible = true;
 	private Rectangle     rect = null;
 	private boolean		  marked = false;
@@ -41,7 +44,11 @@ public class Sprite implements Serializable {
 		pos_y = psy;
 		rect = new Rectangle(pos_x,pos_y,img.getWidth(),img.getHeight());
 		isVisible = visibility;
-		
+		wall = new boolean[4];
+		wall[getDirIndex(Dir.NORTH)] = false;
+		wall[getDirIndex(Dir.WEST)] = false;
+		wall[getDirIndex(Dir.SOUTH)] = false;
+		wall[getDirIndex(Dir.EAST)] = false;
 	}
 	public Sprite(String t_path,Rectangle t_rect,boolean visibility) {
 		img = null;
@@ -55,20 +62,50 @@ public class Sprite implements Serializable {
 		pos_x = rect.x;
 		pos_y = rect.y;
 		isVisible = visibility;
-	/*	BufferedImage before = img;
-		int w = before.getWidth();
-		int h = before.getHeight();
-		BufferedImage after = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-		AffineTransform at = new AffineTransform();
-		int scale_x = rect.width / w;
-		int scale_y = rect.height / h;
-		at.scale(scale_x, scale_y);
-		AffineTransformOp scaleOp = 
-		   new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-		after = scaleOp.filter(before,null);
-		img = after;*/
-		
-	//	System.out.println(after.getWidth() + " " + after.getHeight()+" "+scale_y);
+		wall = new boolean[4];
+		wall[getDirIndex(Dir.NORTH)] = false;
+		wall[getDirIndex(Dir.WEST)] = false;
+		wall[getDirIndex(Dir.SOUTH)] = false;
+		wall[getDirIndex(Dir.EAST)] = false;
+	}
+	public Sprite(String t_path,Rectangle t_rect,boolean visibility,boolean[] wall) {
+		img = null;
+		this.path = t_path;
+		this.rect = t_rect;
+		try {
+			img = ImageIO.read(new File(path));
+		} catch (IOException e) {
+			System.out.println("No image for you!");
+		}
+		pos_x = rect.x;
+		pos_y = rect.y;
+		isVisible = visibility;
+		this.wall = new boolean[4];
+		this.wall[getDirIndex(Dir.NORTH)] = wall[getDirIndex(Dir.NORTH)];
+		this.wall[getDirIndex(Dir.WEST)] = wall[getDirIndex(Dir.WEST)];
+		this.wall[getDirIndex(Dir.SOUTH)] = wall[getDirIndex(Dir.SOUTH)];
+		this.wall[getDirIndex(Dir.EAST)] = wall[getDirIndex(Dir.EAST)];
+	}
+	public static int getDirIndex(Dir dir) {
+		int ret = 0;
+		switch(dir) {
+		case NORTH:
+			ret = 0;
+			break;
+		case WEST:
+			ret = 1;
+			break;
+		case SOUTH:
+			ret = 2;
+			break;
+		case EAST:
+			ret = 3;
+			break;
+		}
+		return ret;
+	}
+	public boolean GetWall(Dir dir) {
+		return wall[getDirIndex(dir)];
 	}
 	public void TransformThisSpriteFromRect(String t_path,Rectangle t_rect) {
 		img = null;
@@ -106,6 +143,9 @@ public class Sprite implements Serializable {
 		rect = new Rectangle(pos_x,pos_y,img.getWidth(),img.getHeight());
 	}
 
+	public Sprite(Sprite sprite) {
+		
+	}
 	public void draw(Graphics g) {
 		if(img != null){
 			if(isVisible) { 
@@ -151,10 +191,10 @@ public class Sprite implements Serializable {
 		this.marked = marked;
 	}
 
-	public int GetWidth() {
+	public int getRectWidth() {
 		return rect.width;
 	}
-	public int GetHeight() {
+	public int getRectHeight() {
 		return rect.height;
 	}
 	
@@ -163,6 +203,9 @@ public class Sprite implements Serializable {
 		stream.writeUTF(path);
 		stream.writeObject(rect);
 		stream.writeBoolean(isVisible);
+		for(int i=0;i<4;i++) {
+			stream.writeBoolean(wall[i]);
+		}
 		/*stream.writeInt(rect.x);
 		stream.writeInt(rect.y);
 		stream.writeInt(rect.width);
@@ -176,6 +219,10 @@ public class Sprite implements Serializable {
 		 this.path= in.readUTF();
 		 this.rect = (Rectangle)in.readObject();
 		 this.isVisible = in.readBoolean();
+		 wall = new boolean[4];
+		 for(int i=0;i<4;i++) {
+				wall[i] = in.readBoolean();
+			} 
 		 this.pos_x = rect.x;
 		 this.pos_y = rect.y;
 		 img = null;
@@ -185,8 +232,7 @@ public class Sprite implements Serializable {
 				System.out.println("No image for you!");
 			}
 		
-		
-		 System.out.println("valami");
+			
 	 }
 	 public void setLocation(int x,int y) {
 		 pos_x = x;
@@ -202,6 +248,12 @@ public class Sprite implements Serializable {
 	}
 	public void setVisibility(boolean visibility) {
 		isVisible = visibility;
+	}
+	public int getImgHeight() {
+		return img.getHeight();
+	}
+	public int getImgWidth() {
+		return img.getWidth();
 	}
 
 

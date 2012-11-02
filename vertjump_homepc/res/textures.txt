@@ -1,5 +1,6 @@
 block_green.png
 block_brown.png
 block_blue.png
-block.png
+block_orange.png
+block_deepred.png
 spooky.png

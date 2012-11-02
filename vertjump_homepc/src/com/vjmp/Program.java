@@ -31,8 +31,8 @@ public class Program {
 			game.start();
 			
 		}else if(words[0].equals("mapeditor")) {
-			editor = new MapEditor();
-			editor.start();
+		//	editor = new MapEditor();
+		//	editor.start();
 		}
 		
 	}
