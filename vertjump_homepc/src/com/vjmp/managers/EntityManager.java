@@ -28,18 +28,18 @@ public class EntityManager<T> implements Iterable<T>,Serializable {
 		list = new ArrayList<T>(spriteManager.list);
 	}
 
-	public void add(T entity) {
+	public synchronized void add(T entity) {
 		list.add(entity);
 	}
-	public T get(int i) {
+	public  synchronized T get(int i) {
 		return list.get(i);
 		
 	}
 	
-	public void remove(int i) {
+	public  synchronized void remove(int i) {
 		list.remove(i);
 	}
-	public T pop(int i) {
+	public  synchronized T pop(int i) {
 		T ret = list.get(i);
 		list.remove(i);
 		return ret;
@@ -48,19 +48,19 @@ public class EntityManager<T> implements Iterable<T>,Serializable {
 	
 	
 
-	public T getLast() {
+	public  synchronized T getLast() {
 		if(list.isEmpty()) return null;
 		return list.get(list.size()-1);
 	}
-	public int size() {
+	public  synchronized int size() {
 		return list.size();
 	}
 
 	@Override
-	public Iterator<T> iterator() {
+	public  synchronized Iterator<T> iterator() {
 		return list.iterator();
 	}
-	 private void writeObject(ObjectOutputStream stream)
+	 private  synchronized void writeObject(ObjectOutputStream stream)
 		        throws IOException {
 		 stream.writeInt(list.size());
 		 for(T entity : list) {
@@ -69,7 +69,7 @@ public class EntityManager<T> implements Iterable<T>,Serializable {
 		 
 		 
 	 }
-	 private void readObject(ObjectInputStream in)
+	 private  synchronized void readObject(ObjectInputStream in)
 			 throws IOException, ClassNotFoundException {
 		 
 		System.out.println("spriteManagaer");

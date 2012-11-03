@@ -1,6 +1,7 @@
 package com.vjmp.managers;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -25,10 +26,13 @@ public class ChapterHighScoreManager {
 		try {
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					new FileInputStream("./res/hs/" + chapterPath + ".txt")));
+			int count = 0;
 			String line = br.readLine();
-			while(line != null) {
+			count++;
+			while(line != null && count <= 100) {
 				highscore_list.add(new HighScore(chapterName,line));
 				line = br.readLine();
+				count++;
 			}
 			br.close();
 			
@@ -41,10 +45,6 @@ public class ChapterHighScoreManager {
 			e.printStackTrace();
 		}
 		
-		Collections.sort(highscore_list);
-		for(HighScore  hs :highscore_list) {
-			System.out.println(hs);
-		}
 
 	}
 	public void add(HighScore hs) {
@@ -53,9 +53,16 @@ public class ChapterHighScoreManager {
 	}
 	
 	public void saveToFile() {
+		//mivel mindig csak a legjobb 100-at olvassuk be, ezert max 100 highscore-t mentunk
 		String chapterPath = chapterName.replace(" ","");
 		try {
-			PrintWriter pw = new PrintWriter(new FileWriter("./res/hs/"+chapterPath+".txt"));
+			//felulirjuk a file-t
+			String file_path = "./res/hs/"+chapterPath+".txt";
+			File file = new File(file_path);
+			file.delete();
+			
+			PrintWriter pw = new PrintWriter(new FileWriter(file_path));
+			
 			for(HighScore hs : highscore_list) {
 				pw.println(hs);
 			}
@@ -65,6 +72,18 @@ public class ChapterHighScoreManager {
 			e.printStackTrace();
 		}
 	
+	}
+	public String[] getHighScores(int n) {
+		String[] ret = new String[n];
+		for(int i=0;i<n;i++) {
+			if(i >= highscore_list.size()){
+				ret[i] = new String("-.--");
+			} else {
+				ret[i] = highscore_list.get(i).toString();
+			}
+		}
+		
+		return ret;
 	}
 	
 }

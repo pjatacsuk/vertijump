@@ -27,6 +27,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import com.vjmp.InputHandler;
@@ -241,11 +242,13 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
 		 oos.writeObject(editor);
 		 oos.close();
+		 JOptionPane.showMessageDialog(frame,"Saved map to \"./res/" + path +"\"");
 	 }
 	void save(File file) throws FileNotFoundException, IOException {
 		 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
 		 oos.writeObject(editor);
 		 oos.close();
+		 JOptionPane.showMessageDialog(frame,"Saved map to \"./res/" + file.getName() + "\"");
 	 }
 	 void load(String path) throws FileNotFoundException, IOException, ClassNotFoundException {
 		 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
@@ -253,6 +256,7 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		 ois.close();
 		 editor.setInputHandler(inputHandler);
 		 editor.setComponentManager(new GuiManager(frame));
+		 JOptionPane.showMessageDialog(frame,"Loaded map from \"./res/" + path +"\"");
 		
 	 }
 	 void load(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -261,7 +265,7 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		 ois.close();
 		 editor.setInputHandler(inputHandler);
 		 editor.setComponentManager(new GuiManager(frame));
-		
+		 JOptionPane.showMessageDialog(frame,"Loaded map from \"./res/" + file.getName() + "\"");
 	 }
 	
 

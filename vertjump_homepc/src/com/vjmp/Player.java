@@ -75,9 +75,10 @@ public class Player {
 		// }
 	}
 
-	private void CheckCollosion(Map map) {
+	private synchronized void CheckCollosion(Map map) {
 	
 		for (TriggerEntity t : map.getTriggerEntityManager()) {
+			
 			if (t.intersects(sprite.getRect())) {
 				TriggerCollosion(t);
 			} else {
@@ -86,11 +87,13 @@ public class Player {
 		}
 
 		for (DrawableEntity s : map) {
-			if (s.intersects(sprite.getRect())) {
-				if (s.getType() == EntityType.TRIGGER) {
-					HandleTriggerPlaceHolder(s);
-				} else if (s.isVisible()) {
-					Collosion(s);
+			if(s.isVisible()) {
+				if (s.intersects(sprite.getRect())) {
+					if (s.getType() == EntityType.TRIGGER) {
+						HandleTriggerPlaceHolder(s);
+					} else if (s.isVisible()) {
+						Collosion(s);
+					}
 				}
 			}
 
@@ -279,9 +282,10 @@ public class Player {
 		// kezeljuk
 
 		if (inputHandler.W.isPressed() && !ignore_W) {
+			
 			jumping = true;
 			// velocity_y = 0;
-			// System.out.println("jumping");
+//			 System.out.println("jumping");
 
 			sticky = false;
 
@@ -322,6 +326,7 @@ public class Player {
 
 		}
 		if (inputHandler.SHIFT.isPressed() && !ignore_SHIFT) {
+
 			max_velocity_x = max_velocity_x * 1.5;
 			max_velocity_y = max_velocity_y * 1.5;
 			max_speed_x = max_speed_x * 1.5;

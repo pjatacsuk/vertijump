@@ -22,7 +22,7 @@ public GameDrawableEntityManager() {
 }
 
 @Override
-	public void DrawSprites(Graphics g) {
+	public synchronized void DrawSprites(Graphics g) {
 
 		for(DrawableEntity drawable : list) {
 			if(drawable.getType() != EntityType.TRIGGER) {

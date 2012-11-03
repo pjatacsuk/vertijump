@@ -23,7 +23,7 @@ public class TriggerHandler {
 				if (trigger.getActivity() == true) {
 					switch (trigger.getTriggerType()) {
 					case FINISH_LINE:
-						chapter.setChapterState(ChapterState.FINISHED);
+						chapter.setChapterState(ChapterState.FINISH_SCREEN);
 						break;
 					case SPIKE:
 						chapter.setChapterState(ChapterState.DIED);

@@ -1,5 +1,6 @@
 package com.vjmp.chapter;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -19,7 +20,7 @@ import com.vjmp.managers.ChapterHighScoreManager;
 import com.vjmp.utilities.HighScore;
 
 public class Chapter {
-	public enum ChapterState{FINISHED,DIED,RUNNING,STALLING};
+	public enum ChapterState{FINISHED,DIED,RUNNING,STALLING, FINISH_SCREEN};
 	
 	
 	private Map map = null;
@@ -185,8 +186,10 @@ public class Chapter {
 			//g.translate(0,0);
 			map.draw(g);
 			player.draw(g);
-			highScore.draw(g);
-			g.dispose();
+			if(chapterState == ChapterState.RUNNING) {
+				highScore.draw(g);
+			}
+			
 	 }
 	public void setChapterState(ChapterState state) {
 		chapterState = state;
@@ -195,5 +198,16 @@ public class Chapter {
 	public String getName() {
 		return chapterName;
 	}
-	
+	public InputHandler getInputHandler() {
+		return inputHandler;
+	}
+	public String getScore() {
+		return highScore.formatScore();
+	}
+	public Camera getCamera() {
+		return camera;
+	}
+	public ChapterHighScoreManager getChapterHighScoreManager() {
+		return chapterHighScoreManager;
+	}
 }

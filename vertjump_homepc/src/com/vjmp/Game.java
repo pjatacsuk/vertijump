@@ -152,6 +152,7 @@ public class Game extends Canvas implements Runnable {
 		case RESUMEGAME:
 			break;
 		case RUNGAME:
+			
 			chapterManager.draw(g);
 			break;
 		}

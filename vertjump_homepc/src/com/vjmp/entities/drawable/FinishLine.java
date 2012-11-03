@@ -12,11 +12,14 @@ public class FinishLine extends TriggerEntity {
 
 	public FinishLine(String string, int x, int y, boolean b) {
 		super(string, x, y, b);
+		isAlwaysVisible = true;
+		
 		triggerType = TriggerType.FINISH_LINE;
 	}
 
 	public FinishLine(String path, Rectangle rect, boolean b) {
 		super(path, rect, b);
+		isAlwaysVisible = true;
 		triggerType = TriggerType.FINISH_LINE;
 
 	}
@@ -24,5 +27,6 @@ public class FinishLine extends TriggerEntity {
 	@Override
 	public void draw(Graphics g) {
 		g.drawString("FINISH!!!", GetPosX(), GetPosY() - 100);
+		sprite.draw(g);
 	}
 }

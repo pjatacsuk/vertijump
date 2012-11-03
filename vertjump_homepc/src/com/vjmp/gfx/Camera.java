@@ -10,8 +10,8 @@ public class Camera {
 	public int pos_x=0;
 	public int pos_y=0;
 	
-	private int width=0;
-	private int height=0;
+	public int width=0;
+	public int height=0;
 	private int mouse_x;
 	private int mouse_y;
 	private int editor_speed = 15;

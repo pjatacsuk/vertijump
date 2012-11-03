@@ -21,7 +21,7 @@ public class DrawableEntityManager extends EntityManager<DrawableEntity> {
 		super(entityManager);
 	}
 
-	public void DrawSprites(Graphics g) {
+	public synchronized void DrawSprites(Graphics g) {
 		for(DrawableEntity drawable : this.list) {
 			
 			drawable.draw(g);
@@ -29,7 +29,7 @@ public class DrawableEntityManager extends EntityManager<DrawableEntity> {
 		
 	}
 
-	public void remove(Rectangle rect) {
+	public synchronized void remove(Rectangle rect) {
 		for(int i=0;i<size();i++) {
 			if(list.get(i).getRect().intersects(rect)) {
 				list.remove(i);

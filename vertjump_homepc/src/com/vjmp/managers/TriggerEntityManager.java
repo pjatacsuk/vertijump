@@ -30,7 +30,7 @@ public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 		isEditor = entityManager.isEditor;
 	}
 
-	public void DrawSprites(Graphics g) {
+	public synchronized void DrawSprites(Graphics g) {
 		for(TriggerEntity trigger : this.list) {
 		
 				trigger.draw(g,isEditor);
@@ -39,7 +39,7 @@ public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 		
 	}
 
-	public void remove(Rectangle rect) {
+	public synchronized void remove(Rectangle rect) {
 		for(int i=0;i<size();i++) {
 			if(list.get(i).getRect().intersects(rect)) {
 				list.remove(i);
@@ -48,7 +48,7 @@ public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 		
 	}
 	
-	private void writeObject(ObjectOutputStream stream) 
+	private synchronized void writeObject(ObjectOutputStream stream) 
 	        throws IOException { 
 		 stream.writeInt(list.size());
 		 stream.writeBoolean(isEditor);
@@ -58,7 +58,7 @@ public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 		 
 	}
 	
-	private void readObject(ObjectInputStream in)
+	private synchronized void readObject(ObjectInputStream in)
 			 throws IOException, ClassNotFoundException {
 		 
 		System.out.println("triggerEntityManagaer");
