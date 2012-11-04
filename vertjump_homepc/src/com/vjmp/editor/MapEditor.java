@@ -327,9 +327,16 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 				delta -= 1;
 				shouldRender = true;
 			}
+		
 			if(shouldRender) {
 				frames++;
 				render();
+			}
+			try {
+				Thread.sleep(25);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
 		/*	if(System.currentTimeMillis() - lastTimer >= 1000) {

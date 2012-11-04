@@ -13,10 +13,9 @@ import com.vjmp.entities.drawable.DrawableEntity;
 import com.vjmp.entities.drawable.TriggerEntity;
 import com.vjmp.gfx.Camera;
 import com.vjmp.managers.DrawableEntityManager;
-import com.vjmp.managers.GameDrawableEntityManager;
 import com.vjmp.managers.TriggerEntityManager;
 
-public class Map implements Iterable<DrawableEntity>,Serializable {
+public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
 	/**
 	 * 
 	 */
@@ -25,13 +24,19 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 	private int HEIGHT;
 	private DrawableEntityManager entityManager = null;
 	private TriggerEntityManager triggerEntityManager = null;
-	private boolean isEditor = false;
+	private DrawableEntityManager visibleEntities = null;
+	private DrawableEntityManager notVisibleEntities = null;
+	public boolean isEditor = false;
+	private boolean running = true;
+	private Camera camera = null;
 	
 	public Map(int width,int height) {
 		entityManager = new DrawableEntityManager();
 		triggerEntityManager = new TriggerEntityManager(false);
 		WIDTH = width;
 		HEIGHT= height;
+		visibleEntities = new DrawableEntityManager();
+		notVisibleEntities = new DrawableEntityManager();
 	//	GenerateMap(100);
 		GenerateTest2(120);
 		entityManager.add(new DrawableEntity("./res/debug_platform.png",0,HEIGHT-25,true));
@@ -45,8 +50,10 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 	//	GenerateTest2(120);
 		entityManager = new DrawableEntityManager();
 		triggerEntityManager = new TriggerEntityManager(iseditor);
-		
+		visibleEntities = new DrawableEntityManager();
+		notVisibleEntities = new DrawableEntityManager();
 		entityManager.add(new DrawableEntity("./res/debug_platform.png",0,HEIGHT-25,true));
+		loadNotVisibleEntites();
 	}
 	
 	public Map(Map map,boolean isEditor) {
@@ -56,10 +63,13 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 		this.isEditor = isEditor;
 		entityManager = new DrawableEntityManager(map.entityManager);
 		triggerEntityManager = new TriggerEntityManager(map.triggerEntityManager,false);
+		visibleEntities = new DrawableEntityManager(map.visibleEntities);
+		notVisibleEntities = new DrawableEntityManager(map.notVisibleEntities);
+		loadNotVisibleEntites();
 		
 }
 	public void draw(Graphics g) {
-		entityManager.DrawSprites(g);
+		visibleEntities.DrawSprites(g);
 		triggerEntityManager.DrawSprites(g);
 	}
 
@@ -140,7 +150,8 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 	public Iterator<DrawableEntity> iterator() {
 		return entityManager.iterator();
 	}
-	public void update(Camera camera) {
+	public synchronized void update(Camera camera) {
+		
 		if(!isEditor)	{
 			UpdateSprites(camera.pos_y);
 		}	else {
@@ -153,23 +164,35 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 
 
 	private void UpdateEditorSprites(int pos_y) {
-		for(int i=0;i<entityManager.size();i++) {
-			DrawableEntity tmp = entityManager.get(i);
-			 if(tmp.GetPosY() + tmp.GetHeight() < 0 - pos_y) {
-				tmp.setVisibility(true);
-			}
-		}
+		UpdateNotVisibleSprites(pos_y);
 		
 	}
-	public void UpdateSprites(int CameraY) {
-		for(int i=0;i<entityManager.size();i++) {
-			DrawableEntity tmp = entityManager.get(i);
-			if(tmp.GetPosY() > -CameraY + HEIGHT) {
-				entityManager.remove(i);
-			} else if(tmp.GetPosY() + tmp.GetHeight() < 0 - CameraY) {
+	public void loadNotVisibleEntites() {
+		for(int i=0;i<entityManager.size();i++){
+			notVisibleEntities.add(entityManager.get(i));
+		}
+	}
+	public void UpdateNotVisibleSprites(int CameraY) {
+		for(int i=0;i<notVisibleEntities.size();i++) {
+			DrawableEntity tmp =notVisibleEntities.get(i);
+			if(tmp.GetPosY() + tmp.getRect().height > -CameraY) {
 				tmp.setVisibility(true);
+				visibleEntities.add(tmp);
+				notVisibleEntities.remove(i);
 			}
 		}
+	}
+	public void UpdateVisibleSprites(int CameraY) {
+		for(int i=0;i<visibleEntities.size();i++){
+			DrawableEntity tmp = visibleEntities.get(i);
+			if(tmp.GetPosY() > -CameraY + HEIGHT){
+				visibleEntities.remove(i);
+			}
+		}
+	}
+	public void UpdateSprites(int CameraY) {
+		UpdateNotVisibleSprites(CameraY);
+		UpdateVisibleSprites(CameraY);
 	}
 	public TriggerEntityManager getTriggerEntityManager() {
 		return triggerEntityManager;
@@ -180,6 +203,7 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 		triggerEntityManager.add((TriggerEntity)sprite);
 		} else {
 			entityManager.add(sprite);
+			notVisibleEntities.add(sprite);
 		}
 	}
 	
@@ -190,6 +214,7 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 		stream.writeBoolean(isEditor);
 		 stream.writeObject(entityManager);
 		 stream.writeObject(triggerEntityManager);
+		
 		 
 	 }
 	 private void readObject(ObjectInputStream in)
@@ -201,11 +226,49 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 		 isEditor = in.readBoolean();
 		 entityManager = (DrawableEntityManager)in.readObject();
 		 triggerEntityManager = (TriggerEntityManager)in.readObject();
-		 System.out.println("COmpltete");
+		 visibleEntities = new DrawableEntityManager();
+		notVisibleEntities = new DrawableEntityManager();
+		loadNotVisibleEntites();
+		System.out.println("COmpltete");
 	 }
 	public void remove(Rectangle rect) {
 		entityManager.remove(rect);
 		triggerEntityManager.remove(rect);
 	}
-	 
+	@Override
+	public void run() {
+		while(running) {
+			try {
+				update(camera);
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
+	public void notifyThread() {
+	
+	}
+	public void setCamera(Camera camera) {
+		this.camera = camera;
+	}
+	public void setVisibilityFalse() {
+		for(DrawableEntity drawableEntity : entityManager) {
+			drawableEntity.setVisibility(false);
+			System.out.println("valami");
+		}
+	}
+	public DrawableEntity getVisibleEntity(int i) {
+		return visibleEntities.get(i);
+	}
+	public int getVisibleEntitiesSize() {
+		return visibleEntities.size();
+	}
+	public DrawableEntityManager getVisibleEntityManager() {
+		return visibleEntities;
+	}
+	
+	
 }

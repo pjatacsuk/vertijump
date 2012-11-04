@@ -40,7 +40,7 @@ public class ChapterManager implements Iterable<Chapter>{
 		}
 		current_chapter = 0;
 		
-		chapter_list.get(current_chapter).start();
+	//	chapter_list.get(current_chapter).start();
 	
 		
 	} catch (FileNotFoundException e) {

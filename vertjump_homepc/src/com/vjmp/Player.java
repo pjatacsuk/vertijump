@@ -85,9 +85,8 @@ public class Player {
 				t.disactivateTrigger();
 			}
 		}
-
-		for (DrawableEntity s : map) {
-			if(s.isVisible()) {
+		for(int i=0;i<map.getVisibleEntitiesSize();i++) {
+			DrawableEntity s = map.getVisibleEntity(i);
 				if (s.intersects(sprite.getRect())) {
 					if (s.getType() == EntityType.TRIGGER) {
 						HandleTriggerPlaceHolder(s);
@@ -95,9 +94,9 @@ public class Player {
 						Collosion(s);
 					}
 				}
-			}
-
 		}
+
+		
 
 	}
 

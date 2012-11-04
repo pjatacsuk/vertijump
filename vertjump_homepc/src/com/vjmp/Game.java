@@ -193,7 +193,12 @@ public class Game extends Canvas implements Runnable {
 				frames++;
 				render();
 			}
-			
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if(System.currentTimeMillis() - lastTimer >= 1000) {
 				lastTimer += 1000;
 				System.out.println(frames + " " + ticks);

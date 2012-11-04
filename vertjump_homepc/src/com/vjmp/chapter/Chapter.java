@@ -34,7 +34,7 @@ public class Chapter {
 	private HighScore highScore = null;
 	private ChapterHighScoreManager chapterHighScoreManager = null;
 	private String chapterName;
-
+	private Thread mapUpdateThread = null;
 	
 	private ChapterState chapterState = ChapterState.STALLING;
 	
@@ -53,9 +53,12 @@ public class Chapter {
 			load_resource();
 			highScore = new HighScore(chapterName);
 			chapterHighScoreManager = new ChapterHighScoreManager(chapterName);
-		
+			map.setCamera(camera);
+			
 			try {
 				load(map_path);
+				
+				
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -87,12 +90,17 @@ public class Chapter {
 			 player.setLocation(editor.GetPlayerLocation());
 			 camera.pos_y =0;
 			 ois.close();
+			 map.isEditor = false;
 			 start();
 	 }
 	 public void start() {
 		 chapterState = ChapterState.RUNNING;
+	
+		 map.isEditor = false;
+		
 		 if(highScore == null) {
 		 	highScore = new HighScore(chapterName);
+		 	
 		 }
 		 highScore.start();
 	 }
@@ -123,7 +131,7 @@ public class Chapter {
 			camera.update(player.GetPosX(), player.GetPosY());
 			map.update(camera);
 			highScore.update(camera);
-			updatePlayerFallDeath();
+			updatePlayerFallDeath(); 
 	 }
 	 private void updatePlayerFallDeath() {
 		if(camera.pos_y + player.GetPosY() > HEIGHT + 10) {
