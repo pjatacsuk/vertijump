@@ -134,6 +134,7 @@ public class Sprite implements Serializable {
 	}
 	
 	public Sprite(String string) {
+		path = string;
 		img = null;
 		try {
 			img = ImageIO.read(new File(string));
@@ -143,6 +144,18 @@ public class Sprite implements Serializable {
 		rect = new Rectangle(pos_x,pos_y,img.getWidth(),img.getHeight());
 	}
 
+	public Sprite(BufferedImage img,String path) {
+		this.img = img;
+		this.path = "";
+		
+		rect = new Rectangle(pos_x,pos_y,img.getWidth(),img.getHeight());
+		wall = new boolean[4];
+		wall[getDirIndex(Dir.NORTH)] = false;
+		wall[getDirIndex(Dir.WEST)] = false;
+		wall[getDirIndex(Dir.SOUTH)] = false;
+		wall[getDirIndex(Dir.EAST)] = false;
+		isVisible = true;
+	}
 	public Sprite(Sprite sprite) {
 		
 	}
@@ -200,18 +213,14 @@ public class Sprite implements Serializable {
 	
 	 private void writeObject(ObjectOutputStream stream)
 		        throws IOException {
+		
 		stream.writeUTF(path);
 		stream.writeObject(rect);
 		stream.writeBoolean(isVisible);
 		for(int i=0;i<4;i++) {
 			stream.writeBoolean(wall[i]);
 		}
-		/*stream.writeInt(rect.x);
-		stream.writeInt(rect.y);
-		stream.writeInt(rect.width);
-		stream.writeInt(rect.height);*/
 		
-		//	pw.close(); 
 		 
 	 }
 	 private void readObject(ObjectInputStream in)
@@ -255,7 +264,9 @@ public class Sprite implements Serializable {
 	public int getImgWidth() {
 		return img.getWidth();
 	}
-
+	public BufferedImage getSubImg(int x,int y,int w,int h){
+		return img.getSubimage(x, y, w, h);
+	}
 
 
 }

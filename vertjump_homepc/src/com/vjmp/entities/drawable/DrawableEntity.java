@@ -41,10 +41,7 @@ public class DrawableEntity extends Entity implements Serializable {
 	public void draw(Graphics g) {
 		sprite.draw(g);
 	}
-	/*a
-	public EntityType getType() {
-		return super.getType();
-	}*/
+	
 	
 	 private void writeObject(ObjectOutputStream stream)
 		        throws IOException {

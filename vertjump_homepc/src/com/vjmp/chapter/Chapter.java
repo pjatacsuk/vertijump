@@ -191,7 +191,7 @@ public class Chapter {
 		    g.fillRect(0, 0, WIDTH, HEIGHT);
 			DrawBackGround(g);
 			g.translate(camera.pos_x,camera.pos_y);
-			//g.translate(0,0);
+			
 			map.draw(g);
 			player.draw(g);
 			if(chapterState == ChapterState.RUNNING) {

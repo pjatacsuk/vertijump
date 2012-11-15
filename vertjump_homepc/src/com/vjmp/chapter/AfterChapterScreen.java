@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import com.vjmp.InputHandler;
 import com.vjmp.chapter.Chapter.ChapterState;
 import com.vjmp.gfx.Camera;
+import com.vjmp.gfx.Sprite;
 
 public class AfterChapterScreen {
 	private InputHandler inputHandler = null;
@@ -18,7 +19,10 @@ public class AfterChapterScreen {
 	private int box_width = box_height * 4/3;
 	int pos_x = 0;
 	int  pos_y = 0;
+	private Sprite background = null; 
 	
+	
+
 	
 	public AfterChapterScreen(Chapter chapter) {
 		this.chapter = chapter;
@@ -28,6 +32,7 @@ public class AfterChapterScreen {
 		//pozicionalas
 		pos_x = -camera.pos_x + camera.width/2 - box_width / 2;
 		pos_y = -camera.pos_y + camera.height/2 - box_height / 2;
+		background = new Sprite("./res/score_background.png", pos_x, pos_y,true);
 		
 	}
 	
@@ -103,8 +108,8 @@ public class AfterChapterScreen {
 
 	private void drawScreenBox(Graphics g) {
 		//TODO PLACEHOLDER GRAFIKA
-		g.setColor(new Color(66,100,192));
-		g.fillRect(pos_x,pos_y, box_width, box_height);
-		
+		//g.setColor(new Color(66,100,192));
+		//g.fillRect(pos_x,pos_y, box_width, box_height);
+		background.draw(g);
 	}
 }

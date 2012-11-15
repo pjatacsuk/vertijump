@@ -85,13 +85,6 @@ public class EntityManager<T> implements Iterable<T>,Serializable {
 		
 	 }
 
-	/*public void remove(Rectangle rect) {
-		for(int i=0;i<list.size();i++) {
-			if(list.get(i).getRect().intersects(rect)) {
-				list.remove(i);
-			}
-		}
-		
-	}*/
+	
 	
 }

@@ -37,29 +37,25 @@ public class Editor implements Serializable,ActionListener {
 	private static EntityType entityType = EntityType.BLOCK;
 	private static DrawableEntity player = null;
 	private static InputHandler.Buttons mouse_button = Buttons.NONE;
-	
+	private static String MessageString = null;
+	private static TriggerType triggerType;
+		
 	private Map map = null;
 	private TextureList textureList = null;
 	private boolean polling_for_mouse_release = true;
-	private static String MessageString = null;
-	private static TriggerType triggerType;
-	
+	private SelectRectangle selectRectangle = null;
 	private GuiManager guiManager = null;
 	
+	private Point old_camera_pos = null;
 	
 	transient private InputHandler inputHandler=null;
-	transient private Point old_mouse_coord = null;
-	
-	
-	
-	
 	
 	
 	public Editor(InputHandler inputHandler,int WIDTH,int HEIGHT) {
 		map = new Map(WIDTH,HEIGHT,true);
 		this.inputHandler = inputHandler; 
 		textureList = new TextureList();
-		
+		selectRectangle = new SelectRectangle(this);
 	}
 	public void setInputHandler(InputHandler inputHandler) {
 		this.inputHandler = inputHandler;
@@ -79,10 +75,10 @@ public class Editor implements Serializable,ActionListener {
 	    else {
 	    	DrawableEntity drawableEntity = GetDrawableEnityTypeFromSpriteIndex(rect);
 	    	if(drawableEntity != null) {
-	    	map.add(drawableEntity);
-	    	} else {
-	    		System.out.println("HIBA!");
-	    	}
+		    	map.add(drawableEntity);
+		    } else {
+		    	System.out.println("HIBA!");
+		    }
 	    }
 	}
 	private DrawableEntity GetDrawableEnityTypeFromSpriteIndex(Rectangle rect) {
@@ -110,8 +106,9 @@ public class Editor implements Serializable,ActionListener {
 			ret = new FinishLine(textureList.GetPath(sprite_index),rect,true);
 			break;
 		case MESSAGE_BOX:
-			ret = new MessageBox(MessageString,textureList.GetPath(sprite_index),rect,true,guiManager.getWalls());
-		
+			if(MessageString != null){
+				ret = new MessageBox(MessageString,textureList.GetPath(sprite_index),rect,true,guiManager.getWalls());
+			}
 			break;
 		}
 		return ret;
@@ -120,16 +117,20 @@ public class Editor implements Serializable,ActionListener {
 		map.update(camera);
 		BlockLogic(camera);
 		if(guiManager != null) {
-		guiManager.update();
+			guiManager.update();
 		}
+		selectRectangle.update(camera);
 	}
 	
 	private void BlockLogic(Camera camera) {
 		if(inputHandler.MOUSE.button.isPressed()) {
 			polling_for_mouse_release = true;
+			if(old_camera_pos == null){
+				old_camera_pos  = new Point(camera.pos_x,camera.pos_y);
+			}
 			if(inputHandler.MOUSE.button_clicked == Buttons.LEFT) {
 				mouse_button = Buttons.LEFT;
-			
+				
 			} else if(inputHandler.MOUSE.button_clicked == Buttons.RIGHT) {
 				mouse_button = Buttons.RIGHT;
 			}
@@ -137,14 +138,20 @@ public class Editor implements Serializable,ActionListener {
 		if(polling_for_mouse_release) {
 			if(!inputHandler.MOUSE.button.isPressed()){
 				polling_for_mouse_release = false;
+				
 				if(mouse_button == Buttons.LEFT) {
+					
 					Rectangle rect = GenerateRectangleFromMouse(camera);
 					addSprite(rect);
 				} else if(mouse_button == Buttons.RIGHT){
+					
 					Rectangle rect = GenerateRectangleFromMouse(camera);
 					removeSprite(rect);
 				}
+				//mar nincs ra szukseg, mivel legeneraltuk a rectangle-t a remove,illetve add-hoz
+				old_camera_pos = null;
 			}
+			
 		}
 		
 	}
@@ -154,9 +161,12 @@ public class Editor implements Serializable,ActionListener {
 		
 		
 	}
-	public Rectangle GenerateRectangleFromMouse(Camera camera) {
-		Point old_pos =DivBlockSize(AddCameraPos(inputHandler.MOUSE.GetOldPos(),camera));
-		Point pos = DivBlockSize(AddCameraPos(inputHandler.MOUSE.GetPos(),camera));
+	public  Rectangle GenerateRectangleFromMouse(Camera camera) {
+		
+		//camera positionje mindig mod15 == 0, mivel ennyi az editor speedje, ezert
+		// csak a mouse position-t kell div15 ölni
+		Point old_pos =AddOldCameraPos(DivBlockSize(inputHandler.MOUSE.getOldPos()));
+		Point pos = AddCameraPos(DivBlockSize(inputHandler.MOUSE.getPos()),camera);
 		int width = Math.abs(old_pos.x - pos.x) + BLOCK_SIZE;
 		int height = Math.abs(old_pos.y - pos.y) +BLOCK_SIZE;
 		
@@ -167,19 +177,24 @@ public class Editor implements Serializable,ActionListener {
 		return new Rectangle(x,y,width,height);
 		
 	}
+	private Point AddOldCameraPos(Point p) {
+		p.x = p.x - old_camera_pos.x;
+		p.y = p.y - old_camera_pos.y;
+		return p;
+	}
 	public Point AddCameraPos(Point p,Camera c) {
-		p.x = p.x - c.pos_x * 2;
-		p.y = p.y - c.pos_y * 2;
+		p.x = p.x - c.pos_x;
+		p.y = p.y - c.pos_y;;
 		return p;
 	}
 	public Point DivBlockSize(Point p) {
-		return new Point((p.x / BLOCK_SIZE) * BLOCK_SIZE,
-						 (p.y / BLOCK_SIZE) * BLOCK_SIZE);
+		return new Point(p.x - (p.x % BLOCK_SIZE),p.y - (p.y % BLOCK_SIZE));
 	}
 
 	public void draw(Graphics g) {
 		map.draw(g);
 		if(player!=null) player.draw(g);
+		selectRectangle.draw(g);
 	}
 
 	 private void writeObject(ObjectOutputStream stream)
@@ -204,6 +219,7 @@ public class Editor implements Serializable,ActionListener {
 		 map = (Map)in.readObject();
 		 player = new DrawableEntity(path,pos_x,pos_y,true);
 		 textureList = new TextureList();
+		selectRectangle = new SelectRectangle(this);
 	 }
 	 public JComboBox GenerateTextureListComponent() {
 		 return guiManager.GenerateTextureListComponent(textureList.size(), this);
@@ -251,7 +267,10 @@ public class Editor implements Serializable,ActionListener {
 	public Component GenerateTriggerListComponent() {
 		return guiManager.GenerateTriggerListComponent(this);
 	}
-	 
-
-
+	public InputHandler getInputHandler(){
+		return inputHandler;
+	}
+	public int getBlockSize(){
+		return BLOCK_SIZE;
+	}
 }

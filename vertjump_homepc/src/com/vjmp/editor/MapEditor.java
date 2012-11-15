@@ -1,34 +1,51 @@
 package com.vjmp.editor;
 
+import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 
 import com.vjmp.InputHandler;
 import com.vjmp.gfx.Camera;
@@ -65,7 +82,8 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		frame = new JFrame(NAME);
 	
 		init();
-		
+		editor = new Editor(inputHandler,WIDTH*SCALE,HEIGHT*SCALE);
+		editor.setComponentManager(new GuiManager(frame));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -140,14 +158,30 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		JMenuItem open = new JMenuItem("Open");
 		open.setName("Open");
 		open.addActionListener(this);
+		open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,ActionEvent.CTRL_MASK));
 		menu.add(open);
 		
 		
 		JMenuItem save = new JMenuItem("Save");
 		save.setName("Save"); 
 		save.addActionListener(this);
-		menu.add(save); 
+		save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,ActionEvent.CTRL_MASK));
+		menu.add(save);
 		
+		JMenuItem save_as = new JMenuItem("Save as");
+		save_as.setName("Save as"); 
+		save_as.addActionListener(this);
+		save_as.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,ActionEvent.CTRL_MASK|ActionEvent.ALT_MASK));
+		menu.add(save_as); 
+		
+		JMenu edit_menu = new JMenu("Edit");
+		menuBar.add(edit_menu);
+		
+		JMenuItem edit_maplist = new JMenuItem("Edit MapList");
+		edit_maplist.setName("Edit MapList");
+		edit_maplist.addActionListener(this);
+		edit_maplist.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_E,ActionEvent.CTRL_MASK));
+		edit_menu.add(edit_maplist);
 		
 		
 		frame.setJMenuBar(menuBar);
@@ -179,8 +213,8 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		inputHandler  = new InputHandler(this);
 	
 		camera		  = new Camera(WIDTH * SCALE,HEIGHT * SCALE);
-		try {
-			activeFile = new File("./res/map.txt");
+		/*try {
+			activeFile = new File("./res/map5.txt");
 			load(activeFile);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -191,7 +225,7 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		load_resource();
 		
 	
@@ -217,6 +251,7 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	private void handleOwnInput() {
 		try {
 			if(inputHandler.O.isPressedAndReleased()) {
+				if(activeFile == null) activeFile = new File("./res/tmp_name.txt");
 				save(activeFile);
 			} else if(inputHandler.P.isPressedAndReleased()) {
 				load(activeFile);
@@ -257,6 +292,7 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		 editor.setInputHandler(inputHandler);
 		 editor.setComponentManager(new GuiManager(frame));
 		 JOptionPane.showMessageDialog(frame,"Loaded map from \"./res/" + path +"\"");
+		 frame.setTitle(NAME + " - " + path);
 		
 	 }
 	 void load(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
@@ -266,6 +302,7 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		 editor.setInputHandler(inputHandler);
 		 editor.setComponentManager(new GuiManager(frame));
 		 JOptionPane.showMessageDialog(frame,"Loaded map from \"./res/" + file.getName() + "\"");
+		 frame.setTitle(NAME + " - " + file.getName());
 	 }
 	
 
@@ -281,12 +318,11 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		
 		g.fillRect(0, 0, getWidth(), getHeight());
 		DrawBackGround(g);
-		g.translate(camera.pos_x,camera.pos_y);
-		
-		//g.translate(0,0);
+	
 		g.setTransform(camera.GetTransform(g));
 	
 		editor.draw(g);
+	
 		g.setTransform(camera.GetOldTransform());
 		g.dispose();
 		
@@ -358,7 +394,9 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 			int returnVal = fc.showOpenDialog(fc);
 			activeFile = fc.getSelectedFile();
 			try {
+				if(activeFile != null){
 				load(activeFile);
+				}
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -370,12 +408,34 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 				e.printStackTrace();
 			}
 		
-		} else if(menuItem.getName().equals("Save")) {
+		} else if(menuItem.getName().equals("Save as")) {
 			try {
 				JFileChooser fc = new JFileChooser("./");
 				int returnVal = fc.showOpenDialog(fc);
 				activeFile = fc.getSelectedFile();
-				save(activeFile);
+				if(activeFile != null){
+					save(activeFile);
+				}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if(menuItem.getName().equals("Edit MapList")) {
+			MapListEditor maplistEditor = new MapListEditor(frame);
+		} else if(menuItem.getName().equals("Save")){
+		
+			try {
+				if(activeFile != null) {
+					save(activeFile);
+				} else {
+					JFileChooser fc = new JFileChooser("./");
+					int returnVal = fc.showOpenDialog(fc);
+					activeFile = fc.getSelectedFile();
+					save(activeFile);
+				}
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -388,5 +448,10 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	}
 
 	
+	
+	
+		
+	
+		
 	
 }

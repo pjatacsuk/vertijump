@@ -20,13 +20,7 @@ public class UpdateThread implements Runnable{
 			chapter.update();
 			chapter.isReadyToUpdate = false;
 		}
-		/*try {
-			
-			this.wait();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} */
+		
 	}
 	public void update() {
 		this.notify();

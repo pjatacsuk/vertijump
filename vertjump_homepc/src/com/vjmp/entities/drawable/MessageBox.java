@@ -101,7 +101,6 @@ public class MessageBox extends TriggerEntity {
 		for(int i=0;i<calculated_strings.length;i++) {
 			g.drawString(calculated_strings[i],message_box.GetPosX()+20,message_box.GetPosY() + 25 + i*string_height+5);
 		}
-	//	g.drawString(message, message_box.GetPosX()+20,message_box.GetPosY() + 25);
 	}
 	 private void writeObject(ObjectOutputStream stream)
 		        throws IOException {

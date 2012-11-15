@@ -1,8 +1,6 @@
 package com.vjmp;
 
-import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.PointerInfo;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -10,7 +8,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import javax.swing.SwingUtilities;
 import com.vjmp.editor.MapEditor;
 
 
@@ -61,11 +58,10 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 	public enum Buttons {LEFT,RIGHT,MIDDLE,NONE};
 	public class Mouse {
 		
-		private int pos_x = 0;
-		private int pos_y = 0;
+		private Point pos  = null;
+		private Point old_pos = null;
+		private Point dragged_pos = null;
 		
-		private int old_pos_x = 0;
-		private int old_pos_y = 0;
 		private int wheel_pos;
 		public Buttons button_clicked = Buttons.NONE;
 		public Key button = null;
@@ -75,37 +71,38 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 		}
 		
 		public int GetX() {
-			return pos_x;
+			return pos.x;
 		}
 		public int GetY() {
-			return pos_y;
+			return pos.y;
 		}
 		public int GetWheelPos() {
 			return wheel_pos;
 		}
 		public void SetX(int x) {
-			pos_x = x;
+			pos.x = x;
 		}
 		public void SetY(int y) {
-			pos_y = y;
+			pos.y = y;
 		}
 		public void SetWheelPos(int pos) {
 			wheel_pos = pos;
 		}
-		public void SetCoord(int x,int y) {
-			old_pos_x = pos_x;
-			old_pos_y = pos_y;
-			pos_x = x;
-			pos_y = y;
+		public void SetCoord(Point point) {
+			old_pos = pos;
+			pos = point;
 		}
-		public Point GetOldPos() {
-			return new Point(old_pos_x,old_pos_y);
+		public Point getOldPos() {
+			return old_pos; 
 		}
-		public Point GetPos() {
-			return new Point(pos_x,pos_y);
+		public Point getPos() {
+			return pos; 
 		}
-		public void SetAttributes(int x,int y,int pos) {
-			SetCoord(x,y);
+		public Point getDraggedPos(){
+			return dragged_pos;
+		}
+		public void SetAttributes(Point point,int pos) {
+			SetCoord(point);
 			SetWheelPos(pos);
 		}
 
@@ -122,6 +119,11 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 		}
 		public void setPressed(boolean press) {
 			this.button.setPressed(press);
+		}
+
+		public void setDraggedPos(Point p) {
+			dragged_pos = p;
+			
 		}
 		
 	}
@@ -151,14 +153,16 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		toogleKey(arg0.getKeyCode(),true);
-		
+		if(!arg0.isAltDown()) {
+			toogleKey(arg0.getKeyCode(),true);
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		toogleKey(arg0.getKeyCode(),false);
-		
+		if(!arg0.isAltDown()){
+			toogleKey(arg0.getKeyCode(),false);
+		}
 	}
 
 	@Override
@@ -211,35 +215,35 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
-		MOUSE.SetCoord(e.getX(), e.getY());
+		MOUSE.SetCoord(e.getPoint());
 		MOUSE.Clicked(e.getButton());
 		
 	}
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		MOUSE.SetCoord(e.getX(), e.getY());
+		MOUSE.SetCoord(e.getPoint());
 		MOUSE.button_clicked = Buttons.NONE;
 		MOUSE.button.setPressed(false);
 	}
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0) {
 		if(arg0.getWheelRotation() > 0) {
-			MOUSE.SetAttributes(arg0.getX(),arg0.getX(),-1);
+			MOUSE.SetAttributes(arg0.getPoint(),-1);
 		} else if(arg0.getWheelRotation() < 0){
-			MOUSE.SetAttributes(arg0.getX(),arg0.getX(),1);
+			MOUSE.SetAttributes(arg0.getPoint(),1);
 		}
 		
 		
 	}
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		MOUSE.dragged_pos = arg0.getPoint();
 		
 	}
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
-	//	MOUSE.SetCoord(arg0.getX(),arg0.getY());
-	//	System.out.println(arg0.getX()+ " " + arg0.getY());
+		// TODO Auto-generated method stub
 		
-	}
+	}	
+	
 }

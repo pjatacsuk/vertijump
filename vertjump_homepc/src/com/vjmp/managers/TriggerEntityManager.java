@@ -73,7 +73,9 @@ public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 	}
 
 	public void update(Camera camera) {
-		
+		for(TriggerEntity triggerEntity : list){
+			triggerEntity.update();
+		}
 		
 	}
 	

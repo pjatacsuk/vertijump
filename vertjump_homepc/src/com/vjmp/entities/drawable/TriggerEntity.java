@@ -89,6 +89,10 @@ public abstract class TriggerEntity extends DrawableEntity {
 			draw(g);
 		}
 	}
+
+	public void update() {
+		
+	}
 	 
 
 }

@@ -2,7 +2,6 @@ package com.vjmp;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Toolkit;
@@ -12,8 +11,10 @@ import javax.swing.JFrame;
 
 import com.vjmp.gfx.Camera;
 import com.vjmp.managers.ChapterManager;
-import com.vjmp.managers.EntityManager;
+import com.vjmp.managers.SampleManager;
 import com.vjmp.menu.MainMenu;
+import com.vjmp.sound.Sample;
+import com.vjmp.sound.Sample.PlayMode;
 
 public class Game extends Canvas implements Runnable {
 	public enum GameState{MENU,NEWGAME,RESUMEGAME,RUNGAME};
@@ -28,12 +29,12 @@ public class Game extends Canvas implements Runnable {
 	public static 		boolean running = true;
 	
     private static boolean gameStarted = false;
-	private static ChapterManager chapterManager = null;
-	private static InputHandler inputHandler = null;
-	private static EntityManager spriteManager;
-	private static String frame_tick = null;
-	private static MainMenu menu = null;
-	private static GameState gameState = GameState.MENU;
+	private static  GameState gameState = GameState.MENU;
+	
+	private MainMenu menu = null;
+	private ChapterManager chapterManager = null;
+	private InputHandler inputHandler = null;
+	private SampleManager sampleManager = null;
 	
 	
 	private JFrame frame;
@@ -74,10 +75,12 @@ public class Game extends Canvas implements Runnable {
 	
 	public void init() {
 		
-		spriteManager = new EntityManager();
 		inputHandler = new InputHandler(this);
 		chapterManager = new ChapterManager("./res/map_list.txt",inputHandler,WIDTH * SCALE,HEIGHT * SCALE);
 		menu = new MainMenu(this, null, new Camera(getWidth(),getHeight()));
+		sampleManager = new SampleManager();
+		sampleManager.add(new Sample("bg_music","./res/sound/bgmusic.wav",PlayMode.LOOP));
+		sampleManager.playSample("bg_music");
 	}
 	
 	public void tick() {
@@ -115,6 +118,9 @@ public class Game extends Canvas implements Runnable {
 		case RUNGAME:
 			//running
 			break;
+		case MENU:
+			break;
+		
 		}
 		
 	}
@@ -144,8 +150,6 @@ public class Game extends Canvas implements Runnable {
 	
 		switch(gameState) {
 		case MENU:
-	//		g.setColor(new Color(17,23,26));
-	//		g.fillRect(0, 0, getWidth(),getHeight());
 			menu.draw(g);
 		break;
 		case NEWGAME:	
@@ -194,9 +198,9 @@ public class Game extends Canvas implements Runnable {
 				render();
 			}
 			try {
-				Thread.sleep(10);
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 			if(System.currentTimeMillis() - lastTimer >= 1000) {
@@ -211,7 +215,7 @@ public class Game extends Canvas implements Runnable {
 	}
 
 	public void setState(GameState gameState) {
-		this.gameState = gameState;
+		Game.gameState = gameState;
 	}
 
 	public static boolean isGameStarted() {
