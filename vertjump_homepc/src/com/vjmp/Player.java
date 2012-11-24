@@ -123,17 +123,17 @@ public class Player {
 			//ha nagyon kicsi az intersection kepes felre ertelmezni a feltetelt
 			//kesobb fixalasra jogosult, ha nem mukodik
 			
-			if(speed_y > 0 && !triggerEntity.getWall(Dir.NORTH)) {
+			if(speed_y > 0 && triggerEntity.getWall(Dir.NORTH)) {
 				triggerEntity.activateTrigger();
 			}
-			else if(!triggerEntity.getWall(Dir.SOUTH)){
+			else if(triggerEntity.getWall(Dir.SOUTH)){
 				triggerEntity.activateTrigger();
 			}  
 		} else {	
-			if(speed_x > 0 && !triggerEntity.getWall(Dir.WEST)) {
+			if(speed_x > 0 && triggerEntity.getWall(Dir.WEST)) {
 				triggerEntity.activateTrigger();
 			}
-			else  if(speed_x < 0 && !triggerEntity.getWall(Dir.EAST)){
+			else  if(speed_x < 0 && triggerEntity.getWall(Dir.EAST)){
 				triggerEntity.activateTrigger();
 		    }
 		}		
@@ -156,12 +156,12 @@ public class Player {
 			// feltetelt
 			// kesobb fixalasra jogosult, ha nem mukodik
 
-			if (speed_y > 0 && !drawableEntity.getWall(Dir.NORTH)) {
+			if (speed_y > 0 && drawableEntity.getWall(Dir.NORTH)) {
 				playerSprite.move(0, -intersection.height);
 				velocity_y = 0;
 				speed_y = 0;
 				ignore_W = false;
-			} else if (!drawableEntity.getWall(Dir.SOUTH)) {
+			} else if (drawableEntity.getWall(Dir.SOUTH)) {
 				playerSprite.move(0, intersection.height);
 				velocity_y = 0;
 				speed_y = 0;
@@ -170,7 +170,7 @@ public class Player {
 
 		} else {
 
-			if (speed_x > 0 && !drawableEntity.getWall(Dir.WEST)) {
+			if (speed_x > 0 && drawableEntity.getWall(Dir.WEST)) {
 
 				sticky = true;
 				stick_dir = STICK_DIR.LEFT;
@@ -178,7 +178,7 @@ public class Player {
 				playerSprite.move(-intersection.width, 0);
 				velocity_x = 0;
 				speed_x = 0;
-			} else if (speed_x < 0 && !drawableEntity.getWall(Dir.EAST)) {
+			} else if (speed_x < 0 && drawableEntity.getWall(Dir.EAST)) {
 
 				sticky = true;
 				stick_dir = STICK_DIR.RIGHT;

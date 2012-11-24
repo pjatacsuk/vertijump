@@ -3,4 +3,5 @@ block_brown.png
 block_blue.png
 block_orange.png
 block_deepred.png
+block_32_earth.png
 spooky.png

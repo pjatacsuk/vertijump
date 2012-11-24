@@ -137,6 +137,7 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 	public Key SHIFT = new Key();
 	public Key ESC = new Key();
 	public Key ENTER = new Key();
+	public Key CTRL = new Key();
 	
 	public Mouse MOUSE = new Mouse();
 	
@@ -197,6 +198,9 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 		}
 		if(keyCode == KeyEvent.VK_ENTER){
 			ENTER.setPressed(isPressed);
+		}
+		if(keyCode == KeyEvent.VK_CONTROL){
+			CTRL.setPressed(isPressed);
 		}
 	}
 	@Override

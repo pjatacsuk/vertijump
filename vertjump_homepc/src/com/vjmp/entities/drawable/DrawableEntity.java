@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import com.vjmp.entities.Entity;
 import com.vjmp.gfx.Sprite;
 import com.vjmp.gfx.Sprite.Dir;
+import com.vjmp.gfx.Sprite.SpriteType;
 
 
 public class DrawableEntity extends Entity implements Serializable {
@@ -22,20 +23,20 @@ public class DrawableEntity extends Entity implements Serializable {
 	protected Sprite sprite;
 	
 	
-	public DrawableEntity(String string, int x, int y, boolean b) {
+	public DrawableEntity(String string, int x, int y, boolean visible) {
 		entityType = entityType.BLOCK;
-		sprite = new Sprite(string,x,y,b);
+		sprite = new Sprite(string,x,y,visible);
 	}
 
-	public DrawableEntity(String path, Rectangle rect, boolean b) {
+	public DrawableEntity(String path, Rectangle rect, boolean visible) {
 		entityType = entityType.BLOCK;
-		sprite = new Sprite(path,rect,b);
+		sprite = new Sprite(path,rect,visible);
 	}
 
-	public DrawableEntity(String path, Rectangle rect, boolean b,
-			boolean[] walls) {
+	public DrawableEntity(String path, Rectangle rect, boolean visible,
+			boolean[] walls, SpriteType spriteType) {
 		entityType = entityType.BLOCK;
-		sprite = new Sprite(path,rect,b,walls);
+		sprite = new Sprite(path,rect,visible,walls,spriteType);
 	}
 
 	public void draw(Graphics g) {
@@ -95,5 +96,9 @@ public class DrawableEntity extends Entity implements Serializable {
 
 	public boolean getWall(Dir dir) {
 		return	sprite.GetWall(dir);
+	}
+
+	public void setSpriteType(SpriteType spriteType) {
+		sprite.setSpriteType(spriteType);
 	}
 }

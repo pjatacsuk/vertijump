@@ -12,6 +12,7 @@ import com.vjmp.entities.Entity.EntityType;
 import com.vjmp.entities.drawable.TriggerEntity.TriggerType;
 import com.vjmp.gfx.Sprite;
 import com.vjmp.gfx.Sprite.Dir;
+import com.vjmp.gfx.Sprite.SpriteType;
 	
 public class SpikeTrigger extends TriggerEntity {
 	
@@ -41,8 +42,8 @@ public class SpikeTrigger extends TriggerEntity {
 		triggerType = TriggerType.SPIKE;
 		isAlwaysVisible = true;
 	}
-	public SpikeTrigger(String path, Rectangle rect, boolean b,boolean[] walls){
-		super(path,rect,b,walls);
+	public SpikeTrigger(String path, Rectangle rect, boolean b,boolean[] walls,SpriteType spriteType){
+		super(path,rect,b,walls,spriteType);
 		isAlwaysVisible = true;
 		triggerType = TriggerType.SPIKE;
 		this.spike_walls = walls;
@@ -55,16 +56,16 @@ public class SpikeTrigger extends TriggerEntity {
 		int rect_width  = sprite.getRect().width;
 		spike_count = 0;
 		
-		if(!spike_walls[Sprite.getDirIndex(Dir.WEST)]) {
+		if(spike_walls[Sprite.getDirIndex(Dir.WEST)]) {
 			spike_count += rect_height / spike_height;	
 		}
-		if(!spike_walls[Sprite.getDirIndex(Dir.EAST)]) {
+		if(spike_walls[Sprite.getDirIndex(Dir.EAST)]) {
 			spike_count += rect_height / spike_height;
 			
 		}
-		if(!spike_walls[Sprite.getDirIndex(Dir.SOUTH)]) {
+		if(spike_walls[Sprite.getDirIndex(Dir.SOUTH)]) {
 			spike_count += rect_width / spike_width;
-		}if(!spike_walls[Sprite.getDirIndex(Dir.NORTH)]) {
+		}if(spike_walls[Sprite.getDirIndex(Dir.NORTH)]) {
 			spike_count += rect_width / spike_width;
 		}
 		
@@ -73,16 +74,16 @@ public class SpikeTrigger extends TriggerEntity {
 		g.setColor(new Color(188, 79, 99));
 		int index = 0;
 		polygons = new Polygon[spike_count];
-		if(!spike_walls[Sprite.getDirIndex(Dir.WEST)]) {
+		if(spike_walls[Sprite.getDirIndex(Dir.WEST)]) {
 			CreateWestSpikes(g);
 		}
-		if(!spike_walls[Sprite.getDirIndex(Dir.EAST)]) {
+		if(spike_walls[Sprite.getDirIndex(Dir.EAST)]) {
 			CreateEastSpikes(g);
 		}
-		if(!spike_walls[Sprite.getDirIndex(Dir.NORTH)]){
+		if(spike_walls[Sprite.getDirIndex(Dir.NORTH)]){
 			CreateNorthSpikes(g);
 		}
-		if(!spike_walls[Sprite.getDirIndex(Dir.SOUTH)]) {
+		if(spike_walls[Sprite.getDirIndex(Dir.SOUTH)]) {
 			CreateSouthSpikes(g);
 		}
 		return polygons;

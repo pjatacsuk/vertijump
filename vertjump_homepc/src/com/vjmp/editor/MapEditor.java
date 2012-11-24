@@ -409,6 +409,8 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 			}
 		
 		} else if(menuItem.getName().equals("Save as")) {
+			//beragada's ellen
+			inputHandler.S.setPressed(false);
 			try {
 				JFileChooser fc = new JFileChooser("./");
 				int returnVal = fc.showOpenDialog(fc);
@@ -426,7 +428,8 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		} else if(menuItem.getName().equals("Edit MapList")) {
 			MapListEditor maplistEditor = new MapListEditor(frame);
 		} else if(menuItem.getName().equals("Save")){
-		
+			//beragada's ellen
+			inputHandler.S.setPressed(false);
 			try {
 				if(activeFile != null) {
 					save(activeFile);
@@ -434,7 +437,9 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 					JFileChooser fc = new JFileChooser("./");
 					int returnVal = fc.showOpenDialog(fc);
 					activeFile = fc.getSelectedFile();
+					if(activeFile != null) {
 					save(activeFile);
+					}
 				}
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block

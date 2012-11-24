@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 
 import com.vjmp.entities.Entity.EntityType;
 import com.vjmp.gfx.Sprite;
+import com.vjmp.gfx.Sprite.SpriteType;
 
 public abstract class TriggerEntity extends DrawableEntity {
 
@@ -33,8 +34,8 @@ public abstract class TriggerEntity extends DrawableEntity {
 		entityType = EntityType.TRIGGER;
 	}
 	
-	public TriggerEntity(String path, Rectangle rect, boolean b, boolean[] walls) {
-		super(path,rect,b,walls);
+	public TriggerEntity(String path, Rectangle rect, boolean b, boolean[] walls,SpriteType spriteType) {
+		super(path,rect,b,walls,spriteType);
 		entityType = EntityType.TRIGGER;
 	}
 

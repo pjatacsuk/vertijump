@@ -14,11 +14,14 @@ import java.io.Serializable;
 
 import javax.imageio.ImageIO;
 
+import com.vjmp.gfx.Sprite.SpriteType;
+
 public class Sprite implements Serializable {
 	/**
 	 * 
 	 */
 	public enum Dir{NORTH,WEST,EAST,SOUTH};
+	public enum SpriteType {SCALE,REPEAT,NORMAL};
 	
 	private static final long serialVersionUID = 1L;
 	private int pos_x = 0;
@@ -30,6 +33,7 @@ public class Sprite implements Serializable {
 	private Rectangle     rect = null;
 	private boolean		  marked = false;
 	private String		  path;
+	private SpriteType 	  spriteType = SpriteType.SCALE;
 	
 	public Sprite(String path,int psx,int psy, boolean visibility) {
 		img = null;
@@ -45,10 +49,10 @@ public class Sprite implements Serializable {
 		rect = new Rectangle(pos_x,pos_y,img.getWidth(),img.getHeight());
 		isVisible = visibility;
 		wall = new boolean[4];
-		wall[getDirIndex(Dir.NORTH)] = false;
-		wall[getDirIndex(Dir.WEST)] = false;
-		wall[getDirIndex(Dir.SOUTH)] = false;
-		wall[getDirIndex(Dir.EAST)] = false;
+		wall[getDirIndex(Dir.NORTH)] = true;
+		wall[getDirIndex(Dir.WEST)] = true;
+		wall[getDirIndex(Dir.SOUTH)] = true;
+		wall[getDirIndex(Dir.EAST)] = true;
 	}
 	public Sprite(String t_path,Rectangle t_rect,boolean visibility) {
 		img = null;
@@ -63,15 +67,16 @@ public class Sprite implements Serializable {
 		pos_y = rect.y;
 		isVisible = visibility;
 		wall = new boolean[4];
-		wall[getDirIndex(Dir.NORTH)] = false;
-		wall[getDirIndex(Dir.WEST)] = false;
-		wall[getDirIndex(Dir.SOUTH)] = false;
-		wall[getDirIndex(Dir.EAST)] = false;
+		wall[getDirIndex(Dir.NORTH)] = true;
+		wall[getDirIndex(Dir.WEST)] = true;
+		wall[getDirIndex(Dir.SOUTH)] = true;
+		wall[getDirIndex(Dir.EAST)] = true;
 	}
-	public Sprite(String t_path,Rectangle t_rect,boolean visibility,boolean[] wall) {
+	public Sprite(String t_path,Rectangle t_rect,boolean visibility,boolean[] wall, SpriteType spriteType) {
 		img = null;
 		this.path = t_path;
 		this.rect = t_rect;
+		this.spriteType = spriteType;
 		try {
 			img = ImageIO.read(new File(path));
 		} catch (IOException e) {
@@ -85,6 +90,16 @@ public class Sprite implements Serializable {
 		this.wall[getDirIndex(Dir.WEST)] = wall[getDirIndex(Dir.WEST)];
 		this.wall[getDirIndex(Dir.SOUTH)] = wall[getDirIndex(Dir.SOUTH)];
 		this.wall[getDirIndex(Dir.EAST)] = wall[getDirIndex(Dir.EAST)];
+		
+		if(spriteType == SpriteType.REPEAT){
+			int width_count = rect.width/img.getWidth() +1;
+			int height_count = rect.height/img.getHeight() +1;
+		
+			rect = new Rectangle(rect.x,rect.y,width_count*img.getWidth(),height_count*img.getHeight());
+		
+		} else if(spriteType == SpriteType.NORMAL) {
+			rect = new Rectangle(rect.x,rect.y,img.getWidth(),img.getHeight());
+		}
 	}
 	public static int getDirIndex(Dir dir) {
 		int ret = 0;
@@ -156,21 +171,40 @@ public class Sprite implements Serializable {
 		wall[getDirIndex(Dir.EAST)] = false;
 		isVisible = true;
 	}
-	public Sprite(Sprite sprite) {
-		
-	}
+	
 	public void draw(Graphics g) {
 		if(img != null){
 			if(isVisible) { 
-			//	g.drawImage(img,pos_x,pos_y,null);
-				g.drawImage(img,pos_x,pos_y,rect.width,rect.height,null);
-	
+				
+				switch(spriteType) {
+				case SCALE:
+					g.drawImage(img,pos_x,pos_y,rect.width,rect.height,null);
+				break;
+				case NORMAL:
+					g.drawImage(img, pos_x, pos_y,rect.width,rect.height,null);	
+				break;
+				case REPEAT:
+					drawRepeatedImage(g);
+					break;
+				}
 			}
 		} else {
 			//todo exceptionok
 		}
 	}
 	
+	private void drawRepeatedImage(Graphics g) {
+		int width_count = rect.width/img.getWidth();
+		int height_count = rect.height/img.getHeight();
+		
+		for(int y=0;y<height_count;y++){
+			for(int x=0;x<width_count;x++){
+				g.drawImage(img,rect.x + x*img.getWidth(),rect.y + y*img.getHeight(),null );
+			}
+		
+		}
+		
+	}
 	public void move(double x,double y) {
 		pos_x += x;
 		pos_y += y;
@@ -217,6 +251,7 @@ public class Sprite implements Serializable {
 		stream.writeUTF(path);
 		stream.writeObject(rect);
 		stream.writeBoolean(isVisible);
+		stream.writeObject(spriteType);
 		for(int i=0;i<4;i++) {
 			stream.writeBoolean(wall[i]);
 		}
@@ -228,6 +263,7 @@ public class Sprite implements Serializable {
 		 this.path= in.readUTF();
 		 this.rect = (Rectangle)in.readObject();
 		 this.isVisible = in.readBoolean();
+		 this.spriteType =(SpriteType)in.readObject();
 		 wall = new boolean[4];
 		 for(int i=0;i<4;i++) {
 				wall[i] = in.readBoolean();
@@ -266,6 +302,10 @@ public class Sprite implements Serializable {
 	}
 	public BufferedImage getSubImg(int x,int y,int w,int h){
 		return img.getSubimage(x, y, w, h);
+	}
+	public void setSpriteType(SpriteType spriteType) {
+		this.spriteType = spriteType;
+		
 	}
 
 

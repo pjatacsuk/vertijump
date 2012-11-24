@@ -1,0 +1,1034 @@
+Simple plain text exporter for demo purposes
+
+See http://www.grantlee.org/apidox/for_themers.html for more information
+
+
+Texture data:
+    texture.width  = 556
+    texture.height = 498
+
+    texture.trimmedName = texturesheet
+    texture.fullName = texturesheet.png
+    texture.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/texturesheet.png
+
+SmartUpdateHash: $TexturePacker:SmartUpdate:c202eeb3b12c0f99a5de9bfc45460402$
+
+Sprite data:
+
+There are 2 variants:
+- sprites - contains the sprites, aliases are available in the
+  aliasList property and are not added top level
+
+- allSprites - list of all sprites
+
+Load javascript filter plugin, must be located in the exporter's folder in a subfolder
+grantlee/0.2/makecssselector.qs
+
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    background.png
+
+    -- name without image type extension
+    sprite.trimmedName      = background
+
+    -- name with image extension
+    sprite.fullName         = background.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 463
+    sprite.frameRect.y = 69
+    sprite.frameRect.width = 90
+    sprite.frameRect.height = 90
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.83273381294964
+    sprite.frameRectRel.y = 0.13855421686747
+    sprite.frameRectRel.width = 0.161870503597122
+    sprite.frameRectRel.height = 0.180722891566265
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 463
+    sprite.frameRectWithoutRotation.y = 69
+    sprite.frameRectWithoutRotation.width = 90
+    sprite.frameRectWithoutRotation.height = 90
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 90
+    sprite.sourceRect.height = 90
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 90
+    sprite.untrimmedSize.height = 90
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/background.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-10-24T12:34:11
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-24T12:34:11
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 2943
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    block.png
+
+    -- name without image type extension
+    sprite.trimmedName      = block
+
+    -- name with image extension
+    sprite.fullName         = block.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 416
+    sprite.frameRect.y = 324
+    sprite.frameRect.width = 100
+    sprite.frameRect.height = 25
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.748201438848921
+    sprite.frameRectRel.y = 0.650602409638554
+    sprite.frameRectRel.width = 0.179856115107914
+    sprite.frameRectRel.height = 0.0502008032128514
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 416
+    sprite.frameRectWithoutRotation.y = 324
+    sprite.frameRectWithoutRotation.width = 25
+    sprite.frameRectWithoutRotation.height = 100
+
+    -- true if the sprite was rotated
+    sprite.rotated        = true
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 25
+    sprite.sourceRect.height = 100
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 25
+    sprite.untrimmedSize.height = 100
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/block.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-10-24T12:34:11
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-24T12:34:11
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 283
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    block_blue.png
+
+    -- name without image type extension
+    sprite.trimmedName      = block_blue
+
+    -- name with image extension
+    sprite.fullName         = block_blue.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 439
+    sprite.frameRect.y = 452
+    sprite.frameRect.width = 15
+    sprite.frameRect.height = 15
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.789568345323741
+    sprite.frameRectRel.y = 0.907630522088353
+    sprite.frameRectRel.width = 0.026978417266187
+    sprite.frameRectRel.height = 0.0301204819277108
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 439
+    sprite.frameRectWithoutRotation.y = 452
+    sprite.frameRectWithoutRotation.width = 15
+    sprite.frameRectWithoutRotation.height = 15
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 15
+    sprite.sourceRect.height = 15
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 15
+    sprite.untrimmedSize.height = 15
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/block_blue.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-10-24T12:34:11
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-24T12:34:11
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 2805
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    block_brown.png
+
+    -- name without image type extension
+    sprite.trimmedName      = block_brown
+
+    -- name with image extension
+    sprite.fullName         = block_brown.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 422
+    sprite.frameRect.y = 452
+    sprite.frameRect.width = 15
+    sprite.frameRect.height = 15
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.758992805755396
+    sprite.frameRectRel.y = 0.907630522088353
+    sprite.frameRectRel.width = 0.026978417266187
+    sprite.frameRectRel.height = 0.0301204819277108
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 422
+    sprite.frameRectWithoutRotation.y = 452
+    sprite.frameRectWithoutRotation.width = 15
+    sprite.frameRectWithoutRotation.height = 15
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 15
+    sprite.sourceRect.height = 15
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 15
+    sprite.untrimmedSize.height = 15
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/block_brown.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-10-24T12:34:11
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-24T12:34:11
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 2805
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    block_deepred.png
+
+    -- name without image type extension
+    sprite.trimmedName      = block_deepred
+
+    -- name with image extension
+    sprite.fullName         = block_deepred.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 405
+    sprite.frameRect.y = 452
+    sprite.frameRect.width = 15
+    sprite.frameRect.height = 15
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.72841726618705
+    sprite.frameRectRel.y = 0.907630522088353
+    sprite.frameRectRel.width = 0.026978417266187
+    sprite.frameRectRel.height = 0.0301204819277108
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 405
+    sprite.frameRectWithoutRotation.y = 452
+    sprite.frameRectWithoutRotation.width = 15
+    sprite.frameRectWithoutRotation.height = 15
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 15
+    sprite.sourceRect.height = 15
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 15
+    sprite.untrimmedSize.height = 15
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/block_deepred.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-10-26T10:31:36
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-26T10:31:34
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 156
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    block_green.png
+
+    -- name without image type extension
+    sprite.trimmedName      = block_green
+
+    -- name with image extension
+    sprite.fullName         = block_green.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 388
+    sprite.frameRect.y = 452
+    sprite.frameRect.width = 15
+    sprite.frameRect.height = 15
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.697841726618705
+    sprite.frameRectRel.y = 0.907630522088353
+    sprite.frameRectRel.width = 0.026978417266187
+    sprite.frameRectRel.height = 0.0301204819277108
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 388
+    sprite.frameRectWithoutRotation.y = 452
+    sprite.frameRectWithoutRotation.width = 15
+    sprite.frameRectWithoutRotation.height = 15
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 15
+    sprite.sourceRect.height = 15
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 15
+    sprite.untrimmedSize.height = 15
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/block_green.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-10-24T12:34:11
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-24T12:34:11
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 2805
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    block_orange.png
+
+    -- name without image type extension
+    sprite.trimmedName      = block_orange
+
+    -- name with image extension
+    sprite.fullName         = block_orange.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 371
+    sprite.frameRect.y = 452
+    sprite.frameRect.width = 15
+    sprite.frameRect.height = 15
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.66726618705036
+    sprite.frameRectRel.y = 0.907630522088353
+    sprite.frameRectRel.width = 0.026978417266187
+    sprite.frameRectRel.height = 0.0301204819277108
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 371
+    sprite.frameRectWithoutRotation.y = 452
+    sprite.frameRectWithoutRotation.width = 15
+    sprite.frameRectWithoutRotation.height = 15
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 15
+    sprite.sourceRect.height = 15
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 15
+    sprite.untrimmedSize.height = 15
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/block_orange.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-10-25T20:51:40
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-25T20:48:12
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 192
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    debug_platform.png
+
+    -- name without image type extension
+    sprite.trimmedName      = debug_platform
+
+    -- name with image extension
+    sprite.fullName         = debug_platform.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 2
+    sprite.frameRect.y = 471
+    sprite.frameRect.width = 540
+    sprite.frameRect.height = 25
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.00359712230215827
+    sprite.frameRectRel.y = 0.94578313253012
+    sprite.frameRectRel.width = 0.971223021582734
+    sprite.frameRectRel.height = 0.0502008032128514
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 2
+    sprite.frameRectWithoutRotation.y = 471
+    sprite.frameRectWithoutRotation.width = 540
+    sprite.frameRectWithoutRotation.height = 25
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 540
+    sprite.sourceRect.height = 25
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 540
+    sprite.untrimmedSize.height = 25
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/debug_platform.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-10-24T12:34:11
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-24T12:34:11
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 247
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    finishflag.png
+
+    -- name without image type extension
+    sprite.trimmedName      = finishflag
+
+    -- name with image extension
+    sprite.fullName         = finishflag.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 518
+    sprite.frameRect.y = 2
+    sprite.frameRect.width = 35
+    sprite.frameRect.height = 65
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.931654676258993
+    sprite.frameRectRel.y = 0.00401606425702811
+    sprite.frameRectRel.width = 0.0629496402877698
+    sprite.frameRectRel.height = 0.130522088353414
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 518
+    sprite.frameRectWithoutRotation.y = 2
+    sprite.frameRectWithoutRotation.width = 35
+    sprite.frameRectWithoutRotation.height = 65
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 35
+    sprite.sourceRect.height = 65
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 35
+    sprite.untrimmedSize.height = 65
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/finishflag.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-11-11T00:17:25
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-11-11T00:17:23
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 227
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    finishflag_anim.png
+
+    -- name without image type extension
+    sprite.trimmedName      = finishflag_anim
+
+    -- name with image extension
+    sprite.fullName         = finishflag_anim.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 354
+    sprite.frameRect.y = 2
+    sprite.frameRect.width = 60
+    sprite.frameRect.height = 350
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.636690647482014
+    sprite.frameRectRel.y = 0.00401606425702811
+    sprite.frameRectRel.width = 0.107913669064748
+    sprite.frameRectRel.height = 0.70281124497992
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 354
+    sprite.frameRectWithoutRotation.y = 2
+    sprite.frameRectWithoutRotation.width = 350
+    sprite.frameRectWithoutRotation.height = 60
+
+    -- true if the sprite was rotated
+    sprite.rotated        = true
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = true
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 350
+    sprite.sourceRect.height = 60
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 360
+    sprite.untrimmedSize.height = 60
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/finishflag_anim.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-11-11T02:01:42
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-11-11T00:33:44
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 1895
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    message_box.png
+
+    -- name without image type extension
+    sprite.trimmedName      = message_box
+
+    -- name with image extension
+    sprite.fullName         = message_box.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 354
+    sprite.frameRect.y = 354
+    sprite.frameRect.width = 200
+    sprite.frameRect.height = 96
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.636690647482014
+    sprite.frameRectRel.y = 0.710843373493976
+    sprite.frameRectRel.width = 0.359712230215827
+    sprite.frameRectRel.height = 0.192771084337349
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 354
+    sprite.frameRectWithoutRotation.y = 354
+    sprite.frameRectWithoutRotation.width = 200
+    sprite.frameRectWithoutRotation.height = 96
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = true
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 2
+    sprite.sourceRect.width = 200
+    sprite.sourceRect.height = 96
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 2
+
+    sprite.untrimmedSize.width = 200
+    sprite.untrimmedSize.height = 100
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/message_box.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-10-25T21:19:28
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-25T20:45:40
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 3107
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    score_background.png
+
+    -- name without image type extension
+    sprite.trimmedName      = score_background
+
+    -- name with image extension
+    sprite.fullName         = score_background.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 2
+    sprite.frameRect.y = 2
+    sprite.frameRect.width = 350
+    sprite.frameRect.height = 467
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.00359712230215827
+    sprite.frameRectRel.y = 0.00401606425702811
+    sprite.frameRectRel.width = 0.629496402877698
+    sprite.frameRectRel.height = 0.937751004016064
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 2
+    sprite.frameRectWithoutRotation.y = 2
+    sprite.frameRectWithoutRotation.width = 467
+    sprite.frameRectWithoutRotation.height = 350
+
+    -- true if the sprite was rotated
+    sprite.rotated        = true
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 467
+    sprite.sourceRect.height = 350
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 467
+    sprite.untrimmedSize.height = 350
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/score_background.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-11-07T03:17:59
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-11-07T03:14:50
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 90031
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    spike.png
+
+    -- name without image type extension
+    sprite.trimmedName      = spike
+
+    -- name with image extension
+    sprite.fullName         = spike.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 354
+    sprite.frameRect.y = 452
+    sprite.frameRect.width = 15
+    sprite.frameRect.height = 15
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.636690647482014
+    sprite.frameRectRel.y = 0.907630522088353
+    sprite.frameRectRel.width = 0.026978417266187
+    sprite.frameRectRel.height = 0.0301204819277108
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 354
+    sprite.frameRectWithoutRotation.y = 452
+    sprite.frameRectWithoutRotation.width = 15
+    sprite.frameRectWithoutRotation.height = 15
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 15
+    sprite.sourceRect.height = 15
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 15
+    sprite.untrimmedSize.height = 15
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/spike.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-10-26T10:25:41
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-26T10:25:40
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 273
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    spooky.png
+
+    -- name without image type extension
+    sprite.trimmedName      = spooky
+
+    -- name with image extension
+    sprite.fullName         = spooky.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 463
+    sprite.frameRect.y = 2
+    sprite.frameRect.width = 45
+    sprite.frameRect.height = 45
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.83273381294964
+    sprite.frameRectRel.y = 0.00401606425702811
+    sprite.frameRectRel.width = 0.0809352517985611
+    sprite.frameRectRel.height = 0.0903614457831325
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 463
+    sprite.frameRectWithoutRotation.y = 2
+    sprite.frameRectWithoutRotation.width = 45
+    sprite.frameRectWithoutRotation.height = 45
+
+    -- true if the sprite was rotated
+    sprite.rotated        = false
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = false
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 45
+    sprite.sourceRect.height = 45
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 45
+    sprite.untrimmedSize.height = 45
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/spooky.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-11-07T00:14:23
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-10-24T12:34:11
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 358
+
+
+    =========================================================================
+
+    Use the javascript filter plugin to replace -hover with :hover
+    spooky_anim.png
+
+    -- name without image type extension
+    sprite.trimmedName      = spooky_anim
+
+    -- name with image extension
+    sprite.fullName         = spooky_anim.png
+
+    -- offset of the center of the trimmed sprite from the
+    -- center of the original sprite (used by cocos2d)
+    sprite.absoluteOffset.x = 
+    sprite.absoluteOffset.y = 
+
+    -- list of alias sprites for this one
+    sprite.aliasList = 
+
+    --- frame rectangle with pixel coordinates
+    sprite.frameRect.x = 416
+    sprite.frameRect.y = 2
+    sprite.frameRect.width = 45
+    sprite.frameRect.height = 320
+
+    --- frame rectangle with uv coordinates (0..1)
+    sprite.frameRectRel.x = 0.748201438848921
+    sprite.frameRectRel.y = 0.00401606425702811
+    sprite.frameRectRel.width = 0.0809352517985611
+    sprite.frameRectRel.height = 0.642570281124498
+
+    --- version of the frame rect with "original" width and height
+    sprite.frameRectWithoutRotation.x = 416
+    sprite.frameRectWithoutRotation.y = 2
+    sprite.frameRectWithoutRotation.width = 320
+    sprite.frameRectWithoutRotation.height = 45
+
+    -- true if the sprite was rotated
+    sprite.rotated        = true
+
+    -- true if the sprite was trimmed
+    sprite.trimmed        = true
+
+    sprite.sourceRect.x = 0
+    sprite.sourceRect.y = 0
+    sprite.sourceRect.width = 320
+    sprite.sourceRect.height = 45
+
+    sprite.cornerOffset.x = 0
+    sprite.cornerOffset.y = 0
+
+    sprite.untrimmedSize.width = 330
+    sprite.untrimmedSize.height = 45
+
+    -- the file absolute file name of the sprite
+    sprite.fileData.absoluteFileName = X:/java2_workspace/vertijump_eclipse/vertjump_homepc/res/spooky_anim.png
+
+    -- the modification date of the sprite
+    sprite.fileData.lastModified = 2012-11-10T00:30:45
+
+    -- the creation date of the sprite
+    sprite.fileData.created = 2012-11-10T00:30:43
+
+    -- the file size of the sprite
+    sprite.fileData.fileSize = 5863
+
+
+

@@ -1,10 +1,7 @@
 package com.vjmp.editor;
 
 import java.awt.Component;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +21,16 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
 	        setHorizontalAlignment(CENTER);
 	        setVerticalAlignment(CENTER);
 	        images = new ArrayList<ImageIcon>();
-	        try {
+	        for(String path : Editor.textureList){
+	        	images.add(createImageIcon(path));
+	        	String[] desc= path.split("/");
+	        	//images.get(images.size()-1).setDescription(desc[desc.length-1]);
+				images.get(images.size()-1).setDescription("");	
+			}
+	        
+	        
+	        
+	       /* try {
 				BufferedReader br = new BufferedReader(new FileReader("./res/textures.txt"));
 				String path = br.readLine();
 				while(path != null) {
@@ -43,14 +49,18 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}*/
+	        
 	        
 	 }
 	private ImageIcon createImageIcon(String path) {
 			
 	        if (path != null) {
 	        
-	            return new ImageIcon(path);
+	            ImageIcon icon = new ImageIcon(path);
+	            Image correct_size = icon.getImage().getScaledInstance(45, 45,0);
+	            icon.setImage(correct_size);
+	            return icon;
 	        } else {
 	            System.err.println("Couldn't find file: " + path);
 	                return null;

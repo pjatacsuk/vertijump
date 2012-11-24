@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import com.vjmp.gfx.Sprite;
+import com.vjmp.gfx.Sprite.SpriteType;
 
 public class MessageBox extends TriggerEntity {
 
@@ -48,8 +49,8 @@ public class MessageBox extends TriggerEntity {
 		message_box = new Sprite("./res/message_box.png",message_box_rect,b);
 	}
 	public MessageBox(String messageString, String path, Rectangle rect,
-			boolean b, boolean[] walls) {
-		super(path,rect,b,walls);
+			boolean b, boolean[] walls,SpriteType spriteType) {
+		super(path,rect,b,walls,spriteType);
 		this.message = messageString;
 		triggerType = TriggerType.MESSAGE_BOX;
 
