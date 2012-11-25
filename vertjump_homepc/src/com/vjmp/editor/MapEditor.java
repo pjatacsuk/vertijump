@@ -51,6 +51,13 @@ import com.vjmp.InputHandler;
 import com.vjmp.gfx.Camera;
 import com.vjmp.managers.GuiManager;
 
+/**
+ * Az map szerkesztõ fõosztálya.
+ * Felelõs a futtatásért, illetve a Swing gui megalkotásáért.
+ * Extendeli a {@link Canvas}-t, implementálja a {@link Runnable}, {@link ActionListener} interfaceket.
+ * 
+ *
+ */
 public class MapEditor extends Canvas implements Runnable,ActionListener{
 	
 	private static final long serialVersionUID = 1L;
@@ -74,6 +81,10 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	
 	private JFrame frame;
 	
+	/**
+	 * Konstruktor
+	 * Megalkotja frame-t, illetve a swing gui-t.
+	 */
 	public MapEditor() {
 		setMinimumSize(new Dimension(WIDTH * (SCALE),HEIGHT*SCALE));
 		setMaximumSize(new Dimension(WIDTH * (SCALE),HEIGHT*SCALE));
@@ -200,6 +211,9 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	
 	}
 	
+	/**
+	 * Elinditja a mapeditor szálat.
+	 */
 	public synchronized void start() {
 		running = true;
 		init();
@@ -207,30 +221,25 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		new Thread(this).start();
 	}
 	
+	/**
+	 * Inicializálja a változókat
+	 */
 	public void init() {
 		
 	
 		inputHandler  = new InputHandler(this);
 	
 		camera		  = new Camera(WIDTH * SCALE,HEIGHT * SCALE);
-		/*try {
-			activeFile = new File("./res/map5.txt");
-			load(activeFile);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
+		
 		load_resource();
 		
 	
 	
 	}
+	
+	/**
+	 * Betölti az  erõforrásokat.
+	 */
 	public void load_resource() {
 		bg = null;
 		try {
@@ -241,6 +250,9 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	
 	}
 	
+	/**
+	 * Updateli a {@link Camera}-t, illetve az {@link Editor}-t. Kezeli az inputokat.
+	 */
 	public void tick() {
 		camera.update(inputHandler);
 		editor.update(camera);
@@ -248,6 +260,9 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	
 	}
 	
+	/**
+	 * Az inputokat kezeli.
+	 */
 	private void handleOwnInput() {
 		try {
 			if(inputHandler.O.isPressedAndReleased()) {
@@ -273,18 +288,39 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		
 	}
 
+	/**
+	 * Elmenti a pályát a megadott útvonalra.
+	 * @param path : {@link String} - megadott útvonal
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	void save(String path) throws FileNotFoundException, IOException {
 		 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
 		 oos.writeObject(editor);
 		 oos.close();
 		 JOptionPane.showMessageDialog(frame,"Saved map to \"./res/" + path +"\"");
 	 }
+	
+	/**
+	 * Elmenti a pályát a megadott filera.
+	 * @param file : {@link File} - a megadott file
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	void save(File file) throws FileNotFoundException, IOException {
 		 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file));
 		 oos.writeObject(editor);
 		 oos.close();
 		 JOptionPane.showMessageDialog(frame,"Saved map to \"./res/" + file.getName() + "\"");
 	 }
+	
+	/**
+	 * Betölti a pályát a megadott útvonalról
+	 * @param path : {@link String} - megadott útvonal
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	 void load(String path) throws FileNotFoundException, IOException, ClassNotFoundException {
 		 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
 		 editor = (Editor)ois.readObject();
@@ -295,6 +331,14 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		 frame.setTitle(NAME + " - " + path);
 		
 	 }
+	 
+	 /**
+	  * Betölti a pályát a megadott fileból
+	  * @param file : {@link File} - a megadott file
+	  * @throws FileNotFoundException
+	  * @throws IOException
+	  * @throws ClassNotFoundException
+	  */
 	 void load(File file) throws FileNotFoundException, IOException, ClassNotFoundException {
 		 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
 		 editor = (Editor)ois.readObject();
@@ -306,7 +350,9 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	 }
 	
 
-
+	 /**
+	  * A renderelést végzõ függvény. 
+	  */
 	public void render() {
 		BufferStrategy strat = this.getBufferStrategy();
 		if(strat == null) {
@@ -329,6 +375,10 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		strat.show();
 	}
 	
+	/**
+	 * Kirajzolja a hátteret.
+	 * @param g : {@link Graphics}
+	 */
 	private void DrawBackGround(Graphics g) {
 		double width_draw_count = (double)getWidth() / (double)bg.getWidth();
 		double height_draw_count = (double)getHeight() / (double)bg.getHeight();
@@ -341,7 +391,9 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	
 	
 	
-	
+	/**
+	 * A felülirt run() függvény. A fix 60fps framerate-ért felelõs.
+	 */
 	@Override
 	public void run() {
 		long lastTime = System.nanoTime();
@@ -386,6 +438,10 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		
 	}
 
+	/**
+	 * Az override-olt actionPerformed függvény. A gui kezelését végzi.
+	 * @param arg0 : {@link ActionEvent}
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		JMenuItem menuItem = (JMenuItem)arg0.getSource();

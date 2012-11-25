@@ -6,6 +6,11 @@ import java.io.InputStreamReader;
 
 import com.vjmp.editor.MapEditor;
 
+/**
+ * A program fõ classja. A játék illetve editor szálak elinditását végzi.
+ * 
+ *
+ */
 public class Program {
 	public static Game game;
 	public static MapEditor editor;
@@ -25,6 +30,10 @@ public class Program {
 			}
 	}
 
+	/**
+	 * A parancsok feldolgozását végzi
+	 * @param words : {@link String} tömb.
+	 */
 	private static void command(String[] words) {
 		if(words[0].equals("game")) {
 			game = new Game();

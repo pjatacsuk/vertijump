@@ -13,7 +13,14 @@ import com.vjmp.entities.drawable.TriggerEntity.TriggerType;
 import com.vjmp.gfx.Sprite;
 import com.vjmp.gfx.Sprite.Dir;
 import com.vjmp.gfx.Sprite.SpriteType;
-	
+
+/**
+ * A SpikeTrigger olyan {@link TriggerEntity} amellyel való érintkezés a player halálához vezet.
+ * A {@link SpikeTrigger}-t egy meglévõ falra kell felhelyezni, a {@link SpikeTrigger} sprite-ja
+ * csak editorban látszik
+ * @author User
+ *
+ */
 public class SpikeTrigger extends TriggerEntity {
 	
 	/**
@@ -27,7 +34,13 @@ public class SpikeTrigger extends TriggerEntity {
 	private static final int spike_height = 15;
 	
 	
-	
+	/**
+	 * Konstruktor
+	 * @param string : {@link String} - a {@link SpikeTrigger} sprite-jának elérési útvonala
+	 * @param x : int - a {@link SpikeTrigger} sprite-jának x poziciója
+	 * @param y : int - a {@link SpikeTrigger} sprite-jának y poziciója
+	 * @param b : boolean - {@link SpikeTrigger} sprite-jának láthatósága
+	 */
 	public SpikeTrigger(String string, int x, int y, boolean b) {
 		super(string, x, y, b);
 		// TODO Auto-generated constructor stub
@@ -35,13 +48,27 @@ public class SpikeTrigger extends TriggerEntity {
 		triggerType = TriggerType.SPIKE;
 		isAlwaysVisible = true;
 	}	
-
+	
+	/**
+	 * Konstruktor
+	 * @param path : {@link String} - a {@link SpikeTrigger} sprite-jának elérési útvonala
+	 * @param rect : {@link Rectangle} - a {@link SpikeTrigger} sprite-jának rectangelje
+	 * @param b : boolean - {@link SpikeTrigger} sprite-jának láthatósága
+	 */
 	public SpikeTrigger(String path, Rectangle rect, boolean b) {
 		super(path, rect, b);
 		
 		triggerType = TriggerType.SPIKE;
 		isAlwaysVisible = true;
 	}
+	
+	/**
+	 * Konstruktor
+	 * @param path : {@link String} - a {@link SpikeTrigger} sprite-jának elérési útvonala
+	 * @param rect : {@link Rectangle} - a {@link SpikeTrigger} sprite-jának rectangelje
+	 * @param b : boolean - {@link SpikeTrigger} sprite-jának láthatósága
+	 * @param walls : boolean[] - {@link SpikeTrigger} sprite-jának falai
+	 */
 	public SpikeTrigger(String path, Rectangle rect, boolean b,boolean[] walls,SpriteType spriteType){
 		super(path,rect,b,walls,spriteType);
 		isAlwaysVisible = true;
@@ -50,6 +77,12 @@ public class SpikeTrigger extends TriggerEntity {
 		
 	}
 
+	/**
+	 * Létrehozza a sprite wall változóinak függvényében a tüskéket.
+	 * Ha van fal az adott oldalon, akkor tüskék is lesznek.
+	 * @param g : {@link Graphics}
+	 * @return polygons : Polygon[] - a létrehozott "tüskék" (polygonok) tömbje
+	 */
 	private Polygon[] CreateSpikes(Graphics g) {
 		
 		int rect_height = sprite.getRect().height;
@@ -72,7 +105,6 @@ public class SpikeTrigger extends TriggerEntity {
 		
 		
 		g.setColor(new Color(188, 79, 99));
-		int index = 0;
 		polygons = new Polygon[spike_count];
 		if(spike_walls[Sprite.getDirIndex(Dir.WEST)]) {
 			CreateWestSpikes(g);
@@ -88,6 +120,10 @@ public class SpikeTrigger extends TriggerEntity {
 		}
 		return polygons;
 	}
+	/**
+	 * Létrehoz a tüskéket a déli oldalon.
+	 * @param g : Graphics
+	 */
 	private void CreateSouthSpikes(Graphics g) {
 		int index = 0;
 		while(polygons[index] != null) index++;
@@ -105,6 +141,10 @@ public class SpikeTrigger extends TriggerEntity {
 		
 	}
 
+	/**
+	 * Létrehozza a tüskéket az északi oldalon
+	 * @param g : {@link Graphics}
+	 */
 	private void CreateNorthSpikes(Graphics g) {
 		int index = 0;
 		while(polygons[index] != null) index++;
@@ -122,6 +162,10 @@ public class SpikeTrigger extends TriggerEntity {
 		
 	}
 
+	/**
+	 * Létrehozza a tüskéket a keleti oldalon
+	 * @param g : {@link Graphics}
+	 */
 	private void CreateEastSpikes( Graphics g) {
 		int index = 0;
 		while(polygons[index] != null) index++;
@@ -139,6 +183,11 @@ public class SpikeTrigger extends TriggerEntity {
 		
 	}
 
+	/**
+	 * Létrehozza a tüskéket a nyugati oldalon
+	 * @param g : {@link Graphics}
+	 * @return polygons : Polygon[] - a spike-okat tartalmazó {@link Polygon}n tömb
+	 */
 	public Polygon[] CreateWestSpikes(Graphics g) {
 		int index = 0;
 		while(polygons[index] != null) index++;
@@ -156,6 +205,10 @@ public class SpikeTrigger extends TriggerEntity {
 		return polygons;
 	}
 	
+	/**
+	 * Kirajzolja a tüskéket
+	 * @param g : {@link Graphics}
+	 */
 	private void drawSpikes(Graphics g) {
 		if(polygons == null) {
 			polygons = CreateSpikes(g);
@@ -169,17 +222,29 @@ public class SpikeTrigger extends TriggerEntity {
 		}
 		g.setColor(Color.black); 
 	}
+	
+	/**
+	 * Kirajzolja a kirajzolandót.
+	 */
 	@Override
 	public void draw(Graphics g) {
 			drawSpikes(g);
 				
 	}
+	
+	/**
+	 * "Disaktiválja" a {@link TriggerEntity}-t
+	 */
 	@Override 
 	public void disactivateTrigger() {
 		return;
 	}
 	
-
+	/**
+	 * Serializáció
+	 * @param stream : {@link ObjectOutputStream}
+	 * @throws IOException
+	 */
 	private void writeObject(ObjectOutputStream stream)
 	        throws IOException {
 	 		
@@ -197,6 +262,13 @@ public class SpikeTrigger extends TriggerEntity {
 	 			stream.writeBoolean(spike_walls[i]);
 	 		}
 	}
+	
+	/**
+	 * Deserializáció
+	 * @param in : {@link ObjectInputStream}
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	private void readObject(ObjectInputStream in)
 			 throws IOException, ClassNotFoundException {
 		//general Trigger types

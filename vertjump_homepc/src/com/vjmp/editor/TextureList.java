@@ -9,9 +9,17 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * A "./res/png" mappában lévõ .png kiterjesztésû file-ok útvonalát tölti be egy listába.
+ * @author User
+ *
+ */
 public class TextureList implements Iterable<String> {
 	private List<String> list = null;
 	
+	/**
+	 * Betölti a mappában lévõ .png kiterjesztésû fileok útvonalát
+	 */
 	TextureList() {
 		list = new ArrayList<String>();
 		
@@ -28,32 +36,29 @@ public class TextureList implements Iterable<String> {
 				
 			}
 			
-		/*	BufferedReader br = new BufferedReader(new FileReader("./res/png"));
-			
-			String line = br.readLine();
-			while(line != null) {
-				line = "./res/" +line;
-				list.add(line);
-				line = br.readLine();
-			}
-			br.close(); 
-		
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} */
+	
 	}
 	
+	/**
+	 * Visszatér a megadott indexû útvonallal
+	 * @param i : int - index
+	 * @return path : {@link String} - a megadott indexû útvonal
+	 */
 	public String GetPath(int i) {
 		return list.get(i);	
 	}
+	
+	/**
+	 * Visszatér a lista méretével
+	 * @return size : int - a lista mérete
+	 */
 	public int size() {
 		return list.size();
 	}
 
+	/**
+	 * @return iterator : {@link Iterator}
+	 */
 	@Override
 	public Iterator<String> iterator() {
 		return list.iterator();

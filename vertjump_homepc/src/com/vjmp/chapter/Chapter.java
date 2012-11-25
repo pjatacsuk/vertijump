@@ -19,6 +19,12 @@ import com.vjmp.gfx.Camera;
 import com.vjmp.managers.ChapterHighScoreManager;
 import com.vjmp.utilities.HighScore;
 
+
+/**
+ * A tényleges pályát kezeli. Megjeleniti, frissiti,betölti, elinditja, pause-olja, reseteli.
+ * 
+ *
+ */
 public class Chapter {
 	public enum ChapterState{FINISHED,DIED,RUNNING,STALLING, FINISH_SCREEN};
 	
@@ -27,20 +33,28 @@ public class Chapter {
 	private Camera camera = null;
 	private Player player = null;
 	private InputHandler inputHandler = null;
+	private TriggerHandler triggerHandler = null;
+	
 	private static BufferedImage bg;
 	private int WIDTH = 0;
 	private int HEIGHT = 0;
 	private String path = null;
+	private String chapterName;
+	
 	private HighScore highScore = null;
 	private ChapterHighScoreManager chapterHighScoreManager = null;
-	private String chapterName;
-	private Thread mapUpdateThread = null;
 	
-	private ChapterState chapterState = ChapterState.STALLING;
-	
-	private TriggerHandler triggerHandler = null;
+	private ChapterState chapterState = ChapterState.STALLING;	
 	public boolean isReadyToUpdate = true;
 	
+	/**Konstruktor
+	 * 
+	 * @param name : {@link String} - a pálya neve
+	 * @param inputHandler : {@link InputHandler} - az input kezelése
+	 * @param WIDTH : int - a pálya szélessége
+	 * @param HEIGHT : int - a pálya magassága
+	 * @param map_path : {@link String} - a pályát tartalmazó file útvonala
+	 */
 	public Chapter(String name,InputHandler inputHandler,int WIDTH,int HEIGHT,String map_path) {
 			player = new Player(inputHandler);
 			camera = new Camera(WIDTH,HEIGHT);
@@ -71,6 +85,10 @@ public class Chapter {
 		}
 			
 	}
+	
+	/**
+	 * Betölti a chapter szükséges erõforrásokat
+	 */
 	public void load_resource() {
 		bg = null;
 		try {
@@ -80,6 +98,14 @@ public class Chapter {
 		}
 	
 	}
+	
+	/**
+	 * Betölti a chaptert a megadott elérési út alapján
+	 * @param path : {@link String} - a pálya elérési útja
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	private void load(String path) throws FileNotFoundException, IOException, ClassNotFoundException {
 			 this.path = path;
 			 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
@@ -93,6 +119,11 @@ public class Chapter {
 			 map.isEditor = false;
 			 start();
 	 }
+	
+	/**
+	 * Elinditja a chaptert, a score mérést, beállitja a chapterState-t RUNNING-ra.
+	 * 
+	 */
 	 public void start() {
 		 chapterState = ChapterState.RUNNING;
 	
@@ -104,11 +135,19 @@ public class Chapter {
 		 }
 		 highScore.start();
 	 }
+	 
+	 /**
+	  * Megállitja a chaptert. Kiszámitja a score-t, majd hozzáadja a highscore-okhoz és el is menti.
+	  */
 	 public void stop() {
 		 highScore.stop();
 		 chapterHighScoreManager.add(new HighScore(chapterName,highScore.toString()));
 		 chapterHighScoreManager.saveToFile();
 	 }
+	 
+	 /**
+	  * Reseteli a pályát.
+	  */
 	 public void resetMap() {
 		  try {
 		
@@ -125,6 +164,12 @@ public class Chapter {
 			e.printStackTrace();
 		}
 	 }
+	 
+	 /**
+	  * Elvégzi a chapter frissitését. Frissiti a {@link Player}-t, a {@link Map}-et,a {@link HighScore}-t, a {@link Camera}-t,
+	  * a {@link TriggerHandler}-t.
+	  *
+	  */
 	 public void update() {
 		 	triggerHandler.update();
 		 	player.update(map);
@@ -133,52 +178,29 @@ public class Chapter {
 			highScore.update(camera);
 			updatePlayerFallDeath(); 
 	 }
+	 
+	 /**
+	  * Vizsgálja, le-e esett a player, ha leesett resetel.
+	  */
 	 private void updatePlayerFallDeath() {
 		if(camera.pos_y + player.GetPosY() > HEIGHT + 10) {
 			resetMap();
 		}
 	}
+	
+	 /**
+	  * 
+	  * @return chapterState : {@link ChapterState} - a jelenlegi chapter állapot
+	  */
 	public ChapterState getChapterState() { 
 		 return chapterState;
 	 }
-	 private void placeHolderLogic() {
-			if(inputHandler.W.isPressed()) {
-				//player.move(0, -10);
-			
-			}
-			if(inputHandler.A.isPressed()) {
-				//player.move(-10,0);
-		
-			}
-			if(inputHandler.S.isPressed()) {
-				//player.move(0, 10);
-				
-			}
-			if(inputHandler.D.isPressed()) {
-				//player.move(10, 0);
-				
-			}
-			if(inputHandler.ESC.isPressed()) {
-				
-			}
-			if(inputHandler.P.isPressed()) {
-				try {
-					load("./res/map.txt");
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-		}
-
-		private void DrawBackGround(Graphics g) {
+	
+	/**
+	 * Kirajzolja a hátteret.
+	 * @param g : {@link Graphics}
+	 */
+	 private void DrawBackGround(Graphics g) {
 			double width_draw_count = (double)WIDTH / (double)bg.getWidth();
 			double height_draw_count = (double)HEIGHT / (double)bg.getHeight();
 			for(int i=0;i<width_draw_count+1;i++) 
@@ -186,7 +208,12 @@ public class Chapter {
 					g.drawImage(bg, i*bg.getWidth(), j*bg.getHeight(),null);
 				}
 			
-		}
+	 }
+	 
+	 /**
+	  * A kirajzolást végzi.
+	  * @param g : {@link Graphics}
+	  */
 	 public void draw(Graphics g) {
 		    g.fillRect(0, 0, WIDTH, HEIGHT);
 			DrawBackGround(g);
@@ -199,22 +226,52 @@ public class Chapter {
 			}
 			
 	 }
+	 
+	 /**
+	  * Beállitja a kivánt {@link ChapterState}-t.
+	  * @param state : {@link ChapterState}
+	  */
 	public void setChapterState(ChapterState state) {
 		chapterState = state;
 		
 	}
+	
+	/**
+	 * 
+	 * @return chapterName : {@link String}
+	 */
 	public String getName() {
 		return chapterName;
 	}
+	
+	/**
+	 * 
+	 * @return inputHandler : {@link InputHandler}
+	 */
 	public InputHandler getInputHandler() {
 		return inputHandler;
 	}
+	
+	/**
+	 * 
+	 * @return formált highScore : {@link String}
+	 */
 	public String getScore() {
 		return highScore.formatScore();
 	}
+	
+	/**
+	 * 
+	 * @return camera : {@link Camera}
+	 */
 	public Camera getCamera() {
 		return camera;
 	}
+	
+	/**
+	 * 
+	 * @return chapterHighScoreManager : {@link ChapterHighScoreManager}
+	 */
 	public ChapterHighScoreManager getChapterHighScoreManager() {
 		return chapterHighScoreManager;
 	}

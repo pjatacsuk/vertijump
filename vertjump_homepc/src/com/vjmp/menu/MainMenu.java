@@ -8,12 +8,24 @@ import com.vjmp.Game;
 import com.vjmp.Game.GameState;
 import com.vjmp.gfx.Camera;
 
+/**
+ * Fõmenu, extendeli a Menu osztályt.
+
+ *
+ */
 public class MainMenu extends Menu {
 	
 	
 	
 	private static final int MenuItemPadding = 50;
 	
+	
+	/**
+	 * Konstruktor
+	 * @param game : {@link Game} - fõ Game osztály
+	 * @param prevMenu : {@link Menu} - az elõzõ menüre mutat
+	 * @param camera : {@link Camera} - a camera
+	 */
 	public MainMenu(Game game,Menu prevMenu,Camera camera) {
 		super(game,null,null,camera);
 		
@@ -34,7 +46,10 @@ public class MainMenu extends Menu {
 	
 	
 
-
+	/**
+	 * Az akciókat kezeli 
+	 * @param gameMenuItem : {@link GameMenuItem} - az aktivált menu
+	 */
 	@Override
 	protected void handleAction(GameMenuItem gameMenuItem) {
 		if(gameMenuItem.getName().equals("Start New Game")){
@@ -47,6 +62,9 @@ public class MainMenu extends Menu {
 	}
 	
 
+	/**
+	 * Kirajzolás.
+	 */
 	@Override
 	public void draw(Graphics g) {
 		//mainmenu -> Õ végzi
@@ -78,6 +96,10 @@ public class MainMenu extends Menu {
 		}
 	}
 
+	/**
+	 * A name által kiválasztott menu-itemet aktiválja
+	 * @param name : {@link String} - a kiválasztandó név
+	 */
 	private void setGameMenuItemActive(String name) {
 		int i = 0;
 		while(menuItems.get(i).getName().equals(name) != true){

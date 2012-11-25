@@ -10,6 +10,13 @@ import com.vjmp.chapter.Chapter.ChapterState;
 import com.vjmp.gfx.Camera;
 import com.vjmp.gfx.Sprite;
 
+
+/**
+ * A pálya teljesitése után megjelenõ összesités osztálya.<br>
+ * Megjeleniti az elért pontot, illetve a top 5 elért eredményt.
+ * 
+ *
+ */
 public class AfterChapterScreen {
 	private InputHandler inputHandler = null;
 	private String		 score = null;
@@ -23,7 +30,11 @@ public class AfterChapterScreen {
 	
 	
 
-	
+	/**
+	 * Konstruktor<br>
+	 * 
+	 * @param chapter : {@link Chapter} - Az {@link AfterChapterScreen}-hez tartozó {@link Chapter}.
+	 */
 	public AfterChapterScreen(Chapter chapter) {
 		this.chapter = chapter;
 		camera = chapter.getCamera();
@@ -37,10 +48,16 @@ public class AfterChapterScreen {
 	}
 	
 	
+	/**
+	 * Az update-elést végzi
+	 */
 	public void update() {
 		handleInput();
 	}
 	
+	/**
+	 * Az inputokat kezeli.
+	 */
 	public void handleInput() {
 		if(inputHandler.ENTER.isPressedOnce()){
 			chapter.setChapterState(ChapterState.FINISHED);
@@ -49,7 +66,10 @@ public class AfterChapterScreen {
 		
 	}
 
-
+	/**
+	 * A kirajzolást végzõ függvény
+	 * @param g : {@link Graphics}
+	 */
 	public void draw(Graphics g) {
 		// nincs g.translate(), mivel a Chapter-nek draw-ja utan vagyunk, ahol ez mar megtortent
 		drawGrayTransparentBackGround(g);
@@ -60,6 +80,10 @@ public class AfterChapterScreen {
 	}
 
 
+	/**
+	 * Kirajzol egy szürke kissé átlátszó hátteret
+	 * @param g : {@link Graphics}
+	 */
 	private void drawGrayTransparentBackGround(Graphics g) {
 		g.setColor(new Color(24,24,24,200));
 		g.fillRect(-camera.pos_x,-camera.pos_y,camera.width + 20,camera.height+20);
@@ -67,6 +91,11 @@ public class AfterChapterScreen {
 	}
 
 
+	/**
+	 * Kirajzolja a megjelenitendõ információkat:
+	 * A jelenleg mért pontot, illetve a legjobb pontokat.
+	 * @param g : {@link Graphics}
+	 */
 	private void drawInfo(Graphics g) {
 		g.setFont(new Font("Helvetica",0,32));
 		g.setColor(new Color(255,173,0));
@@ -87,6 +116,12 @@ public class AfterChapterScreen {
 	}
 
 
+	/** 
+	 * 
+	 * @param g : {@link Graphics}
+	 * @param metrics : {@link FontMetrics} - a jelenlegi font tulajdonságait tárolja
+	 * @param next_pos_y : int - a következõ score y poziciója
+	 */
 	private void drawTopScoresInfo(Graphics g, FontMetrics metrics,int next_pos_y) {
 		int n = 5;
 		String[] scores = chapter.getChapterHighScoreManager().getHighScores(n);
@@ -106,10 +141,11 @@ public class AfterChapterScreen {
 	}
 
 
+	/**
+	 * Kirajzolja az {@link AfterChapterScreen} hátterét.
+	 * @param g
+	 */
 	private void drawScreenBox(Graphics g) {
-		//TODO PLACEHOLDER GRAFIKA
-		//g.setColor(new Color(66,100,192));
-		//g.fillRect(pos_x,pos_y, box_width, box_height);
 		background.draw(g);
 	}
 }

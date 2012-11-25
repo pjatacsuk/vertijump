@@ -14,6 +14,11 @@ import com.vjmp.chapter.AfterChapterScreen;
 import com.vjmp.chapter.Chapter;
 import com.vjmp.chapter.Chapter.ChapterState;
 
+/**
+ * A {@link Chapter}-ek managelesét végzõ osztály. Frissiti, kirajzolja, rendezi ezeket.
+ * Implementálja az Iterable interface-t
+ *
+ */
 public class ChapterManager implements Iterable<Chapter>{
 	private List<Chapter> chapter_list = null;
 	private InputHandler inputHandler = null;
@@ -21,6 +26,14 @@ public class ChapterManager implements Iterable<Chapter>{
 	private int WIDTH = 0;
 	private int HEIGHT = 0;
 	private int current_chapter = 0;
+	
+	/**
+	 * Konstruktor
+	 * @param path : {@link String} - a megadott elérési útvonal a chapter listát tartalmazó file-hoz
+	 * @param inputHandler : {@link InputHandler} - az input kezelõ
+	 * @param WIDTH : int - az ablak szélessége
+	 * @param HEIGHT : int - az ablak magassága
+	 */
 	public ChapterManager(String path,InputHandler inputHandler,int WIDTH,int HEIGHT) {
 		this.chapter_list = new ArrayList<Chapter>();
 		this.WIDTH = WIDTH;
@@ -55,6 +68,12 @@ public class ChapterManager implements Iterable<Chapter>{
 	
 	}
 	
+	/**
+	 * Update-eli a {@link Chapter}-eket a {@link ChapterState} alapján.
+	 * Amennyiben egyik {@link Chapter} eléri a FINISH -ed állapotot, várunk az
+	 * {@link AfterChapterScreen} bezárására és  ugrunk a következõre.
+	 * Amennyiben eléri a DIED állapotot, reseteljük az adott {@link Chapter}-t.
+	 */
 	public void update() {
 		ChapterState chapter_state = chapter_list.get(current_chapter).getChapterState();
 		if(chapter_state == ChapterState.RUNNING) {
@@ -77,6 +96,11 @@ public class ChapterManager implements Iterable<Chapter>{
 			afterChapterScreen.update();
 		}
 	}
+	
+	/**
+	 * Kirajzoljuk az adott {@link Chapter}, ha vége van megjelenitjük az adott {@link AfterChapterScreen}-t.
+	 * @param g : {@link Graphics}
+	 */
 	public void draw(Graphics g) {
 		chapter_list.get(current_chapter).draw(g);
 		ChapterState current_chapter_state = chapter_list.get(current_chapter).getChapterState();
@@ -88,10 +112,17 @@ public class ChapterManager implements Iterable<Chapter>{
 		
 	}
 
+	/**
+	 * Reseteli az aktuális {@link Chapter}-t.
+	 */
 	public void resetChapter() {
 		chapter_list.get(current_chapter).resetMap();
 		
 	}
+	
+	/**
+	 * Reseteli az összes {@link Chapter}-t. Alapállapotba állitja a {@link ChapterManager}-t.
+	 */
 	public void resetChapterManager() {
 		for(Chapter chapter : chapter_list) {
 			chapter.resetMap();

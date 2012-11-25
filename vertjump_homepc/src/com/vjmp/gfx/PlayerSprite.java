@@ -3,14 +3,20 @@ package com.vjmp.gfx;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+import com.vjmp.Player;
+
+/**
+ * A Player animációit tartalmazó osztály. Felelõs ezen animációk frissitéséért a {@link PlayerState} függvénéyben. <br>
+ * 
+ * A Player sprite-okat tartalmazó .png felépitése a következõ:<br>
+ * sprite width = 45, offSet = 10 <br> 
+ * standing sprite = 0. sprite <br>
+ * jumping sprite = 5. sprite <br>
+ * run right sprites = 1..2 sprites <br>
+ * run left sprites = 2..4 sprites <br>
+ */
 public class PlayerSprite {
-	/*A Player sprite-okat tartalmazó .png felépitése a következõ:
-	 * sprite width = 45, offSet = 10 
-	 * standing sprite = 0. sprite
-	 * jumping sprite = 5. sprite
-	 * run right sprites = 1..2 sprites
-	 * run left sprites = 2..4 sprites
-	 */
+	
 	public enum PlayerState{
 			RUNNING_LEFT,RUNNING_RIGHT,JUMPING,STANDING
 	};
@@ -22,6 +28,10 @@ public class PlayerSprite {
 	
 	private PlayerState playerState = PlayerState.STANDING;
 	
+	/**
+	 * Konstruktor
+	 * @param path : {@link String} - Az sprite-okat tartalmazó kép.
+	 */
 	public PlayerSprite(String path){
 		Sprite tmp = new Sprite(path);
 		standing = new Sprite(tmp.getSubImg(0,0,45,45),path);
@@ -37,9 +47,20 @@ public class PlayerSprite {
 		
 		
 	}
+	
+	/**
+	 * Beállitja a {@link Player}-nek a  {@link PlayerState}-jét.
+	 * @param playerState : {@link PlayerState} - a beállitandó érték
+	 */
 	public void setPlayerState(PlayerState playerState) {
 		this.playerState = playerState;
 	}
+	
+	/**
+	 * Eltmozgatja az animációkat.
+	 * @param x : double - az x tengelyen való elmozgatás mértéke
+	 * @param y : double - az y tengelyen való elmozgatás mértéke
+	 */
 	public void move(double x,double y){
 		standing.move(x, y);
 		jumping.move(x, y);
@@ -47,6 +68,10 @@ public class PlayerSprite {
 		running_left.move(x, y);
 		
 	}
+	
+	/**
+	 * Frissiti az animációkat.
+	 */
 	public void update(){
 		switch(playerState) {
 		case STANDING:
@@ -65,6 +90,10 @@ public class PlayerSprite {
 		
 	}
 	
+	/**
+	 * Kirajzolja az animációkat.
+	 * @param g : {@link Graphics}
+	 */
 	public void draw(Graphics g){
 		switch(playerState) {
 		case STANDING:
@@ -82,9 +111,20 @@ public class PlayerSprite {
 		}
 		
 	}
+	
+	/**
+	 * Visszatér az álló ("standing") sprite {@link Rectangle}-jével
+	 * @return rect : {@link Rectangle} - a standing sprite {@link Rectangle}-je
+	 */
 	public Rectangle getRect() {
 		return standing.getRect();
 	}
+	
+	/**
+	 * A megadott pozicióra rakja az animációkat
+	 * @param x : int - a megadott x pozició
+	 * @param y : int - a megadott y pozició
+	 */
 	public void setLocation(int x, int y) {
 		standing.setLocation(x, y);
 		jumping.setLocation(x, y);
@@ -92,12 +132,27 @@ public class PlayerSprite {
 		running_right.setLocation(x,y);
 		
 	}
+	
+	/**
+	 * Visszatér a standing sprite x poziciójával
+	 * @return x : int - a standing sprite x poziciója
+	 */
 	public int GetPosX() {
 		return standing.GetPosX();
 	}
+	
+	/**
+	 * Visszatér a standing sprite y poziciójával
+	 * @return y : int - a stanidng sprite y poziciója
+	 */
 	public int GetPosY() {
 		return standing.GetPosY();
 	}
+	
+	/**
+	 * Visszatér a standing sprite {@link Rectangle}-jének szélességével
+	 * @return width - int : a standing sprite {@link Rectangle}-jének szélessége
+	 */
 	public int getRectWidth() {
 		return standing.getRectWidth();
 	}

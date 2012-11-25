@@ -42,6 +42,11 @@ import javax.swing.table.DefaultTableModel;
 import com.vjmp.editor.MapListEditor.MyTableModel.MapInfo;
 
 
+/**
+ * A pálya listát kezelõ ablak létrehozásáért és kezeléséért felelõs függvény.
+ * Implementálja az ActionListenert.
+ *
+ */
 public class MapListEditor implements ActionListener{
 	private JTextField map_name_textField = new JTextField(10);
 	private JTextField map_path_textField = new JTextField(10);
@@ -119,14 +124,30 @@ public class MapListEditor implements ActionListener{
 		
 
 	
-	
+	/**
+	 * A megjelenitett {@link JTable} saját modellje.
+	 * Extendeli az {@link AbstractTableModel}-t, implementálja az {@link ActionListener}-t, illetve
+	 * az {@link Iterable} interface-t (MapInfo specifikusan).
+	 *
+	 *
+	 */
 	public class MyTableModel extends AbstractTableModel implements ActionListener,Iterable<MapInfo>{
+			/**
+			 * Belsõ osztály amely tárolja egy mapról az információkat.
+			 *
+			 */
 			public class MapInfo {
 				public String number = null;
 				public String map_path = null;
 				public String map_name = null;
 				public boolean is_new = true;
 				
+				/**
+				 * Konstruktor
+				 * @param number : {@link String} - a map sorszáma listán
+				 * @param map_name : {@link String} - a map neve
+				 * @param map_path : {@link String} - a map elérési útvonala
+				 */
 				public MapInfo(String number,String map_name,String map_path) {
 					this.number = number;
 					this.map_name = map_name;
@@ -137,6 +158,12 @@ public class MapListEditor implements ActionListener{
 			public AbstractTableModel atm = null;
 			public String[] columNames = {"Number","Map Name","Map Path"};
 			public List<MapInfo> datas = null;
+			
+			/**
+			 * Konstruktor
+			 * A map list alapján létrehozza a listát, amit késõbb tudunk módositani
+			 * 
+			 */
 			public MyTableModel() {
 				
 				List<String> array = new ArrayList<String>();
@@ -163,16 +190,30 @@ public class MapListEditor implements ActionListener{
 					e.printStackTrace();
 				}
 			}
+				/**
+				 * 
+				 * @return column_size : int - az oszlopok száma
+				 */
 				@Override
 				public int getColumnCount() {
 					return columNames.length;
 				}
 
+				/**
+				 * 
+				 * @return row_size : int - a sorok száma
+				 */
 				@Override
 				public int getRowCount() {
 					return datas.size();
 				}
 
+				/**
+				 * Az érték lekérdezése
+				 * @param row : int - a sor indexe
+				 * @param col : int - az oszlop indexe
+				 * @return ret : {@link Object} - a sor,oszlop által meghatározott Object
+				 */
 				@Override
 				public Object getValueAt(int row, int col) {
 					switch(col) {
@@ -184,13 +225,31 @@ public class MapListEditor implements ActionListener{
 					
 				}
 				
+				/**
+				 * 
+				 * @param col : int - oszlop index
+				 * @return name : String - oszlop neve
+				 */
 				public String getColumName(int col){
 					return columNames[col];
 				}
+				
+				/**
+				 * 
+				 * @param row : int - sor indexe
+				 * @param col : int - oszlop indexe
+				 * @return true - ha editálható, false ha nem
+				 */
 				public boolean isCellEditable(int row,int col){
 					return true;
 				}
 				
+				/**
+				 * 
+				 * @param value : {@link Object} - a beállitandó érték
+				 * @param row : int - a sor indexe
+				 * @param col : int  - az oszlop indexe
+				 */
 				 public void setValueAt(Object value, int row, int col) {
 					 switch(col) {
 						case 0: datas.get(row).number = (String)value;
@@ -204,6 +263,10 @@ public class MapListEditor implements ActionListener{
 				        fireTableCellUpdated(row, col);
 				        orderTable();
 				 }
+				 
+				 /**
+				  * sorba rendezi a táblázatot
+				  */
 				 public void orderTable(){
 					 Collections.sort(datas,new Comparator<MapInfo>(){
 
@@ -227,6 +290,10 @@ public class MapListEditor implements ActionListener{
 					 }
 					 fireTableStructureChanged();
 				 }
+				 /**
+				  * Kezeli a táblázat megváltozását
+				  * @param e  : {@link TableModelEvent}
+				  */
 				 public void tableChanged(TableModelEvent e) {
 				        int row = e.getFirstRow();
 				        int column = e.getColumn();
@@ -247,7 +314,10 @@ public class MapListEditor implements ActionListener{
 				 }
 		
 			
-
+				 /**
+				  * Kezeli a keletkezõ action-öket
+				  * @param e : {@link ActionEvent}
+				  */
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					JButton button = (JButton)e.getSource();
@@ -272,10 +342,19 @@ public class MapListEditor implements ActionListener{
 					
 					orderTable();
 				}
+				/**
+				 * 
+				 * @return iterator : {@link Iterator}
+				 */
 				@Override
 				public Iterator<MapInfo> iterator() {
 					return datas.iterator();
 				}
+				
+				/**
+				 * Betölti a map listát a megadott activeFile-ról
+				 * @param activeFile : {@link File} - az active file
+				 */
 				public void load(File activeFile) {
 					List<String> array = new ArrayList<String>();
 					datas =new ArrayList<MapInfo>();
@@ -303,6 +382,11 @@ public class MapListEditor implements ActionListener{
 					}
 					
 				}
+				
+				/**
+				 * Elmenti a map listát a megadott fileba.
+				 * @param activeFile : {@link File} - a megadott file
+				 */
 				public void save(File activeFile) {
 					try {
 						PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(activeFile)));
@@ -321,7 +405,10 @@ public class MapListEditor implements ActionListener{
 
 
 
-
+	/**
+	 * Kezeli a keletkezett action-öket
+	 * @param e : {@link ActionEvent}
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JMenuItem menuItem = (JMenuItem)e.getSource();

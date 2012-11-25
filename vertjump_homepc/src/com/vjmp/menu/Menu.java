@@ -6,10 +6,17 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Attributes.Name;
 
 import com.vjmp.Game;
 import com.vjmp.gfx.Camera;
 
+/**
+ * Menu osztály, extendeli a GameMenuItemet. Feladata az alap menu feladatok(váltás, aktiválás,rajzolás) kezelése
+ * 
+ * @author User
+ *
+ */
 public abstract class Menu extends GameMenuItem{
 	public enum SwitchScreenState {
 		NEXT_MENU,NONE,PREV_MENU
@@ -30,12 +37,24 @@ public abstract class Menu extends GameMenuItem{
 	protected Camera camera = null;
 	protected Color color = null;
 
+	/**
+	 * Konstruktor
+	 * @param game : {@link Game} - game fõosztály
+	 */
 	public Menu(Game game) {
 		menuItems = new ArrayList<GameMenuItem>();
 		current_menu = 0;
 		this.game = game;
 		menuItemType = MenuItemType.MENU;
 	}
+	
+	/**
+	 * Konstruktor
+	 * @param game : {@link Game} - game fõosztály
+	 * @param name : {@link Name} - a menu neve
+	 * @param prevMenu : {@link Menu} - az elõzõ menu 
+	 * @param camera : {@link Camera} - camera
+	 */
 	public Menu(Game game,String name,Menu prevMenu,Camera camera) {
 		super(name);
 		this.game = game;
@@ -57,10 +76,17 @@ public abstract class Menu extends GameMenuItem{
 		
 	}
 	
+	/**
+	 * A kovetkezõ menu-t állitja be
+	 * @param menu : {@link Menu} a következõ menu referenciája
+	 */
 	public void addNextMenu(Menu menu) {
 		nextMenu = menu;
 	}
 	
+	/**
+	 * Beállitja a menu itemeket az ablak közepébe
+	 */
 	protected void sortGameMenuItemsToScreen() {
 		int pos_x = game.getWidth() / 2;
 		int pos_y = game.getHeight() / 2 - (menuItems.size() * MenuItemPadding)
@@ -78,6 +104,12 @@ public abstract class Menu extends GameMenuItem{
 		}
 
 	}
+	
+	/**
+	 * Beállitja a menu itemeket az ablak közepébe, de egy eltolással amit a fõ menütõl való 
+	 * távolság (láncolt listás távolság) határoz meg
+	 * @param distaFromRoot : int - távolság a fõgyökértõl
+	 */
 	protected void sortGameMenuItemsToScreenOffSet(int distaFromRoot) {
 		int pos_x = game.getWidth() / 2;
 		int pos_y = game.getHeight() / 2 - (menuItems.size() * MenuItemPadding)
@@ -102,6 +134,10 @@ public abstract class Menu extends GameMenuItem{
 
 	}
 
+	/**
+	 * Kirajzolja a mainMenu-t.
+	 * @param g : {@link Graphics}
+	 */
 	public void mainMenuDraw(Graphics g) {
 		for (GameMenuItem gameMenuItem : menuItems) {
 			if(gameMenuItem.menuItemType == MenuItemType.ACTION) {
@@ -125,6 +161,9 @@ public abstract class Menu extends GameMenuItem{
 		}
 	}
 
+	/**
+	 * Frissiti a Menu-t
+	 */
 	public void update() {
 			if(isMenuActive) {
 				switch(switchScreenState){
@@ -148,7 +187,9 @@ public abstract class Menu extends GameMenuItem{
 			
 	}
 
-	
+	/**
+	 * Kezeli az inputot.
+	 */
 	private void handleInput() {
 		if (game.getInputHandler().W.isPressedOnce()) {
 
@@ -179,6 +220,10 @@ public abstract class Menu extends GameMenuItem{
 		menuItems.get(current_menu).select();
 
 	}
+	
+	/**
+	 * Kezeli az ESC gomb lenyomásával járó mellékhatásokat.
+	 */
 	private void handleESC() {
 		if(prevMenu != null) {
 			switchScreenState = SwitchScreenState.PREV_MENU;
@@ -188,6 +233,10 @@ public abstract class Menu extends GameMenuItem{
 		}
 		
 	}
+	
+	/**
+	 * Kezeli az Enter gomb lenyomásával járó mellékhatásokat
+	 */
 	private void handleEnter() {
 		if(menuItems.get(current_menu).menuItemType == MenuItemType.ACTION) {
 			handleAction(menuItems.get(current_menu));
@@ -200,14 +249,28 @@ public abstract class Menu extends GameMenuItem{
 		}
 		
 	}
+	
+	/**
+	 * Kezeli az actionöket, overrideolni való
+	 * @param gameMenuItem : {@link GameMenuItem}
+	 */
 	protected void handleMenuAction(GameMenuItem gameMenuItem) {
 		// TODO Auto-generated method stub
 		
 	}
+	/**
+	 * Kezeli az actiönöket, overrideolni való
+	 * @param gameMenuItem : {@link GameMenuItem}
+	 */
 	protected void handleAction(GameMenuItem gameMenuItem) {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	/**
+	 * Beállitja az adott nevû GameMenuItem-et active-ra
+	 * @param name : {@link String} - az adott név
+	 */
 	private void setGameMenuItemActive(String name) {
 		int i = 0;
 		while(menuItems.get(i).getName().equals(name) != true){
@@ -216,6 +279,10 @@ public abstract class Menu extends GameMenuItem{
 		menuItems.get(i).setActivity(true);
 		
 	}
+	
+	/**
+	 * Átvált a következõ menüre.
+	 */
 	protected void switchToNextScreen() {
 		if(camera.pos_x > (-1 * nextMenu.distanceFromRoot*game.getWidth())) {
 				camera.pos_x -= 15;
@@ -228,6 +295,9 @@ public abstract class Menu extends GameMenuItem{
 		
 	}
 	
+	/**
+	 * Átvált az elõzõ menüre
+	 */
 	protected void switchToPrevScreen() {
 		if(camera.pos_x < (-1 * prevMenu.distanceFromRoot*game.getWidth())) {
 				camera.pos_x += 15;
@@ -238,6 +308,10 @@ public abstract class Menu extends GameMenuItem{
 		}
 		
 	}
+	
+	/**
+	 * Kirajzolja a menu nevét
+	 */
 	@Override
 	public void drawMenuName(Graphics g) {
 		Font font = new Font("Jokerman", Font.PLAIN, 24);
@@ -249,6 +323,10 @@ public abstract class Menu extends GameMenuItem{
 		g.drawString(name, position.x,position.y);
 		
 	}
+	
+	/**
+	 * Kirajzolásja a menu-t és az adott dolgokat, rekurzivan a következõ menu-ket is kirajzolja
+	 */
 	public void draw(Graphics g) {
 		if(isMenuActive) {
 			if(switchScreenState == switchScreenState.NONE) {

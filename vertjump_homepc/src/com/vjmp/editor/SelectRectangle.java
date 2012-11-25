@@ -8,19 +8,37 @@ import java.awt.Rectangle;
 import com.vjmp.InputHandler;
 import com.vjmp.gfx.Camera;
 
+/**
+ * A szerkesztés során a láthatóságot segitõ szürke "kijelelõ" box osztálya.
+ * Létrehozza, kezeli, frissiti és megjeleniti ezt.
+ *
+ */
 public class SelectRectangle {
 	private Editor editor = null;
 	private Point		 select_start_pos = null;
 	private Rectangle	 rect = null;
+	
+	/**
+	 * Konstruktor
+	 * @param editor : {@link Editor} - a SelectRectangle-t tartalmazó editor
+	 */
 	public SelectRectangle(Editor editor){
 		this.editor = editor;
 	}
 	
+	/**
+	 * Frissitést végez a camera függvényében
+	 * @param camera : {@link Camera}
+	 */
 	public void update(Camera camera){
 		updateRectangle(camera);
 	}
 	
 
+	/**
+	 * Frissiti a camera függvényében a kijelölést jelölõ rectangle-t
+	 * @param camera : {@link Camera}
+	 */
 	private void updateRectangle(Camera camera) {
 		if(editor.getInputHandler().MOUSE.button.isPressed()) {
 			if(select_start_pos == null) {
@@ -49,7 +67,10 @@ public class SelectRectangle {
 	}
 
 	
-
+	/**
+	 * Kirajzolja a rectangle-t
+	 * @param g : {@link Graphics}
+	 */
 	public void draw(Graphics g){
 		Color tmp = g.getColor();
 		g.setColor(new Color(20,20,20,20));

@@ -11,6 +11,12 @@ import java.io.ObjectOutputStream;
 import com.vjmp.gfx.Sprite;
 import com.vjmp.gfx.Sprite.SpriteType;
 
+
+/**
+ * A {@link MessageBox} végzi a pályán a pálya szerkesztõben elhelyezett üzenetek kezelését, megjelenitését
+ * frissitését.
+ *
+ */
 public class MessageBox extends TriggerEntity {
 
 	
@@ -23,6 +29,15 @@ public class MessageBox extends TriggerEntity {
 	private static final long serialVersionUID = 1L;
     private static Point box_offSet = new Point(75,75);
     private int string_height = 0;
+    
+    
+    /**
+     * Konstruktor
+     * @param string : {@link String} - a {@link MessageBox} sprite elérési útvonala
+     * @param x : int - a {@link MessageBox} sprite x poziciója
+     * @param y : int - a {@link MessageBox} sprite y poziciója
+     * @param b : boolean - a  {@link MessageBox} sprite láthatósága
+     */
 	public MessageBox(String string, int x, int y, boolean b) {
 		super(string, x, y, b);
 		triggerType = TriggerType.MESSAGE_BOX;
@@ -33,6 +48,12 @@ public class MessageBox extends TriggerEntity {
 			message_box = new Sprite("./res/message_box.png",message_box_rect,b);
 		
 	}
+	  /**
+     * Konstruktor
+     * @param path : {@link String} - a {@link MessageBox} sprite elérési útvonala
+     * @param rect : {@link Rectangle} - a  {@link MessageBox} sprite {@link Rectangle}-je
+     * @param b : boolean - a {@link MessageBox} sprite láthatósága
+     */
 	public MessageBox(String message,String path, Rectangle rect, boolean b) {
 		super(path,rect,b);
 		this.message = message;
@@ -48,6 +69,16 @@ public class MessageBox extends TriggerEntity {
 													75);
 		message_box = new Sprite("./res/message_box.png",message_box_rect,b);
 	}
+	
+	/**
+	 * Konstruktor
+	 * @param messageString : {@link String} - a megadott üzenet
+	 * @param path : {@link String} - a {@link MessageBox} sprite elérési útvonala
+	 * @param rect : {@link Rectangle} - a {@link MessageBox} sprite {@link Rectangle}-je
+	 * @param b : boolean - a {@link MessageBox} sprite láthatósága
+	 * @param walls : boolean[] - a {@link MessageBox} sprite falai
+	 * @param spriteType : {@link MessageBox} sprite tipusa
+	 */
 	public MessageBox(String messageString, String path, Rectangle rect,
 			boolean b, boolean[] walls,SpriteType spriteType) {
 		super(path,rect,b,walls,spriteType);
@@ -65,6 +96,13 @@ public class MessageBox extends TriggerEntity {
 		message_box = new Sprite("./res/message_box.png",message_box_rect,b);
 		
 	}
+	
+	/**
+	 * Kikalkulálja a messageString által megadott üzenet tördelését, ez alapján
+	 * pedig létrehozza a megfelelõ nagyságú rectangle-t a megjelenitéshez
+	 * @param g : {@link Graphics}
+	 * @return ret : {@link String} tömb - a tördelt messageString
+	 */
 	public String[] CalculateStringsUpdateRectFromIt(Graphics g) {
 		FontMetrics metrics = g.getFontMetrics();
 		
@@ -91,6 +129,10 @@ public class MessageBox extends TriggerEntity {
 		}
 		return ret;
 	}
+	/**
+	 * Kiirja a megadott tördelt message-t,
+	 * majd kirajzolja a sprite-ot
+	 */
 	@Override
 	public void draw(Graphics g) {
 		message_box.draw(g);
@@ -103,6 +145,11 @@ public class MessageBox extends TriggerEntity {
 			g.drawString(calculated_strings[i],message_box.GetPosX()+20,message_box.GetPosY() + 25 + i*string_height+5);
 		}
 	}
+	/**
+	 * Serializáció
+	 * @param stream : {@link ObjectOutputStream}
+	 * @throws IOException
+	 */
 	 private void writeObject(ObjectOutputStream stream)
 		        throws IOException {
 		 		//triggerentity altalanos
@@ -116,6 +163,12 @@ public class MessageBox extends TriggerEntity {
 		 		stream.writeObject(message_box);
 		 		
 	}
+	 /**
+	  *Deserializáció 
+	  * @param in : {@link ObjectInputStream}
+	  * @throws IOException
+	  * @throws ClassNotFoundException
+	  */
 	 private void readObject(ObjectInputStream in)
 			 throws IOException, ClassNotFoundException {
 		 //triggerentity altalanos

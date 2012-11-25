@@ -16,6 +16,12 @@ import com.vjmp.menu.MainMenu;
 import com.vjmp.sound.Sample;
 import com.vjmp.sound.Sample.PlayMode;
 
+/**
+ * A játék fõ class-a, felelõs a futtatásért, renderelésért,
+ * frissitéséért. Az ablak megnyitását és kezelését is ez a class végzi.
+ * A {@link Canvas} leszármazottja, implementálja a {@link Runnable} interface-t. 
+ *
+ */
 public class Game extends Canvas implements Runnable {
 	public enum GameState{MENU,NEWGAME,RESUMEGAME,RUNGAME};
 	
@@ -39,6 +45,10 @@ public class Game extends Canvas implements Runnable {
 	
 	private JFrame frame;
 	
+	/**Game konstruktor
+	 * 
+	
+	 */
 	public Game() {
 		
 		setMinimumSize(new Dimension(WIDTH * SCALE,HEIGHT*SCALE));
@@ -65,14 +75,19 @@ public class Game extends Canvas implements Runnable {
 		
 
 	}
-	
+	/** A játék thread-et inditását végzi
+	 *  
+	 */
 	public synchronized void start() {
 		running = true;
 		init();
 		
 		new Thread(this).start();
 	}
-	
+	/**
+	 * A Game erõforrásait inicializálja
+	 * 
+	 */
 	public void init() {
 		
 		inputHandler = new InputHandler(this);
@@ -83,6 +98,11 @@ public class Game extends Canvas implements Runnable {
 		sampleManager.playSample("bg_music");
 	}
 	
+	/**
+	 * A játékot updateli
+	 * 
+	 * 
+	 */
 	public void tick() {
 		
 		
@@ -103,7 +123,10 @@ public class Game extends Canvas implements Runnable {
 		
 	}
 	
-	
+	/**
+	 * A GameState-ek között való váltás kezelése
+	 * 
+	 */
 	private void updateGameState() {
 		switch(gameState){
 		case NEWGAME:
@@ -125,9 +148,18 @@ public class Game extends Canvas implements Runnable {
 		
 	}
 
+	/**
+
+	 * @return inputHandler : {@link InputHandler} - input kezelõ 
+	 *
+	 */
 	public InputHandler getInputHandler() {
 		return inputHandler;
 	}
+	
+	/**
+	 * Apróbb inputokat kezel (menü-be lépés, pálya reset)
+	 */
 	private void placeHolderLogic() {
 	
 		if(inputHandler.ESC.isPressed()) {
@@ -140,6 +172,12 @@ public class Game extends Canvas implements Runnable {
 		
 	}
 	
+	/**
+	 * A játékot renderelését végzi
+	 * 
+
+	 * 
+	 */
 	public void render() {
 		BufferStrategy strat = this.getBufferStrategy();
 		if(strat == null) {
@@ -171,7 +209,11 @@ public class Game extends Canvas implements Runnable {
 	
 	
 	
-	
+	/**
+	 * Override-olt run függvény,
+	 * a játék futattása
+	 * fixálja 60fps-re a frameratet
+	 */
 	@Override
 	public void run() {
 		long lastTime = System.nanoTime();
@@ -214,19 +256,34 @@ public class Game extends Canvas implements Runnable {
 		
 	}
 
+	/**
+	 * 
+	 * @param gameState : GameState - a játék state-jét tároljáa
+	 */
 	public void setState(GameState gameState) {
 		Game.gameState = gameState;
 	}
 
+	/**
+	 * 
+	 * @return gameStarted : boolean - true, ha elindult már a játék, false ha nem
+	 */
 	public static boolean isGameStarted() {
 		return gameStarted;
 	}
 
+	/**
+	 * Beállitja a gameStarted valtozót
+	 * @param gameStarted : GameStarted 
+	 */
 	public static void setGameStarted(boolean gameStarted) {
 		Game.gameStarted = gameStarted;
 	}
 
-	
+	/**
+	 *  
+	 * @return ChapterManager : chapterManager - a játék pályáit kezelõ class
+	 */
 	public ChapterManager getChapterManager() {
 		return chapterManager;
 	}

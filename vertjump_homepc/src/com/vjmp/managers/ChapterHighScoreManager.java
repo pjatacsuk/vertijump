@@ -12,13 +12,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.vjmp.chapter.Chapter;
 import com.vjmp.utilities.HighScore;
 
+/**
+ * A {@link HighScore}-ok managelését végzi az adott {@link Chapter}-hez kapcsolódva
+ * @author User
+ *
+ */
 public class ChapterHighScoreManager {
 	List<HighScore> highscore_list = null;
 	String chapterName = null;
 
 	
+	/**
+	 * Konstruktor
+	 * @param chapterName : {@link String} - a megadott chapter neve
+	 */
 	public ChapterHighScoreManager(String chapterName) {
 		highscore_list = new ArrayList<HighScore>();
 		this.chapterName = chapterName;
@@ -47,11 +57,19 @@ public class ChapterHighScoreManager {
 		
 
 	}
+	
+	/**
+	 * Hozzáad egy {@link HighScore}-t a listához.
+	 * @param hs - {@link HighScore} - a hozzáadandó {@link HighScore}
+	 */
 	public void add(HighScore hs) {
 		highscore_list.add(hs);
 		Collections.sort(highscore_list);
 	}
 	
+	/**
+	 * Elmenti a legjobb 100 {@link HighScore}-t egy hard code-olt forma alapján a "./res/hs/" mappába.
+	 */
 	public void saveToFile() {
 		//mivel mindig csak a legjobb 100-at olvassuk be, ezert max 100 highscore-t mentunk
 		String chapterPath = chapterName.replace(" ","");
@@ -73,6 +91,11 @@ public class ChapterHighScoreManager {
 		}
 	
 	}
+	/**
+	 * Visszaadja a megadott index által meghatározott {@link HighScore}-t String[] formátumban.
+	 * @param n : int - a megadott index
+	 * @return ret : String[] - a már megformált {@link HighScore}
+	 */
 	public String[] getHighScores(int n) {
 		String[] ret = new String[n];
 		for(int i=0;i<n;i++) {

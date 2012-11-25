@@ -11,6 +11,12 @@ import com.vjmp.entities.drawable.DrawableEntity;
 import com.vjmp.entities.drawable.TriggerEntity;
 import com.vjmp.gfx.Camera;
 
+/**
+ * A {@link TriggerEntityManager} a {@link TriggerEntity}-k kezelését végzi.
+ * Frissiti,kirajzolja, aktiválja,deaktiválja stb... ezeket.
+ * 
+ *
+ */
 public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 
 	/**
@@ -19,17 +25,29 @@ public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 	private static final long serialVersionUID = 1L;
 	boolean isEditor = false;
 	
+	/**
+	 * Konstruktor
+	 * @param editor : boolean - true - ha editorhoz tartozik, false - ha nem
+	 */
 	public TriggerEntityManager(boolean editor) {
 		super();
 		isEditor = editor;
-		int CameraY = 0;
 	}
 
+	/**
+	 * Másoló Konstruktor
+	 * @param entityManager : {@link TriggerEntityManager} 
+	 * @param isEditor : boolean - true - ha editorhoz tartozik, false - ha nem
+	 */
 	public TriggerEntityManager(TriggerEntityManager entityManager,boolean isEditor) {
 		super(entityManager);
 		isEditor = entityManager.isEditor;
 	}
 
+	/**
+	 * Kirajzolja az adott {@link TriggerEntity}-ket.
+	 * @param g : {@link Graphics}
+	 */
 	public synchronized void DrawSprites(Graphics g) {
 		for(TriggerEntity trigger : this.list) {
 		
@@ -39,6 +57,10 @@ public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 		
 	}
 
+	/**
+	 * Kitörli azokat a triggereket, amelyeket lefed az adott {@link Rectangle}.
+	 * @param rect : {@link Rectangle} - az adott {@link Rectangle}.
+	 */
 	public synchronized void remove(Rectangle rect) {
 		for(int i=0;i<size();i++) {
 			if(list.get(i).getRect().intersects(rect)) {
@@ -48,6 +70,12 @@ public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 		
 	}
 	
+	/**
+	 * Serializáció
+	 * 
+	 * @param stream : {@link ObjectOutputStream}
+	 * @throws IOException
+	 */
 	private synchronized void writeObject(ObjectOutputStream stream) 
 	        throws IOException { 
 		 stream.writeInt(list.size());
@@ -58,6 +86,12 @@ public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 		 
 	}
 	
+	/**
+	 * Deserializáció
+	 * @param in : {@link ObjectInputStream}
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	private synchronized void readObject(ObjectInputStream in)
 			 throws IOException, ClassNotFoundException {
 		 
@@ -72,6 +106,10 @@ public class TriggerEntityManager extends EntityManager<TriggerEntity> {
 		
 	}
 
+	/**
+	 * Updateli a listát.
+	 * @param camera : {@link Camera}
+	 */
 	public void update(Camera camera) {
 		for(TriggerEntity triggerEntity : list){
 			triggerEntity.update();

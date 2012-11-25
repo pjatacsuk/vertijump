@@ -3,9 +3,14 @@ package com.vjmp.managers;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+import com.vjmp.Game;
 import com.vjmp.entities.Entity.EntityType;
 import com.vjmp.entities.drawable.DrawableEntity;
-
+/**
+ * {@link DrawableEntityManager} a {@link Game} osztályhoz specifikusan igazitva.
+ * @author User
+ *
+ */
 public class GameDrawableEntityManager extends DrawableEntityManager {
 
 	/**
@@ -13,15 +18,26 @@ public class GameDrawableEntityManager extends DrawableEntityManager {
 	 */
 	private static final long serialVersionUID = 1L;
 		
-public GameDrawableEntityManager(DrawableEntityManager entityManager) {
+	/**
+	 * Másoló konstruktor
+	 * @param entityManager : {@link EntityManager} - másolandó konstruktor
+	 */
+	public GameDrawableEntityManager(DrawableEntityManager entityManager) {
 		super(entityManager);
 	}
 
-public GameDrawableEntityManager() {
-	super();
-}
+	/**
+	 * Konstruktor
+	 */
+	public GameDrawableEntityManager() {
+		super();
+	}
 
-@Override
+	/**
+	 * Kirajzolja a sprite-okat
+	 * @param g : {@link Graphics}
+	 */
+	@Override
 	public synchronized void DrawSprites(Graphics g) {
 
 		for(DrawableEntity drawable : list) {

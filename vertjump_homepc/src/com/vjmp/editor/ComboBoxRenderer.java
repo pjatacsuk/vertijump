@@ -10,12 +10,21 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+/**
+ * Az editorban felhasznált comboBoxhoz a texturákat megjelenitõ custom renderer.
+ * @author User
+ *
+ */
 public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
-	 /**
-	 * 
-	 */
+	 
+	
 	private static final long serialVersionUID = 1L;
 	private List<ImageIcon> images;
+	
+	
+	/**
+	 * Konstruktor
+	 */
 	 public ComboBoxRenderer() {
 	        setOpaque(true);
 	        setHorizontalAlignment(CENTER);
@@ -23,36 +32,16 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
 	        images = new ArrayList<ImageIcon>();
 	        for(String path : Editor.textureList){
 	        	images.add(createImageIcon(path));
-	        	String[] desc= path.split("/");
-	        	//images.get(images.size()-1).setDescription(desc[desc.length-1]);
 				images.get(images.size()-1).setDescription("");	
 			}
 	        
-	        
-	        
-	       /* try {
-				BufferedReader br = new BufferedReader(new FileReader("./res/textures.txt"));
-				String path = br.readLine();
-				while(path != null) {
-					path = "./res/" +  path;
-					images.add(createImageIcon(path));
-					
-					String[] desc = path.split("/");
-					images.get(images.size()-1).setDescription(desc[desc.length-1]);
-					path = br.readLine();
-					
-				}
-				br.close();
-	        } catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-	        
-	        
 	 }
+	 
+	 /**
+	  * Létrehozza a megfelelõ icon-t.
+	  * @param path : {@link String} - a texture elérési útja
+	  * @return icon - {@link ImageIcon} - a kapott méretezett (45*45)-ös Icon
+	  */
 	private ImageIcon createImageIcon(String path) {
 			
 	        if (path != null) {
@@ -66,6 +55,11 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
 	                return null;
 	        }
 	}
+	
+	/**
+	 * A felülirt cell renderer függvény.
+	 * 
+	 */
 	@Override
 	public Component getListCellRendererComponent(JList list, Object value,
 			int index, boolean isSelected, boolean cellHasFocus) {
@@ -79,7 +73,7 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
               setForeground(list.getForeground());
           }
 
-          //Set the icon and text.  If icon was null, say so.
+          
           ImageIcon icon = images.get(selectedIndex);
           String desc = images.get(selectedIndex).getDescription();
           setIcon(icon);

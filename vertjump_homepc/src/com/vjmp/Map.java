@@ -14,34 +14,36 @@ import com.vjmp.entities.drawable.TriggerEntity;
 import com.vjmp.gfx.Camera;
 import com.vjmp.managers.DrawableEntityManager;
 import com.vjmp.managers.TriggerEntityManager;
-
-public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
+/**
+ * 
+ *Az osztály végzi a pálya megjelenitését, updatelesété mind az editor mind pedig a játék folyamán.
+ *Implementálja az {@link Iterable} interface-t (DrawableEnity paraméterrel), {@link Serializable}.
+ */
+public class Map implements Iterable<DrawableEntity>,Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
 	private	int	WIDTH;
 	private int HEIGHT;
+	
 	private DrawableEntityManager entityManager = null;
 	private TriggerEntityManager triggerEntityManager = null;
 	private DrawableEntityManager visibleEntities = null;
 	private DrawableEntityManager notVisibleEntities = null;
+	
 	public boolean isEditor = false;
 	private boolean running = true;
+	
 	private Camera camera = null;
-	
-/*	public Map(int width,int height) {
-		entityManager = new DrawableEntityManager();
-		triggerEntityManager = new TriggerEntityManager(false);
-		WIDTH = width;
-		HEIGHT= height;
-		visibleEntities = new DrawableEntityManager();
-		notVisibleEntities = new DrawableEntityManager();
-	//	GenerateMap(100);
-		GenerateTest2(120);
-		entityManager.add(new DrawableEntity("./res/debug_platform.png",0,HEIGHT-25,true));
-	}*/
-	
+
+	/**
+	 * Konstruktor 
+	 * @param width : int - Az ablak szélessége
+ 	 * @param height : int - Az ablak magassága
+	 * @param iseditor : boolean - true ha editornak a mapja,false ha a játék mapja
+	 */
 	public Map(int width,int height,boolean iseditor) {
 		
 		WIDTH = width;
@@ -56,6 +58,11 @@ public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
 		loadNotVisibleEntites();
 	}
 	
+	/**
+	 * Copy konstruktor
+	 * @param map : {@link Map}
+	 * @param isEditor : boolean - true ha editornak a mapja, false ha a játék mapja
+	 */
 	public Map(Map map,boolean isEditor) {
 		
 		WIDTH = map.WIDTH;
@@ -67,7 +74,12 @@ public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
 		notVisibleEntities = new DrawableEntityManager(map.notVisibleEntities);
 		loadNotVisibleEntites();
 		
-}
+	}
+	
+	/**
+	 * A map megjelenitését végzi
+	 * @param g : {@link Graphics} 
+	 */
 	public void draw(Graphics g) {
 		visibleEntities.DrawSprites(g);
 		triggerEntityManager.DrawSprites(g);
@@ -79,6 +91,11 @@ public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
 	public Iterator<DrawableEntity> iterator() {
 		return entityManager.iterator();
 	}
+	
+	/**
+	 * Updateli a map-et a camera függvényében és a hovatartozás(editor,game) függvényében
+	 * @param camera : {@link Camera}
+	 */
 	public synchronized void update(Camera camera) {
 		
 		if(!isEditor)	{
@@ -88,19 +105,33 @@ public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
 		}
 		triggerEntityManager.update(camera);
 		
-}
+	}
 	
 
-
+	/**
+	 * Updateli az Editor követelményeinek megfelelõen (nincs törlés), a map-et
+	 * @param pos_y : int - A camera y poziciója
+	 */
 	private void UpdateEditorSprites(int pos_y) {
 		UpdateNotVisibleSprites(pos_y);
 		
 	}
+	
+	/**
+	 * Feltölti a nem láthatjó entitások listáját a fõ entitás listából.
+	 * 
+	 */
 	public void loadNotVisibleEntites() {
 		for(int i=0;i<entityManager.size();i++){
 			notVisibleEntities.add(entityManager.get(i));
 		}
 	}
+	
+	/**
+	 * Updateli a nem látható sprite-ok listáját, ha látható képbe kerül egy sprite, bedobja a látható
+	 * sprite-ok listájába, és törli a nem láthatók közül
+	 * @param CameraY : int - A camera Y poziciója
+	 */
 	public void UpdateNotVisibleSprites(int CameraY) {
 		for(int i=0;i<notVisibleEntities.size();i++) {
 			DrawableEntity tmp =notVisibleEntities.get(i);
@@ -111,6 +142,11 @@ public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
 			}
 		}
 	}
+	
+	/**
+	 * Updateli a látható sprite-ok listáját, ha a látható sprite kikerül a látható képtérbõl, törli a listából.
+	 * @param CameraY : int - A camera Z poziciója
+	 */
 	public void UpdateVisibleSprites(int CameraY) {
 		for(int i=0;i<visibleEntities.size();i++){
 			DrawableEntity tmp = visibleEntities.get(i);
@@ -119,14 +155,28 @@ public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
 			}
 		}
 	}
+	
+	/** 
+	 * Updateli a sprite-ok listáját (játéknak megfelelõen: törli a már nem látható sprite-okat)
+	 * @param CameraY : int - a Camera poziciója
+	 */
 	public void UpdateSprites(int CameraY) {
 		UpdateNotVisibleSprites(CameraY);
 		UpdateVisibleSprites(CameraY);
 	}
+	
+	/**
+	 * 
+	 * @return triggerEntityManager : {@link TriggerEntityManager}
+	 */
 	public TriggerEntityManager getTriggerEntityManager() {
 		return triggerEntityManager;
 	}
 	
+	/**
+	 * Hozzáadja a map-hez a sprite-ot, a láthatóságának függvényében
+	 * @param sprite : {@link DrawableEntity}
+	 */
 	public void add(DrawableEntity sprite) {
 		if(sprite.getType() == EntityType.TRIGGER) {
 		triggerEntityManager.add((TriggerEntity)sprite);
@@ -140,6 +190,11 @@ public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
 		}
 	}
 	
+	/**
+	 * Serializáció
+	 * @param stream : {@link ObjectOutputStream}
+	 * @throws IOException
+	 */
 	 private void writeObject(ObjectOutputStream stream)
 		        throws IOException {
 		stream.writeInt(WIDTH);
@@ -147,9 +202,14 @@ public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
 		stream.writeBoolean(isEditor);
 		 stream.writeObject(entityManager);
 		 stream.writeObject(triggerEntityManager);
-		
-		 
 	 }
+	 
+	 /**
+	  * Deserializáció
+	  * @param in : {@link ObjectInputStream}
+	  * @throws IOException
+	  * @throws ClassNotFoundException
+	  */
 	 private void readObject(ObjectInputStream in)
 			 throws IOException, ClassNotFoundException {
 		
@@ -164,42 +224,55 @@ public class Map implements Iterable<DrawableEntity>,Serializable,Runnable {
 		loadNotVisibleEntites();
 		System.out.println("COmpltete");
 	 }
+	 
+	/**
+	 *  A rectangle alapján törli az entitásokat
+	 * @param rect : {@link Rectangle}
+	 */
 	public void remove(Rectangle rect) {
 		visibleEntities.remove(rect);
 		entityManager.remove(rect);
 		triggerEntityManager.remove(rect);
 	}
-	@Override
-	public void run() {
-		while(running) {
-			try {
-				update(camera);
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-	}
-	public void notifyThread() {
 	
-	}
+	/**
+	 * Beállitja a kamerát
+	 * @param camera : {@link Camera}
+	 */
 	public void setCamera(Camera camera) {
 		this.camera = camera;
 	}
+	
+	/**
+	 * Végig iterálunk az entitásokon és láthatóságukat false-ra állitjuk
+	 */
 	public void setVisibilityFalse() {
 		for(DrawableEntity drawableEntity : entityManager) {
 			drawableEntity.setVisibility(false);
-			System.out.println("valami");
 		}
 	}
+	
+	/**
+	 * 
+	 * @param i : int - Index
+	 * @return i-edik {@link DrawableEntity}
+	 */
 	public DrawableEntity getVisibleEntity(int i) {
 		return visibleEntities.get(i);
 	}
+	
+	/**
+	 * 
+	 * @return size : int - A látható entitás lista méretét adja meg
+	 */
 	public int getVisibleEntitiesSize() {
 		return visibleEntities.size();
 	}
+	
+	/**
+	 * 
+	 * @return drawableEntityManager : {@link DrawableEntityManager} - A látható entitások listáját adja meg 
+	 */
 	public DrawableEntityManager getVisibleEntityManager() {
 		return visibleEntities;
 	}

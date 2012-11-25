@@ -15,6 +15,12 @@ import com.vjmp.gfx.Sprite.Dir;
 import com.vjmp.managers.SampleManager;
 import com.vjmp.sound.Sample;
 
+/**
+ * 
+ * A játékos mozgását, megjelenitését, frissitését végzõ osztály.
+ * A játékos figura kollozióját, ugrás mechanikáját és végzi.
+ * 
+ */
 public class Player {
 	enum STICK_DIR {
 		LEFT, RIGHT, NONE
@@ -49,6 +55,11 @@ public class Player {
 	private boolean sticky = false;
 	private STICK_DIR stick_dir = STICK_DIR.NONE;
 
+	
+	/**
+	 * Konstruktor
+	 * @param iHandler : {@link InputHandler}
+	 */
 	public Player(InputHandler iHandler) {
 		playerSprite = new PlayerSprite("./res/spooky_anim.png");
 		inputHandler = iHandler;
@@ -57,6 +68,12 @@ public class Player {
 		sampleManager.add(new Sample("jump","./res/sound/jump.wav"));
 	}
 
+	/**
+	 * A jatekos frissitését végzi. Kezeli az inputot, a kollóziót, a poziciót, 
+	 * a játékos logikáját és az animált spriteot.
+	 * 
+	 * @param map : {@link Map}
+	 */
 	public void update(Map map) {
 		HandleInput();
 		UpdateVelocity();
@@ -69,6 +86,9 @@ public class Player {
 		
 	}
 
+	/**
+	 * Updateli a játékos sprite-ját a mozgásnak megfelelõen
+	 */
 	private void UpdatePlayerSprite() {
 		if(speed_x == 0 && speed_y >= 0) {
 			playerSprite.setPlayerState(PlayerState.STANDING);
@@ -82,6 +102,9 @@ public class Player {
 		playerSprite.update();
 	}
 
+	/**
+	 * Updateli a sticky mechanizmust a sebességnek megfelelõen
+	 */
 	private void StickyUpdate() {
 		if (Math.abs(speed_x) > 0.01) {
 			sticky = false;
@@ -90,6 +113,11 @@ public class Player {
 		
 	}
 
+	/**
+	 * A collosion detection-t végzi a függvény, collosion esetén meghivja a collosiot
+	 * kezelõ függvényt
+	 * @param map : {@link Map}
+	 */
 	private synchronized void CheckCollosion(Map map) {
 	
 		for (TriggerEntity t : map.getTriggerEntityManager()) {
@@ -103,9 +131,7 @@ public class Player {
 		for(int i=0;i<map.getVisibleEntitiesSize();i++) {
 			DrawableEntity s = map.getVisibleEntity(i);
 				if (s.intersects(playerSprite.getRect())) {
-					if (s.getType() == EntityType.TRIGGER) {
-						HandleTriggerPlaceHolder(s);
-					} else if (s.isVisible()) {
+					if (s.isVisible()) {
 						Collosion(s);
 					}
 				}
@@ -115,6 +141,11 @@ public class Player {
 
 	}
 
+	/**
+	 * A {@link TriggerEntity} collosion-t kezeli
+	 * @param triggerEntity : {@link TriggerEntity} - a megfelelõ trigger mechanizmust aktiválja 
+	 * ha ütközés van
+	 */
 	private void TriggerCollosion(TriggerEntity triggerEntity) {
 		Rectangle rect = triggerEntity.getRect();
 		Rectangle intersection = playerSprite.getRect().intersection(rect);
@@ -140,13 +171,11 @@ public class Player {
 		
 	}
 
-	private void HandleTriggerPlaceHolder(DrawableEntity s) {
-		TriggerEntity tmp = (TriggerEntity) s;
-		if (tmp.getTriggerType() == TriggerType.FINISH_LINE) {
-			System.out.println("Finish!!!");
-		}
-	}
-
+	
+	/**
+	 * A sima {@link DrawableEntity} collosion-t kezeli 
+	 * @param drawableEntity : {@link DrawableEntity} - az az entity amivel ütköztünk
+	 */
 	private void Collosion(DrawableEntity drawableEntity) {
 		Rectangle rect = drawableEntity.getRect();
 		Rectangle intersection = playerSprite.getRect().intersection(rect);
@@ -191,6 +220,9 @@ public class Player {
 
 	}
 
+	/**
+	 * A játékos gyorsulását frissiti.
+	 */
 	private void UpdateVelocity() {
 		// a velocity nem haladhat meg egy kuszoberteket
 
@@ -201,11 +233,7 @@ public class Player {
 		} else if (velocity_x < 0 && !inputHandler.A.isPressed()) {
 			velocity_x += velocity_change;
 
-		}
-
-		
-
-		// gravity
+		}	
 
 		if (jumping) {
 			
@@ -233,6 +261,10 @@ public class Player {
 		}
 	}
 
+	/**
+	 * A játékos sebességét frissiti.
+	 * 
+	 */
 	private void ChangePlayerSpeed() {
 		if (velocity_x != 0) {
 			if (Math.abs(speed_x) <= max_speed_x) {
@@ -244,7 +276,7 @@ public class Player {
 				if (speed_x > 0) {
 					dir = 1;
 				} else {
-					// speed < 0
+					
 					dir = -1;
 				}
 
@@ -265,14 +297,19 @@ public class Player {
 		}
 	}
 
+	/**
+	 * Beállitja a játékos kivánt pozicióját 
+	 * @param p : {@link Point} - a kivánt pozició
+	 */
 	public void setLocation(Point p) {
 		playerSprite.setLocation(p.x, p.y);
 	}
 
+	/**
+	 * A játékos mozgatását végzi, ha kifutunk a képernyõrõl a másik oldalt
+	 * térünk vissza.
+	 */
 	private void MovePlayer() {
-
-		
-
 		ChangePlayerSpeed();
 
 		playerSprite.move(speed_x, speed_y);
@@ -285,6 +322,9 @@ public class Player {
 
 	}
 
+	/**
+	 * Az input-okat dolgozza fel.
+	 */
 	public void HandleInput() {
 		
 		if (inputHandler.W.isPressed() && !ignore_W) {
@@ -350,14 +390,26 @@ public class Player {
 
 	}
 
+	/**
+	 * A játékost rajzolja ki.
+	 * @param g : {@link Graphics}
+	 */
 	public void draw(Graphics g) {
 		playerSprite.draw(g);
 	}
 
+	/**
+	 *  A játékos X koordinátáját adja vissza
+	 * @return x : int - a játékos x koordinátája
+	 */
 	public int GetPosX() {
 		return playerSprite.GetPosX();
 	}
 
+	/**
+	 *  A játékos Y koordinátáját adja vissza
+	 * @return y : int - a játékos y koordinátája
+	 */
 	public int GetPosY() {
 		return playerSprite.GetPosY();
 	}

@@ -27,14 +27,21 @@ import com.vjmp.entities.drawable.SpikeTrigger;
 import com.vjmp.entities.drawable.TriggerEntity;
 import com.vjmp.entities.drawable.TriggerEntity.TriggerType;
 import com.vjmp.gfx.Camera;
+import com.vjmp.gfx.Sprite;
 import com.vjmp.gfx.Sprite.Dir;
 import com.vjmp.gfx.Sprite.SpriteType;
 import com.vjmp.managers.GuiManager;
 
+/**
+ * A szerkesztõ felület, feladatai minden fajta szerkesztõi funkció. DrawableEntity-ket, {@link TriggerEntity}-ket
+ * helyez el, illetve töröl a pályán.
+ * 
+ *
+ */
 public class Editor implements Serializable, ActionListener {
-	/**
-	 * 
-	 */
+	
+	
+	
 	private static final long serialVersionUID = 1L;
 	private static final int BLOCK_SIZE = 15;
 	private static int sprite_index = 0;
@@ -49,7 +56,7 @@ public class Editor implements Serializable, ActionListener {
 	
 	private Map map = null;
 
-	// TODO: readobject texture list checkolas
+
 
 	private boolean polling_for_mouse_release = true;
 	private SelectRectangle selectRectangle = null;
@@ -59,6 +66,12 @@ public class Editor implements Serializable, ActionListener {
 
 	transient private InputHandler inputHandler = null;
 
+	/**
+	 * Konstruktor 
+	 * @param inputHandler : {@link InputHandler} : az input kezelõ
+	 * @param WIDTH : int - a szerkesztõ szélessége
+	 * @param HEIGHT : int - a szerkesztõ magassága
+	 */
 	public Editor(InputHandler inputHandler, int WIDTH, int HEIGHT) {
 		map = new Map(WIDTH, HEIGHT, true);
 		this.inputHandler = inputHandler;
@@ -66,14 +79,27 @@ public class Editor implements Serializable, ActionListener {
 		selectRectangle = new SelectRectangle(this);
 	}
 
+	/**
+	 * Beállitja az inputHandler-t
+	 * @param inputHandler : {@link InputHandler}
+	 */
 	public void setInputHandler(InputHandler inputHandler) {
 		this.inputHandler = inputHandler;
 	}
 
+	/**
+	 * Beállitja a GuiManager-t.
+	 * @param componentManager : {@link GuiManager}
+	 */
 	public void setComponentManager(GuiManager componentManager) {
 		this.guiManager = componentManager;
 	}
 
+	/**
+	 * Hozzáadja a megfelelõ entitást a pályához a rect {@link Rectangle} alapján.
+	 * A current_sprite_index alapján meghatározza az entitás textúráját
+	 * @param rect
+	 */
 	public void addSprite(Rectangle rect) {
 
 		if (textureList.GetPath(sprite_index).equals("./res/png/spooky.png")) {
@@ -92,7 +118,11 @@ public class Editor implements Serializable, ActionListener {
 			}
 		}
 	}
-
+	/**
+	 * 
+	 * @param rect : {@link Rectangle} - a hozzáadandó entitás {@link Rectangle}-je
+	 * @return ret : {@link DrawableEntity} - a megalkotott entitás.
+	 */
 	private DrawableEntity GetDrawableEnityTypeFromSpriteIndex(Rectangle rect) {
 
 		DrawableEntity ret = null;
@@ -111,6 +141,13 @@ public class Editor implements Serializable, ActionListener {
 
 	}
 
+	/**
+	 * Az editor a kapott adatok alapján megalkotja a megfelelõ {@link TriggerEntity}-t.
+	 * 
+	 * @param rect : {@link Rectangle} - a hozzáadandó entitás {@link Rectangle}-je
+	 * @return ret : {@link DrawableEntity} - valójában egy TriggerEntity, amit a kapott adatok alapján
+	 * alkotunk.
+	 */
 	private DrawableEntity GetTriggerEntityFromType(Rectangle rect) {
 		TriggerEntity ret = null;
 		switch (triggerType) {
@@ -131,7 +168,10 @@ public class Editor implements Serializable, ActionListener {
 		}
 		return ret;
 	}
-
+	/**
+	 * Frissiti az editort. Köztük a {@link Map}-t,a {@link SelectRectangle}-t.
+	 * @param camera : {@link Camera}
+	 */
 	public void update(Camera camera) {
 		map.update(camera);
 		BlockLogic(camera);
@@ -141,6 +181,11 @@ public class Editor implements Serializable, ActionListener {
 		selectRectangle.update(camera);
 	}
 
+	/**
+	 * Az inputHandler alapján frissiti az alkotandó entitás {@link SpriteType}-ját,
+	 * a mouse mozgása alapján pedig meghatározza a DrawableEntity {@link Rectangle}-jét.
+	 * @param camera
+	 */
 	private void BlockLogic(Camera camera) {
 		if (inputHandler.MOUSE.button.isPressed()) {
 			polling_for_mouse_release = true;
@@ -188,21 +233,20 @@ public class Editor implements Serializable, ActionListener {
 
 	}
 
-	private Rectangle GenerateNotScaledRectangleFromMouse(Camera camera) {
-		Rectangle ret = null;
-		
-		Point pos = AddCameraPos(DivBlockSize(inputHandler.MOUSE.getPos()),camera);
-		DrawableEntity tmp = new DrawableEntity(textureList.GetPath(sprite_index),pos.x,pos.y,true);
-		ret = tmp.getRect(); 
-		
-		return ret;
-	}
-
+	/**
+	 * A {@link Rectangle} alapján törli az ezzel ütközõ entitásokat.
+	 * @param rect : {@link Rectangle} - a mouse által meghatározott {@link Rectangle}.
+	 */
 	private void removeSprite(Rectangle rect) {
 		map.remove(rect);
 
 	}
 
+	/**
+	 * A mouse gomb lenyomása alatt meghatározott {@link Rectangle}-t generálja ki. 
+	 * @param camera : {@link Camera}
+	 * @return ret : {@link Rectangle} - a kigenerált {@link Rectangle}
+	 */
 	public Rectangle GenerateScaledRectangleFromMouse(Camera camera) {
 
 		// camera positionje mindig mod15 == 0, mivel ennyi az editor speedje,
@@ -222,12 +266,23 @@ public class Editor implements Serializable, ActionListener {
 
 	}
 
+	/**
+	 * Meghatározza az ezelõtti mouse esemény során keletkezett mouse poziciót.
+	 * @param p : {@link Point} - a jelenlegi mouse pozició.
+	 * @return
+	 */
 	private Point AddOldCameraPos(Point p) {
 		p.x = p.x - old_camera_pos.x;
 		p.y = p.y - old_camera_pos.y;
 		return p;
 	}
 
+	/**
+	 * Meghatározza a jelenlegi mouse esemény során keletkezett mouse poziciót.
+	 * @param p
+	 * @param c
+	 * @return p : Point - a változtatott point
+	 */
 	public Point AddCameraPos(Point p, Camera c) {
 		p.x = p.x - c.pos_x;
 		p.y = p.y - c.pos_y;
@@ -235,10 +290,19 @@ public class Editor implements Serializable, ActionListener {
 		return p;
 	}
 
+	/**
+	 * A BLOCK_SIZE alapján meghatározott konstanssal elosztja a p {@link Point}-ot.
+	 * @param p : {@link Point}
+	 * @return elosztott pont : {@link Point}
+	 */
 	public Point DivBlockSize(Point p) {
 		return new Point(p.x - (p.x % BLOCK_SIZE), p.y - (p.y % BLOCK_SIZE));
 	}
 
+	/**
+	 * Kirajzolja az editort.
+	 * @param g : {@link Graphics}
+	 */
 	public void draw(Graphics g) {
 		map.draw(g);
 		if (player != null) {
@@ -248,6 +312,10 @@ public class Editor implements Serializable, ActionListener {
 		drawSpriteBorderLines(g);
 	}
 
+	/**
+	 * Kirajzolja a sprite-ok oldalait, az sprite falainak(fal -> ahol ütközés áll fenn) megfelelõen
+	 * @param g : {@link Graphics}
+	 */
 	private void drawSpriteBorderLines(Graphics g) {
 		for(DrawableEntity sprite : map){
 			Rectangle rect = sprite.getRect();
@@ -269,13 +337,27 @@ public class Editor implements Serializable, ActionListener {
 		}
 		
 	}
+	
+	/**
+	 * Visszadja a border szinét a sprite direction irányú falának megfelelõen
+	 * @param sprite : {@link Sprite} - a vizsgált sprite
+	 * @param dir : {@link Dir} - a vizsgált direction
+	 * @return {@link Color}
+	 */
 	private Color getColorFromWall(DrawableEntity sprite,Dir dir){
-		if(sprite.getWall(Dir.NORTH)) {
+		if(sprite.getWall(dir)) {
 			return Color.red;
 		} else {
 			return Color.green;
 		}
+		
 	}
+	
+	/**
+	 * Serializáció
+	 * @param stream : {@link ObjectOutputStream}
+	 * @throws IOException
+	 */
 	private void writeObject(ObjectOutputStream stream) throws IOException {
 		if (player == null) {
 			System.out.println("Nincs spawnpoint");
@@ -289,6 +371,12 @@ public class Editor implements Serializable, ActionListener {
 
 	}
 
+	/**
+	 * Deserializáció
+	 * @param in : {@link ObjectInputStream}
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	private void readObject(ObjectInputStream in) throws IOException,
 			ClassNotFoundException {
 
@@ -302,22 +390,43 @@ public class Editor implements Serializable, ActionListener {
 		selectRectangle = new SelectRectangle(this);
 	}
 
+	
+	/**
+	 * Kigenerálja a textureList alapján a megfelelõ komponenst.
+	 * @return generalt komponens :{@link JComboBox}
+	 */
 	public JComboBox GenerateTextureListComponent() {
 		return guiManager.GenerateTextureListComponent(textureList.size(), this);
 	}
 
+	/**
+	 * Kigenerálja a Entity-k alapján a megfelelõ komponenst.
+	 * @return ret : {@link JComboBox} -  a kigenerált combo Box
+	 */
 	public JComboBox GenerateEntityTypeComponent() {
 		return guiManager.GenerateEntityTypeComponent(this);
 	}
 
+	/**
+	 * 
+	 * @return map :  {@link Map}
+	 */
 	public Map getMap() {
 		return map;
 	}
 
+	/**
+	 * 
+	 * @return location : {@link Point}
+	 */
 	public Point GetPlayerLocation() {
 		return player.GetLocation();
 	}
 
+	/**
+	 * Override-olt actionPerformed függvény, vizsgálja a {@link MapEditor} swing elemeinek változását
+	 * és beállitja ezek alapján a megfelelõ adatokat a sprite alkotáshoz.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 
@@ -357,14 +466,26 @@ public class Editor implements Serializable, ActionListener {
 		}
 	}
 
+	/**
+	 * Kigenerálja a TriggerList alapján az adott components a guiManagerrel.
+	 * @return komponens : {@link Component}
+	 */
 	public Component GenerateTriggerListComponent() {
 		return guiManager.GenerateTriggerListComponent(this);
 	}
 
+	/**
+	 * 
+	 * @return inputHandler : {@link InputHandler}
+	 */
 	public InputHandler getInputHandler() {
 		return inputHandler;
 	}
 
+	/**
+	 * 
+	 * @return BLOCK_SIZE : int
+	 */
 	public int getBlockSize() {
 		return BLOCK_SIZE;
 	}
