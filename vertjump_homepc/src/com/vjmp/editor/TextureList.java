@@ -22,9 +22,10 @@ public class TextureList implements Iterable<String> {
 	 */
 	TextureList() {
 		list = new ArrayList<String>();
-		
+			
 			File file = new File("./res/png");
 			if(file.isDirectory()) {
+				//végig megyünk a file-okon a png mappában, ha .png a kiterjesztés jöhet a listába
 				File[] pngs = file.listFiles();
 				for(File png : pngs) {
 					if(png.isFile() && png.getName().endsWith(".png")) {

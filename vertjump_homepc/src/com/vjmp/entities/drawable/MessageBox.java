@@ -61,6 +61,7 @@ public class MessageBox extends TriggerEntity {
 
 		int top_right = rect.x + box_offSet.x + 250; 
 		
+		//hogy ne lógjunk ki a képernyõbõl
 		while(top_right > 3*180) top_right--;
 		
 		Rectangle message_box_rect = new Rectangle(top_right - 250,
@@ -106,20 +107,27 @@ public class MessageBox extends TriggerEntity {
 	public String[] CalculateStringsUpdateRectFromIt(Graphics g) {
 		FontMetrics metrics = g.getFontMetrics();
 		
+		//a message hossza
 		double string_width = metrics.stringWidth(message);
 		string_height = metrics.getHeight();
 		
+		//egy karakter hossza
 		int char_width = metrics.stringWidth("a");
 		
+		//ennyi sorban fér el  a szöveg
 		int rows = (int) (string_width / (message_box.getRect().getWidth() - 40)) + 1; 
+		
 		String[] ret = new String[rows];
 		
+		//ha nem férnénk bele a messageBoxnak a spritejába, megnöveljük kicsit
 		if(rows*(string_height+5)+40 > message_box.getRect().height) {
 			message_box.getRect().height = rows * (string_height+5) + 40;
 		}
 		
+		//ennyi karakter fér egy sorba
 		int char_per_row = (int)((message_box.getRect().getWidth()- 40)/char_width);
 		
+		//tördeljük a szöveget
 		for(int i=0;i<rows;i++){
 			if(message.length() - (i+1)*char_per_row < 0) {
 				ret[i] = message.substring(i*char_per_row);
@@ -137,11 +145,14 @@ public class MessageBox extends TriggerEntity {
 	public void draw(Graphics g) {
 		message_box.draw(g);
 		if(calculated_strings==null) { 
+			//ha még nincs kikalkulálva a szöveg,kikalkuláljuk. ehhez kell a graphics
+			//azért csináljuk itt
 			calculated_strings = CalculateStringsUpdateRectFromIt(g);
 	
 		}
 	
 		for(int i=0;i<calculated_strings.length;i++) {
+			//kirajzoljuk a sorokkat
 			g.drawString(calculated_strings[i],message_box.GetPosX()+20,message_box.GetPosY() + 25 + i*string_height+5);
 		}
 	}

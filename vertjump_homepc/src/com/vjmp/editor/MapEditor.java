@@ -100,7 +100,7 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		GridBagConstraints c = new GridBagConstraints();
 	
 		
-		//list.setBounds(WIDTH-100, HEIGHT-50, 100, 50);
+		//CANVAS
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weighty = 1.0;
@@ -109,6 +109,7 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		c.fill = GridBagConstraints.VERTICAL;
 		frame.add(this,c);
 	
+		//TEXTURE LISTA
 		c.gridx=1;
 		c.gridy=0;
 		c.gridheight = 1;
@@ -116,25 +117,25 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		
 		frame.getContentPane().add(editor.GenerateTextureListComponent(),c);
 		
+		//ENTITÁS LISTA
 		c.gridx=1;
 		c.gridy=1;
 		c.gridheight = 1;
 		c.weighty = 0.0;
 		
-		
 		frame.add(editor.GenerateEntityTypeComponent(),c);
 		
 		
-		
+		//TRIGGER LISTA
 		c.gridy = 2;
 		frame.getContentPane().add(editor.GenerateTriggerListComponent(),c);
 		
+		//MESSAGEBOX FIELD
 		c.gridx=1;
 		c.gridy=3;
 		c.gridheight=1;
 		c.weighty = 0.0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		
 		
 		JTextField t = new JTextField(10);
 		t.setName("MessageBoxField");
@@ -143,6 +144,7 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		frame.getContentPane().add(t,c);
 		
 		
+		//CHECKBOX-ok
 		JCheckBox c1 = new JCheckBox("North");
 		c1.setName("North");
 		JCheckBox c2 = new JCheckBox("West");
@@ -159,9 +161,10 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		c.gridy=6;
 		frame.getContentPane().add(c4,c);
 		
-		
+		//A guiManager kezeli a component-eket
 		editor.setComponentManager(new GuiManager(frame));
 		
+		//MENU
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("File"); 
 		menuBar.add(menu);
@@ -266,9 +269,11 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	private void handleOwnInput() {
 		try {
 			if(inputHandler.O.isPressedAndReleased()) {
+				//O-val mentünk
 				if(activeFile == null) activeFile = new File("./res/tmp_name.txt");
 				save(activeFile);
 			} else if(inputHandler.P.isPressedAndReleased()) {
+				//P-vel töltünk
 				load(activeFile);
 				
 			}
@@ -360,11 +365,11 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 			return;
 		}
 		Graphics2D g = (Graphics2D) strat.getDrawGraphics();
-		AffineTransform old = g.getTransform();
-		
+		//kitöltjük a hátteret,kirajzoljuk a háttérképet
 		g.fillRect(0, 0, getWidth(), getHeight());
 		DrawBackGround(g);
 	
+		//transzformálunk
 		g.setTransform(camera.GetTransform(g));
 	
 		editor.draw(g);
@@ -399,10 +404,13 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		long lastTime = System.nanoTime();
 		double nsPerTick = 1000000000.0 / 60.0;
 		
+		
 		int ticks = 0;
 		int frames = 0;
 		
-		long lastTimer = System.currentTimeMillis();
+		//FPS számitáshoz kell
+		//long lastTimer = System.currentTimeMillis();
+		
 		double delta = 0;
 		while(running) {
 			long now = System.nanoTime();
@@ -446,8 +454,9 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	public void actionPerformed(ActionEvent arg0) {
 		JMenuItem menuItem = (JMenuItem)arg0.getSource();
 		if(menuItem.getName().equals("Open")) {
+			//megnyitunk egy file választót
 			JFileChooser fc = new JFileChooser("./");
-			int returnVal = fc.showOpenDialog(fc);
+			fc.showOpenDialog(fc);
 			activeFile = fc.getSelectedFile();
 			try {
 				if(activeFile != null){
@@ -468,8 +477,9 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 			//beragada's ellen
 			inputHandler.S.setPressed(false);
 			try {
+				//megnyitunk egy file választót
 				JFileChooser fc = new JFileChooser("./");
-				int returnVal = fc.showOpenDialog(fc);
+				fc.showOpenDialog(fc);
 				activeFile = fc.getSelectedFile();
 				if(activeFile != null){
 					save(activeFile);
@@ -490,8 +500,9 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 				if(activeFile != null) {
 					save(activeFile);
 				} else {
+					//megnyitunk egy file választót
 					JFileChooser fc = new JFileChooser("./");
-					int returnVal = fc.showOpenDialog(fc);
+					fc.showOpenDialog(fc);
 					activeFile = fc.getSelectedFile();
 					if(activeFile != null) {
 					save(activeFile);

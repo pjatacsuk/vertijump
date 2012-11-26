@@ -63,6 +63,7 @@ public class MapListEditor implements ActionListener{
 		dialog.setResizable(false);
 		
 
+		//MENU
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("File"); 
 		menuBar.add(menu);
@@ -88,6 +89,7 @@ public class MapListEditor implements ActionListener{
 		
 		dialog.setJMenuBar(menuBar);
 		
+		//a model megalkotása
 		tableData = new MyTableModel();
 		
 		table = new JTable(tableData);
@@ -95,7 +97,8 @@ public class MapListEditor implements ActionListener{
 		dialog.add(table);
 		
 		JPanel panel = new JPanel();
-	
+		
+		//Labelek,textfieldek és gombok
 		panel.add(new JLabel("MapName: "));
 		
 		map_name_textField.setName("map_name_textField");
@@ -169,6 +172,7 @@ public class MapListEditor implements ActionListener{
 				List<String> array = new ArrayList<String>();
 				datas =new ArrayList<MapInfo>();
 				try {
+					//beolvassuk a standard fileból a maplistát, és feltöltjük vele a model-t
 					BufferedReader br = new BufferedReader(new FileReader("./res/map_list.txt"));
 					String line = br.readLine();
 					while(line != null){

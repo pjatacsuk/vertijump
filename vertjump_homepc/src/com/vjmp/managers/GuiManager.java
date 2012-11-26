@@ -240,6 +240,8 @@ public class GuiManager {
 				setSpriteDirectionsVisibility(false);
 				getMessageBoxField().setVisible(false);
 				break;
+			default:
+				break;
 			}
 			
 			guiStatesChanged = false;
@@ -252,27 +254,30 @@ public class GuiManager {
 	 * @param arg0 : {@link ActionEvent} - a generált {@link ActionEvent}.
 	 */
 	public void updateGuiState(ActionEvent arg0) {
+		
+		guiStatesChanged = true;
+		
 		JComboBox c = (JComboBox)arg0.getSource();
 		if(c.getName().equals("EntityType")) {
 			String type = (String)c.getSelectedItem();
 			if(type.equals("BLOCK")) {
 				guiStates = GuiStates.BLOCK;
-				guiStatesChanged = true;
+				
 			} else if(type.equals("TRIGGER")) {
 				guiStates = GuiStates.TRIGGER;
-				guiStatesChanged = true;
+				
 			}
 		} else if(c.getName().equals("TriggerType")) {
 			String type = (String)c.getSelectedItem();
 			if(type.equals("MESSAGE_BOX")){
 				guiStates = GuiStates.MESSAGEBOX;
-				guiStatesChanged = true;
+				
 			} else if(type.equals("SPIKE")){
 				guiStates = GuiStates.SPIKE;
-				guiStatesChanged = true;
+				
 			} else if(type.equals("FINISH_LINE")) {
 				guiStates = GuiStates.FINISH_LINE;
-				guiStatesChanged = true;
+				
 			}
 		}
 		

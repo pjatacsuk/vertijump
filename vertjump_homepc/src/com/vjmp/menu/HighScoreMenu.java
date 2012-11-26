@@ -30,7 +30,7 @@ public class HighScoreMenu extends Menu {
 		menuItems.get(0).setHighLightText(true);
 		current_menu = 1;
 		
-	
+		//betöltjük a map listából a mapokat  és hozzárendeljük a highscoreList-menüket
 		for(Chapter chapter : game.getChapterManager()) {
 			menuItems.add(new HighScoreListMenu(game,chapter.getName(),this,camera));
 		}

@@ -101,7 +101,9 @@ public class Editor implements Serializable, ActionListener {
 	 * @param rect
 	 */
 	public void addSprite(Rectangle rect) {
-
+		
+		//Kezdetleges megoldás, spawn pointot a spooky.png képpel kiválasztva rakhatunk le
+		//TODO:Refactor triggerré
 		if (textureList.GetPath(sprite_index).equals("./res/png/spooky.png")) {
 			if (player == null) {
 				player = new DrawableEntity("./res/png/spooky.png", rect.x, rect.y,
@@ -110,6 +112,7 @@ public class Editor implements Serializable, ActionListener {
 				player.setLocation(rect.x, rect.y);
 			}
 		} else {
+			//Létrehozzuk a az entitást a spriteType,entityType,rectangle,textúra alapján
 			DrawableEntity drawableEntity = GetDrawableEnityTypeFromSpriteIndex(rect);
 			if (drawableEntity != null) {
 				map.add(drawableEntity);
@@ -189,6 +192,8 @@ public class Editor implements Serializable, ActionListener {
 	private void BlockLogic(Camera camera) {
 		if (inputHandler.MOUSE.button.isPressed()) {
 			polling_for_mouse_release = true;
+			//kell egy régi kamera állás a helyes rectangle számitás miatt
+			//ha mozgott közbe a kamera, szükség van rá
 			if (old_camera_pos == null) {
 				old_camera_pos = new Point(camera.pos_x, camera.pos_y);
 			}
@@ -205,6 +210,7 @@ public class Editor implements Serializable, ActionListener {
 
 				if (mouse_button == Buttons.LEFT) {
 					
+					//a megfelelõ tipust kiválasztjuk
 					if(inputHandler.SHIFT.isPressed()) {
 						spriteType = SpriteType.NORMAL;
 						
@@ -213,14 +219,17 @@ public class Editor implements Serializable, ActionListener {
 					} else {
 						spriteType = SpriteType.SCALE;
 					}
+					//kiszámitjuk a megfelelõ rectangle-t a régi és új kamera állás alapján
 					Rectangle rect = GenerateScaledRectangleFromMouse(camera);
 					if(rect == null) {
 						System.out.println("HIBA,rect == null!");
 					} else {
+						//minden oké, mehet az entitás
 						addSprite(rect);
 					}
 				} else if (mouse_button == Buttons.RIGHT) {
 
+					//törlést végezzük
 					Rectangle rect = GenerateScaledRectangleFromMouse(camera);
 					removeSprite(rect);
 				}
@@ -435,10 +444,11 @@ public class Editor implements Serializable, ActionListener {
 			JComboBox c = (JComboBox) arg0.getSource();
 
 			if (c.getName().equals("Textures")) {
-
+				//ha a texturákat változtattuk, a sprite_index-t kell beállitani
 				sprite_index = c.getSelectedIndex();
 
 			} else if (c.getName().equals("EntityType")) {
+				//az entitás tipusát változtattuk, az entityType-ot kell beállitani
 				String type = (String) c.getSelectedItem();
 
 				if (type.equals("BLOCK")) {
@@ -446,19 +456,23 @@ public class Editor implements Serializable, ActionListener {
 					entityType = EntityType.BLOCK;
 
 				} else if (type.equals("TRIGGER")) {
-
+					
 					entityType = EntityType.TRIGGER;
+					//TODO: bug gyanús kód
 					JComboBox cb = (JComboBox) guiManager.getTriggerTypeBox();
 					triggerType = guiManager.getTriggerType(cb);
+				    
 
 				}
 			} else if (c.getName().equals("TriggerType")) {
+				//a trigger tipusát kell beállitani
 				triggerType = guiManager.getTriggerType(c);
 			}
 
 		} else {
 			JComponent c = (JComponent) arg0.getSource();
 			if (c.getName().equals("MessageBoxField")) {
+				//A messageBox szövegét kell beállitani
 				JTextField t = (JTextField) c;
 				MessageString = new String(t.getText());
 

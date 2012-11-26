@@ -38,7 +38,7 @@ public class EntityManager<T> implements Iterable<T>,Serializable {
 	 * Másoló konstruktor
 	 * @param spriteManager
 	 */
-	public EntityManager(EntityManager spriteManager) {
+	public EntityManager(EntityManager<T> spriteManager) {
 		list = new ArrayList<T>(spriteManager.list);
 	}
 

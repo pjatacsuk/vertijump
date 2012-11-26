@@ -37,13 +37,15 @@ public class TriggerHandler {
 				if (trigger.getActivity() == true) {
 					switch (trigger.getTriggerType()) {
 					case FINISH_LINE:
+						//teljesitettük a pályát, jöhet az AfterChapterScrren
 						chapter.setChapterState(ChapterState.FINISH_SCREEN);
 						break;
 					case SPIKE:
+						//Meghaltunk,reset
 						chapter.setChapterState(ChapterState.DIED);
 						break;
 					case MESSAGE_BOX:
-
+						//ezt kezeli a MessageBox maga
 						break;
 					}
 				}

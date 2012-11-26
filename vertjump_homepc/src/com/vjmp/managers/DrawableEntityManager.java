@@ -2,6 +2,7 @@ package com.vjmp.managers;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.util.ListIterator;
 
 import com.vjmp.entities.drawable.DrawableEntity;
 
@@ -51,9 +52,11 @@ public class DrawableEntityManager extends EntityManager<DrawableEntity> {
 	 * @param rect : {@link Rectangle}
 	 */
 	public synchronized void remove(Rectangle rect) {
-		for(int i=0;i<size();i++) {
-			if(list.get(i).getRect().intersects(rect)) {
-				list.remove(i);
+		ListIterator<DrawableEntity> it = list.listIterator();
+		while(it.hasNext()){
+			DrawableEntity tmp = it.next();
+			if(tmp.getRect().intersects(rect)){
+				it.remove();
 			}
 		}
 		

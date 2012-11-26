@@ -126,16 +126,17 @@ public abstract class Menu extends GameMenuItem{
 						pos_x + (distaFromRoot * game.getWidth()) - menuItems.get(i).getWidth() / 2,
 						highlight_pos_y);
 			} else {
-			menuItems.get(i).setLocation(
-					pos_x + (distaFromRoot * game.getWidth()) - menuItems.get(i).getWidth() / 2,
-					pos_y + i * MenuItemPadding);
+				menuItems.get(i).setLocation(
+						pos_x + (distaFromRoot * game.getWidth()) - menuItems.get(i).getWidth() / 2,
+						pos_y + i * MenuItemPadding);
 			}
 		}
 
 	}
 
 	/**
-	 * Kirajzolja a mainMenu-t.
+	 * Kirajzolja a mainMenu-t, ha rajta vagyunk egy itemen vagy highlightolt akkor piros, 
+	 * ha nem sárga, ha pedig inaktiv  akkor szürke
 	 * @param g : {@link Graphics}
 	 */
 	public void mainMenuDraw(Graphics g) {
@@ -149,6 +150,7 @@ public abstract class Menu extends GameMenuItem{
 					g.setColor(Color.GRAY);
 				}
 				gameMenuItem.draw(g);
+				
 				} else if(gameMenuItem.menuItemType == MenuItemType.MENU) {
 							if(gameMenuItem.selected()) {
 								g.setColor(Color.RED);
@@ -156,7 +158,7 @@ public abstract class Menu extends GameMenuItem{
 							} else {
 								g.setColor(Color.GRAY);
 							}
-						gameMenuItem.drawMenuName(g);
+					gameMenuItem.drawMenuName(g);
 				}
 		}
 	}
@@ -284,6 +286,7 @@ public abstract class Menu extends GameMenuItem{
 	 * Átvált a következõ menüre.
 	 */
 	protected void switchToNextScreen() {
+		//a kamerát toljuk odébb, nem a menüt. Egy menü szélességnyi távolságig
 		if(camera.pos_x > (-1 * nextMenu.distanceFromRoot*game.getWidth())) {
 				camera.pos_x -= 15;
 		} else {
@@ -299,6 +302,7 @@ public abstract class Menu extends GameMenuItem{
 	 * Átvált az elõzõ menüre
 	 */
 	protected void switchToPrevScreen() {
+		//a kamerát toljuk odébb, nem a menüt. Egy menü szélességnyi távolságig
 		if(camera.pos_x < (-1 * prevMenu.distanceFromRoot*game.getWidth())) {
 				camera.pos_x += 15;
 		} else {

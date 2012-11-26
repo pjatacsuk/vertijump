@@ -40,6 +40,7 @@ public class ChapterManager implements Iterable<Chapter>{
 		this.HEIGHT = HEIGHT;
 		this.inputHandler = inputHandler;
 	try {
+		//betöltjük a chaptereket, a megadott map_lista alapján (path)
 		BufferedReader br = new BufferedReader(new FileReader(path));
 		
 		String line = br.readLine();
@@ -79,17 +80,19 @@ public class ChapterManager implements Iterable<Chapter>{
 		if(chapter_state == ChapterState.RUNNING) {
 			chapter_list.get(current_chapter).update();
 		} else if(chapter_state == ChapterState.FINISHED) {
-			//Ugrás a következõ chapterre
+			
+			//Ugrás a következõ chapterre,afterChapterScreen-t null-ozzuk
 			afterChapterScreen = null;
 			current_chapter = (current_chapter + 1)%chapter_list.size();
 			chapter_list.get(current_chapter).resetMap();
 			chapter_list.get(current_chapter).start();
 		} else if(chapter_state == ChapterState.DIED) {
-			System.out.println("Hello");
+			//kezdjük a pályát elõlrõl
 			chapter_list.get(current_chapter).resetMap();
 			
 		} else if(chapter_state == ChapterState.FINISH_SCREEN) {
 			if(afterChapterScreen == null) {
+				//ha még nincs afterChapterScreen-nünk akkor csinálunk
 				chapter_list.get(current_chapter).stop();
 				afterChapterScreen = new AfterChapterScreen(chapter_list.get(current_chapter));
 			}

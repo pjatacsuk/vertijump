@@ -34,6 +34,7 @@ public class ChapterHighScoreManager {
 		this.chapterName = chapterName;
 		String chapterPath = chapterName.replace(" ","");
 		try {
+			//betöltjük a top100 highscore-okat a chapter név alapján
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					new FileInputStream("./res/hs/" + chapterPath + ".txt")));
 			int count = 0;
@@ -64,6 +65,7 @@ public class ChapterHighScoreManager {
 	 */
 	public void add(HighScore hs) {
 		highscore_list.add(hs);
+		//rendezzük is rögtön
 		Collections.sort(highscore_list);
 	}
 	

@@ -22,13 +22,9 @@ public class Camera {
 	
 	public int width=0;
 	public int height=0;
-	private int mouse_x;
-	private int mouse_y;
 	private int editor_speed = 15;
 	private AffineTransform old_transform;
 	private double zoom=1;
-	private boolean zoom_mouse = false;
-	
 	/**
 	 * Konstuktor
 	 * @param width : int - a {@link Camera} képének szélessége

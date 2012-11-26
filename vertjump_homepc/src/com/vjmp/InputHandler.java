@@ -38,6 +38,7 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 		public void setPressed(boolean press) {
 			previous_state = pressed;
 			pressed = press;
+			//ha a felengedést vizsgáljuk
 			if(pressed) pressed_and_released = true;
 	
 			
@@ -62,7 +63,6 @@ public class InputHandler implements KeyListener,MouseMotionListener,MouseListen
 				if(!pressed) {
 					pressed_and_released = false;
 					return true;
-				
 				}
 				else {
 					return false;

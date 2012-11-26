@@ -120,6 +120,7 @@ public class Player {
 	 */
 	private synchronized void CheckCollosion(Map map) {
 	
+		//elõszõr a trigger-eken futunk végig és kezeljük õket
 		for (TriggerEntity t : map.getTriggerEntityManager()) {
 			
 			if (t.intersects(playerSprite.getRect())) {
@@ -128,6 +129,7 @@ public class Player {
 				t.disactivateTrigger();
 			}
 		}
+		
 		for(int i=0;i<map.getVisibleEntitiesSize();i++) {
 			DrawableEntity s = map.getVisibleEntity(i);
 				if (s.intersects(playerSprite.getRect())) {
@@ -154,6 +156,8 @@ public class Player {
 			//ha nagyon kicsi az intersection kepes felre ertelmezni a feltetelt
 			//kesobb fixalasra jogosult, ha nem mukodik
 			
+			// y tengely menti ütközések
+			
 			if(speed_y > 0 && triggerEntity.getWall(Dir.NORTH)) {
 				triggerEntity.activateTrigger();
 			}
@@ -161,6 +165,7 @@ public class Player {
 				triggerEntity.activateTrigger();
 			}  
 		} else {	
+			//x tengely menti ütközések
 			if(speed_x > 0 && triggerEntity.getWall(Dir.WEST)) {
 				triggerEntity.activateTrigger();
 			}
@@ -185,6 +190,7 @@ public class Player {
 			// feltetelt
 			// kesobb fixalasra jogosult, ha nem mukodik
 
+			//y tengely menti ütközések
 			if (speed_y > 0 && drawableEntity.getWall(Dir.NORTH)) {
 				playerSprite.move(0, -intersection.height);
 				velocity_y = 0;
@@ -198,7 +204,7 @@ public class Player {
 			}
 
 		} else {
-
+			//x tengely menti ütközések
 			if (speed_x > 0 && drawableEntity.getWall(Dir.WEST)) {
 
 				sticky = true;
@@ -239,15 +245,18 @@ public class Player {
 			
 			velocity_y += -jump_speed;
 			if (Math.abs(velocity_y) > max_velocity_y) {
-				velocity_y = max_velocity_y
-						* ((velocity_y) / Math.abs(velocity_y));
+				//rá állitjuk a küszöbértékre
+				velocity_y = max_velocity_y	* ((velocity_y) / Math.abs(velocity_y));
 			}
 		}
 
+		//gravitáció
 		velocity_y += velocity_gravity;
 
 		if (speed_y < -max_speed_y) {
 			speed_y = max_speed_y * ((speed_y) / Math.abs(speed_y));
+			
+			//ha elértük a maximális ugrási sebességet, többé nem számit a W lenyomása
 			ignore_W = true;
 			jumping = false;
 		}
@@ -255,6 +264,7 @@ public class Player {
 			velocity_x = max_velocity_x * ((velocity_x) / Math.abs(velocity_x));
 		}
 		if (sticky) {
+			//há ráragadtunk a falra csak kicsit csúszunk lefelé
 			velocity_y = 1;
 			speed_y = 1;
 			ignore_W = false;
@@ -268,9 +278,11 @@ public class Player {
 	private void ChangePlayerSpeed() {
 		if (velocity_x != 0) {
 			if (Math.abs(speed_x) <= max_speed_x) {
+				//1/60-al kell változtani a sebességet a framerate miatt
 				speed_x += velocity_x * (1.0 / 60.0);
 			}
 		} else {
+			//a tényleges sebességet számoljuk ki, küszöbérték alatt 0.
 			if (Math.abs(speed_x) >= 0.2) {
 				int dir = 1;
 				if (speed_x > 0) {
@@ -313,6 +325,7 @@ public class Player {
 		ChangePlayerSpeed();
 
 		playerSprite.move(speed_x, speed_y);
+		//Az egyik oldalon ki, másikon be mechanizmus
 		if (playerSprite.GetPosX() + playerSprite.getRectWidth() < 0) {
 			playerSprite.move(180 * 3, 0);
 		}
@@ -374,7 +387,7 @@ public class Player {
 
 		}
 		if (inputHandler.SHIFT.isPressed() && !ignore_SHIFT) {
-
+			// a sprintelés mechanizmusa, TODO: refactor metódussá
 			max_velocity_x = max_velocity_x * 1.5;
 			max_velocity_y = max_velocity_y * 1.5;
 			max_speed_x = max_speed_x * 1.5;

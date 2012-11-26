@@ -60,6 +60,7 @@ public class AfterChapterScreen {
 	 */
 	public void handleInput() {
 		if(inputHandler.ENTER.isPressedOnce()){
+			//mehetünk a következõ Chapter-re
 			chapter.setChapterState(ChapterState.FINISHED);
 			
 		}
@@ -100,6 +101,8 @@ public class AfterChapterScreen {
 		g.setFont(new Font("Helvetica",0,32));
 		g.setColor(new Color(255,173,0));
 		
+		//A szövegeket középre állitjuk és kirajzoljuk
+		
 		FontMetrics metrics = g.getFontMetrics();
 		String current_info = "Your score: " + score;
 		int your_highscore_pos_x = pos_x + box_width/2 - metrics.stringWidth(current_info)/2 ;
@@ -110,6 +113,8 @@ public class AfterChapterScreen {
 		
 		g.setFont(new Font("Helvetica",Font.ITALIC,12));
 		metrics =  g.getFontMetrics();
+		
+		//Ezt a szöveget pedig a jobb alsó sarokba helyezzük
 		g.drawString("Press Enter to continue", 
 					 pos_x + box_width - metrics.stringWidth("Press Enter to continue") - 5,
 					 pos_y + box_height - metrics.getHeight() - 5);
@@ -124,6 +129,7 @@ public class AfterChapterScreen {
 	 */
 	private void drawTopScoresInfo(Graphics g, FontMetrics metrics,int next_pos_y) {
 		int n = 5;
+		//A legjobb 5 score-t kirajzoljuk, esetleges szinben
 		String[] scores = chapter.getChapterHighScoreManager().getHighScores(n);
 		int score_pos_x = pos_x + camera.width/2 - metrics.stringWidth("1. "+scores[0]);
 		for(int i=0;i<n;i++) {

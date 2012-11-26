@@ -60,6 +60,7 @@ public class Sprite implements Serializable {
 			img = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			System.out.println("No image for you!");
+			return;
 		}
 		
 		pos_x = psx;
@@ -88,6 +89,7 @@ public class Sprite implements Serializable {
 			img = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			System.out.println("No image for you!");
+			return;
 		}
 		pos_x = rect.x;
 		pos_y = rect.y;
@@ -105,7 +107,7 @@ public class Sprite implements Serializable {
 	 * @param t_path : {@link String} - a sprite elérési útvonala
 	 * @param t_rect : {@link Rectangle} - a sprite {@link Rectangle}-je
 	 * @param visibility : boolean - a sprite láthatósága
-	 * @param wall : boolean[] - a sprite falai
+	 * @param wall : boolean[] - a sprite falai -> Sorrend: NORTH - WEST - SOUTH - EAST
 	 * @param spriteType : {@link SpriteType} - a sprite tipusa
 	 */
 	public Sprite(String t_path,Rectangle t_rect,boolean visibility,boolean[] wall, SpriteType spriteType) {
@@ -117,6 +119,7 @@ public class Sprite implements Serializable {
 			img = ImageIO.read(new File(path));
 		} catch (IOException e) {
 			System.out.println("No image for you!");
+			return;
 		}
 		pos_x = rect.x;
 		pos_y = rect.y;

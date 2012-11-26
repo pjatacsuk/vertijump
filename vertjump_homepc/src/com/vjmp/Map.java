@@ -81,6 +81,7 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 	 * @param g : {@link Graphics} 
 	 */
 	public void draw(Graphics g) {
+		//csak a látható entitásokat, illetve triggereket kell kirajzolni
 		visibleEntities.DrawSprites(g);
 		triggerEntityManager.DrawSprites(g);
 	}
@@ -134,7 +135,9 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 	 */
 	public void UpdateNotVisibleSprites(int CameraY) {
 		for(int i=0;i<notVisibleEntities.size();i++) {
-			DrawableEntity tmp =notVisibleEntities.get(i);
+			DrawableEntity tmp = notVisibleEntities.get(i);
+			
+			//ha az entitás a látható képtartományba van, láthatóvá tesszük
 			if(tmp.GetPosY() + tmp.getRect().height > -CameraY) {
 				tmp.setVisibility(true);
 				visibleEntities.add(tmp);
@@ -179,8 +182,9 @@ public class Map implements Iterable<DrawableEntity>,Serializable {
 	 */
 	public void add(DrawableEntity sprite) {
 		if(sprite.getType() == EntityType.TRIGGER) {
-		triggerEntityManager.add((TriggerEntity)sprite);
+			triggerEntityManager.add((TriggerEntity)sprite);
 		} else {
+			//entityManager-be a mentés miatt mindenképp berakjuk
 			entityManager.add(sprite);
 			if(sprite.isVisible()) {
 				visibleEntities.add(sprite);

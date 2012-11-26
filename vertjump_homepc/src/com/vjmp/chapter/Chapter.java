@@ -109,8 +109,10 @@ public class Chapter {
 	private void load(String path) throws FileNotFoundException, IOException, ClassNotFoundException {
 			 this.path = path;
 			 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+			 //ronda megoldás, refactorra vár
 			 Editor editor = (Editor)ois.readObject();
 			 map = new Map(editor.getMap(),false);
+			 
 			 triggerHandler = new TriggerHandler(this,map.getTriggerEntityManager());
 			 player = new Player(inputHandler);
 			 player.setLocation(editor.GetPlayerLocation());
@@ -201,6 +203,7 @@ public class Chapter {
 	 * @param g : {@link Graphics}
 	 */
 	 private void DrawBackGround(Graphics g) {
+		 //megnézzük hányszor kell ismételni, hogy elfedje a képernyõt
 			double width_draw_count = (double)WIDTH / (double)bg.getWidth();
 			double height_draw_count = (double)HEIGHT / (double)bg.getHeight();
 			for(int i=0;i<width_draw_count+1;i++) 

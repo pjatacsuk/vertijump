@@ -68,6 +68,7 @@ public class Game extends Canvas implements Runnable {
 		
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		
+	
 		int x = (dim.width - WIDTH*2*SCALE)/2 - 50;
 		int y = (dim.height - HEIGHT*SCALE)/2;
 		frame.setLocation(x, y);
@@ -217,6 +218,8 @@ public class Game extends Canvas implements Runnable {
 	@Override
 	public void run() {
 		long lastTime = System.nanoTime();
+		
+		//hány ns jut egy tick-re, cél a 60 fps
 		double nsPerTick = 1000000000.0 / 60.0;
 		
 		int ticks = 0;
@@ -226,6 +229,8 @@ public class Game extends Canvas implements Runnable {
 		double delta = 0;
 		while(running) {
 			long now = System.nanoTime();
+			
+			//kiszámoljuk hányszor kell tickelni
 			delta += (now - lastTime) / nsPerTick;
 			lastTime = now;
 			boolean shouldRender  = false;
@@ -240,6 +245,8 @@ public class Game extends Canvas implements Runnable {
 				render();
 			}
 			try {
+				//sleepeljük kicsit a thread-et, hogy 
+				//drasztikusan csökkentsük a cpu használatot
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				

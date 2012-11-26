@@ -30,6 +30,7 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
 	        setHorizontalAlignment(CENTER);
 	        setVerticalAlignment(CENTER);
 	        images = new ArrayList<ImageIcon>();
+	        //Minden textúrához tartozik egy kis kép
 	        for(String path : Editor.textureList){
 	        	images.add(createImageIcon(path));
 				images.get(images.size()-1).setDescription("");	
@@ -73,7 +74,7 @@ public class ComboBoxRenderer extends JLabel implements ListCellRenderer {
               setForeground(list.getForeground());
           }
 
-          
+          //a standard render függvény átirtuk kép rendelelésre
           ImageIcon icon = images.get(selectedIndex);
           String desc = images.get(selectedIndex).getDescription();
           setIcon(icon);

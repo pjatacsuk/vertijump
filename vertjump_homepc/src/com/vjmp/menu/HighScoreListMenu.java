@@ -36,6 +36,7 @@ public class HighScoreListMenu extends Menu{
 		
 		chapterPath = chapterName.replace(" ","");
 		try {
+			//betöltjük a highscore-okat
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					new FileInputStream("./res/hs/" + chapterPath + ".txt")));
 			int count = 0;
@@ -67,6 +68,7 @@ public class HighScoreListMenu extends Menu{
 		menuItems.get(0).setHighLightText(true);
 		current_menu = 1;
 		try {
+			//betöltjük a highscore-okat
 			BufferedReader br = new BufferedReader(new InputStreamReader(
 					new FileInputStream("./res/hs/" + chapterPath + ".txt")));
 			int count = 0;

@@ -89,6 +89,7 @@ public class SpikeTrigger extends TriggerEntity {
 		int rect_width  = sprite.getRect().width;
 		spike_count = 0;
 		
+		//kiszámoljuk mennyi spike-ra van szükség
 		if(spike_walls[Sprite.getDirIndex(Dir.WEST)]) {
 			spike_count += rect_height / spike_height;	
 		}
@@ -103,7 +104,7 @@ public class SpikeTrigger extends TriggerEntity {
 		}
 		
 		
-		
+		//létrehozzuk a spike-okat
 		g.setColor(new Color(188, 79, 99));
 		polygons = new Polygon[spike_count];
 		if(spike_walls[Sprite.getDirIndex(Dir.WEST)]) {
@@ -126,8 +127,11 @@ public class SpikeTrigger extends TriggerEntity {
 	 */
 	private void CreateSouthSpikes(Graphics g) {
 		int index = 0;
+		//megkeressük az elsõ nem nulla indexet, innen folytatjuk a feltöltést
 		while(polygons[index] != null) index++;
+		
 		int spike_south_count = sprite.getRect().width / spike_width;	
+		
 		for(int i=0;i<spike_south_count;i++) {
 			Polygon p = new Polygon();
 			p.addPoint(sprite.GetPosX() + i * spike_width ,  sprite.GetPosY() + sprite.getRectHeight());
@@ -147,6 +151,8 @@ public class SpikeTrigger extends TriggerEntity {
 	 */
 	private void CreateNorthSpikes(Graphics g) {
 		int index = 0;
+		
+		//megkeressük az elsõ nem nulla indexet, innen folytatjuk a feltöltést
 		while(polygons[index] != null) index++;
 		int spike_north_count = ( sprite.getRect().width / spike_width);	
 		for(int i=0;i<spike_north_count;i++) {
@@ -168,6 +174,8 @@ public class SpikeTrigger extends TriggerEntity {
 	 */
 	private void CreateEastSpikes( Graphics g) {
 		int index = 0;
+		
+		//megkeressük az elsõ nem nulla indexet, innen folytatjuk a feltöltést
 		while(polygons[index] != null) index++;
 		int spike_east_count = (sprite.getRect().height / spike_height);	
 		for(int i=0;i<spike_east_count;i++) {
@@ -190,6 +198,8 @@ public class SpikeTrigger extends TriggerEntity {
 	 */
 	public Polygon[] CreateWestSpikes(Graphics g) {
 		int index = 0;
+		
+		//megkeressük az elsõ nem nulla indexet, innen folytatjuk a feltöltést
 		while(polygons[index] != null) index++;
 		int spike_west_count = (sprite.getRect().height / spike_height);	
 		for(int i=0;i<spike_west_count;i++) {

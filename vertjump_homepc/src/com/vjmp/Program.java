@@ -16,18 +16,20 @@ public class Program {
 	public static MapEditor editor;
 	public static void main(String[] args)  {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		//	String line = br.readLine();
-			String line = "mapeditor";
-			while(line != null) {
-				String[]  words = line.split(" ");
-				command(words);
-				if(line.equals("mapeditor")) {
-					line = "game";
-				} else {
-					line = null;
-				} 
 			
+			try {
+				String line = br.readLine();
+				while(line != null) {
+					String[]  words = line.split(" ");
+					command(words);	
+					line = br.readLine();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+		
+			
 	}
 
 	/**

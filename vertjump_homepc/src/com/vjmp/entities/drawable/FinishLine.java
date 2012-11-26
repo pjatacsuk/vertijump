@@ -40,6 +40,7 @@ public class FinishLine extends TriggerEntity {
 		
 		triggerType = TriggerType.FINISH_LINE;
 		
+		//a flag animáció elhelyezése a rectangle végében
 		animatedSprite = new AnimatedSprite("./res/finishflag_anim.png",35,10);
 		animatedSprite.setAnimType(AnimType.LOOP);
 		animatedSprite.setLocation(this.GetPosX()+sprite.getRectWidth()-animatedSprite.getWidth(),
@@ -57,6 +58,7 @@ public class FinishLine extends TriggerEntity {
 		isAlwaysVisible = true;
 		triggerType = TriggerType.FINISH_LINE;
 
+		//a flag animáció elhelyezése a rectangle végében
 		animatedSprite = new AnimatedSprite("./res/finishflag_anim.png",35,10);
 		animatedSprite.setAnimType(AnimType.LOOP);
 		animatedSprite.setLocation(this.GetPosX()+sprite.getRectWidth()-animatedSprite.getWidth(),
@@ -77,8 +79,7 @@ public class FinishLine extends TriggerEntity {
 	 */
 	@Override
 	public void draw(Graphics g) {
-		g.drawString("FINISH!!!", GetPosX(), GetPosY() - 100);
-		
+		//csak a flag-et kell kirajzolni
 		animatedSprite.draw(g);
 	}
 	
