@@ -5,8 +5,9 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import com.vjmp.InputHandler;
 import com.vjmp.gfx.Camera;
+import com.vjmp.gfx.Sprite;
+import com.vjmp.gfx.Sprite.SpriteType;
 
 /**
  * A szerkesztés során a láthatóságot segitõ szürke "kijelelõ" box osztálya.
@@ -17,6 +18,7 @@ public class SelectRectangle {
 	private Editor editor = null;
 	private Point		 select_start_pos = null;
 	private Rectangle	 rect = null;
+	private Sprite		sprite = null;
 	
 	/**
 	 * Konstruktor
@@ -32,6 +34,7 @@ public class SelectRectangle {
 	 */
 	public void update(Camera camera){
 		updateRectangle(camera);
+		
 	}
 	
 
@@ -40,6 +43,10 @@ public class SelectRectangle {
 	 * @param camera : {@link Camera}
 	 */
 	private void updateRectangle(Camera camera) {
+		if(sprite != null) {
+			sprite.setSpriteType(editor.getSpriteType());
+		}
+		
 		if(editor.getInputHandler().MOUSE.button.isPressed()) {
 			if(select_start_pos == null) {
 				select_start_pos = editor.getInputHandler().MOUSE.getPos();
@@ -56,13 +63,23 @@ public class SelectRectangle {
 			
 				//le null-ozzuk a dragged_pos-t, hogy ne a jelenlegi értéket használja fel késõbbi selectnél
 				editor.getInputHandler().MOUSE.setDraggedPos(null);
+				if(editor.getSpriteType() == SpriteType.SCALE || editor.getSpriteType() == SpriteType.REPEAT) {
+					rect = new Rectangle(x,y,width,height);
+				} else {
+					rect = new Rectangle(current_pos.x,current_pos.y,width,height);
+				}
 				
-				rect = new Rectangle(x,y,width,height);
 				
+				sprite = new Sprite(Editor.textureList.GetPath(editor.getSpriteIndex()),rect,true);
+				sprite.setSpriteType(editor.getSpriteType());
+				sprite.calculateSpriteRectFromSpriteType();
+				rect = sprite.getRect();
 			}
 		} else {
 			select_start_pos = null;
 			rect = null;
+			sprite = null;
+		
 		}
 	}
 
@@ -78,5 +95,8 @@ public class SelectRectangle {
 			g.fillRect(rect.x, rect.y, rect.width, rect.height);
 		}
 		g.setColor(tmp);
+		if(sprite!=null){
+		sprite.draw(g);
+		}
 	}
 }

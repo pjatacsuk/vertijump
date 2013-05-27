@@ -239,6 +239,7 @@ public class SpikeTrigger extends TriggerEntity {
 	@Override
 	public void draw(Graphics g) {
 			drawSpikes(g);
+			sprite.draw(g);
 				
 	}
 	

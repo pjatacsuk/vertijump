@@ -71,8 +71,8 @@ public class HighScore implements Comparable {
 	 */
 	public String formatScore() {
 		
-		long sec = ((stopWatch.getTime() / 1000)  +  1);
-		long msec = stopWatch.getTime() % 100;
+		long sec = ((stopWatch.getTime() / 1000) );
+		long msec = stopWatch.getTime() % 1000;
 		return new String(sec + "." + msec);
 	}
 	

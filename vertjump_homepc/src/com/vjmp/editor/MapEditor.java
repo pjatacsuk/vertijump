@@ -145,14 +145,18 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 		
 		
 		//CHECKBOX-ok
-		JCheckBox c1 = new JCheckBox("North");
+		JCheckBox c1 = new JCheckBox("North",true);
 		c1.setName("North");
-		JCheckBox c2 = new JCheckBox("West");
+		
+		JCheckBox c2 = new JCheckBox("West",true);
 		c2.setName("West");
-		JCheckBox c3 = new JCheckBox("South");
+		
+		JCheckBox c3 = new JCheckBox("South",true);
 		c3.setName("South");
-		JCheckBox c4 = new JCheckBox("East");
+		
+		JCheckBox c4 = new JCheckBox("East",true);
 		c4.setName("East");
+		
 		frame.getContentPane().add(c1,c);
 		c.gridy=4;
 		frame.getContentPane().add(c2,c);
@@ -246,7 +250,7 @@ public class MapEditor extends Canvas implements Runnable,ActionListener{
 	public void load_resource() {
 		bg = null;
 		try {
-			bg = ImageIO.read(new File("./res/background.png"));
+			bg = ImageIO.read(new File("./res/background_editor.png"));
 		} catch (IOException e) {
 			System.out.println("No image for you!");
 		}

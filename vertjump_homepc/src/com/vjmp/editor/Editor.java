@@ -156,7 +156,7 @@ public class Editor implements Serializable, ActionListener {
 		switch (triggerType) {
 		case SPIKE:
 			ret = new SpikeTrigger(textureList.GetPath(sprite_index), rect,
-					true, guiManager.getWalls(),SpriteType.SCALE);
+					true, guiManager.getWalls(),spriteType);
 			break;
 		case FINISH_LINE:
 			ret = new FinishLine(textureList.GetPath(sprite_index), rect, true);
@@ -177,11 +177,22 @@ public class Editor implements Serializable, ActionListener {
 	 */
 	public void update(Camera camera) {
 		map.update(camera);
+		spriteTypeUpdate();
 		BlockLogic(camera);
 		if (guiManager != null) {
 			guiManager.update();
 		}
 		selectRectangle.update(camera);
+	}
+	private void spriteTypeUpdate(){
+		if(inputHandler.SHIFT.isPressed()) {
+			spriteType = SpriteType.NORMAL;
+			
+		} else if(inputHandler.CTRL.isPressed()) {
+			spriteType = SpriteType.REPEAT;
+		} else {
+			spriteType = SpriteType.SCALE;
+		}
 	}
 
 	/**
@@ -210,16 +221,8 @@ public class Editor implements Serializable, ActionListener {
 
 				if (mouse_button == Buttons.LEFT) {
 					
-					//a megfelelõ tipust kiválasztjuk
-					if(inputHandler.SHIFT.isPressed()) {
-						spriteType = SpriteType.NORMAL;
-						
-					} else if(inputHandler.CTRL.isPressed()) {
-						spriteType = SpriteType.REPEAT;
-					} else {
-						spriteType = SpriteType.SCALE;
-					}
 					//kiszámitjuk a megfelelõ rectangle-t a régi és új kamera állás alapján
+					
 					Rectangle rect = GenerateScaledRectangleFromMouse(camera);
 					if(rect == null) {
 						System.out.println("HIBA,rect == null!");
@@ -261,6 +264,9 @@ public class Editor implements Serializable, ActionListener {
 		// camera positionje mindig mod15 == 0, mivel ennyi az editor speedje,
 		// ezert
 		// csak a mouse position-t kell div15 ölni
+		
+		Rectangle ret = null;
+		
 		Point old_pos = AddOldCameraPos(DivBlockSize(inputHandler.MOUSE
 				.getOldPos()));
 		Point pos = AddCameraPos(DivBlockSize(inputHandler.MOUSE.getPos()),
@@ -270,9 +276,12 @@ public class Editor implements Serializable, ActionListener {
 
 		int x = Math.min(old_pos.x, pos.x);
 		int y = Math.min(old_pos.y, pos.y);
-
-		return new Rectangle(x, y, width, height);
-
+		if(spriteType == SpriteType.REPEAT || spriteType == SpriteType.SCALE) {
+			ret = new Rectangle(x, y, width, height);
+		} else {
+			ret = new Rectangle(pos.x,pos.y,width,height);
+		}
+		return ret;
 	}
 
 	/**
@@ -502,5 +511,12 @@ public class Editor implements Serializable, ActionListener {
 	 */
 	public int getBlockSize() {
 		return BLOCK_SIZE;
+	}
+
+	public SpriteType getSpriteType() {
+		return spriteType;
+	}
+	public int getSpriteIndex(){
+		return sprite_index;
 	}
 }

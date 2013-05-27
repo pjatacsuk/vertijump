@@ -25,7 +25,7 @@ public class FinishLine extends TriggerEntity {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static AnimatedSprite animatedSprite = null;
+	private  AnimatedSprite animatedSprite = null;
 	
 	/**
 	 * Konstruktor
@@ -124,6 +124,7 @@ public class FinishLine extends TriggerEntity {
 			 
 			 //finish line specific
 			 animatedSprite = (AnimatedSprite)in.readObject();
+			
 	
 	}
 }

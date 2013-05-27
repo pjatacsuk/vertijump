@@ -247,7 +247,9 @@ public class Game extends Canvas implements Runnable {
 			try {
 				//sleepeljük kicsit a thread-et, hogy 
 				//drasztikusan csökkentsük a cpu használatot
+				
 				Thread.sleep(1);
+				
 			} catch (InterruptedException e) {
 				
 				e.printStackTrace();

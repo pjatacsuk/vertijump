@@ -99,6 +99,8 @@ public class Sprite implements Serializable {
 		wall[getDirIndex(Dir.WEST)] = true;
 		wall[getDirIndex(Dir.SOUTH)] = true;
 		wall[getDirIndex(Dir.EAST)] = true;
+		spriteType = SpriteType.SCALE;
+		
 	}
 	
 	/**
@@ -129,6 +131,11 @@ public class Sprite implements Serializable {
 		this.wall[getDirIndex(Dir.WEST)] = wall[getDirIndex(Dir.WEST)];
 		this.wall[getDirIndex(Dir.SOUTH)] = wall[getDirIndex(Dir.SOUTH)];
 		this.wall[getDirIndex(Dir.EAST)] = wall[getDirIndex(Dir.EAST)];
+		calculateSpriteRectFromSpriteType();
+		
+	}
+	
+	public void calculateSpriteRectFromSpriteType(){
 		
 		if(spriteType == SpriteType.REPEAT){
 			int width_count = rect.width/img.getWidth() +1;
@@ -140,7 +147,6 @@ public class Sprite implements Serializable {
 			rect = new Rectangle(rect.x,rect.y,img.getWidth(),img.getHeight());
 		}
 	}
-	
 	/**
 	 * 
 	 * @param dir : {@link Dir} - megadja a dir által meghatározott indexet
